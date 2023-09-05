@@ -1,0 +1,6947 @@
+﻿1
+00:00:20,854 --> 00:00:22,088
+All right.
+
+2
+00:00:22,088 --> 00:00:25,525
+Today, we're going to talk about
+the motion planning through gadgets
+
+3
+00:00:25,525 --> 00:00:29,262
+framework, which is a powerful framework
+for understanding
+
+4
+00:00:29,496 --> 00:00:33,633
+how hard your game is given one or two
+
+5
+00:00:33,700 --> 00:00:36,669
+relatively simple gadgets.
+
+6
+00:00:36,669 --> 00:00:39,906
+But it's motion planning in the sense
+that all these gadgets
+
+7
+00:00:39,906 --> 00:00:43,977
+are traversed by an agent such as Mario.
+
+8
+00:00:44,077 --> 00:00:46,646
+This is an example of a gadget
+that we're going to try to capture
+
+9
+00:00:46,646 --> 00:00:50,083
+with this framework
+from the very previous lecture.
+
+10
+00:00:50,150 --> 00:00:54,354
+Recall, this was a door
+and the spiny could be on the right side
+
+11
+00:00:54,354 --> 00:00:58,124
+or the left side, and you can change
+which side by hitting this block.
+
+12
+00:00:58,124 --> 00:01:03,463
+In fact, since the recording of that
+previous lecture, we actually implemented
+
+13
+00:01:03,463 --> 00:01:07,100
+this in a hacked version
+of the Super Mario Brothers ROM.
+
+14
+00:01:07,200 --> 00:01:09,669
+So you can see it in action
+hitting the spiny
+
+15
+00:01:09,669 --> 00:01:15,041
+to the other side,
+which lets you traverse that left path
+
+16
+00:01:15,108 --> 00:01:18,978
+or think it's going to show up
+from the other side as well,
+
+17
+00:01:19,045 --> 00:01:20,447
+showing that the physics are right
+
+18
+00:01:20,447 --> 00:01:24,017
+and you obviously can't go through
+the center because of the fire bars.
+
+19
+00:01:24,084 --> 00:01:27,220
+In the real gadget,
+there's a block here, but this gives
+
+20
+00:01:27,220 --> 00:01:30,223
+you an idea of how how it all works.
+
+21
+00:01:30,457 --> 00:01:32,992
+So what we'd like to do
+is take gadgets like this
+
+22
+00:01:32,992 --> 00:01:37,097
+that we can build in games
+and abstract their behavior.
+
+23
+00:01:37,197 --> 00:01:40,567
+So, like, this gadget
+is an example of a bunch of things...
+
+24
+00:01:40,567 --> 00:01:45,338
+a bunch of gadgets we've seen
+where you have a bunch of traversable
+
+25
+00:01:45,338 --> 00:01:49,142
+paths that change the state of the gadget
+and everything is
+
+26
+00:01:49,142 --> 00:01:51,744
+kind of local to the gadget.
+
+27
+00:01:51,744 --> 00:01:55,548
+The only thing the gadget remembers
+is like the location of the spiny;
+
+28
+00:01:55,782 --> 00:01:58,685
+the only way it interacts
+with other gadgets is from
+
+29
+00:01:58,685 --> 00:02:01,688
+Mario, traversing
+from one place to another.
+
+30
+00:02:01,688 --> 00:02:05,525
+So in this case, we have two states
+which we call open and closed
+
+31
+00:02:05,525 --> 00:02:10,363
+for the door, and there's this traverse
+pathway that's possible -- this one
+
+32
+00:02:10,463 --> 00:02:13,933
+-- it's possible only in the open state
+when the spiny is on the right.
+
+33
+00:02:14,167 --> 00:02:16,302
+It's not possible in this state.
+
+34
+00:02:16,302 --> 00:02:19,706
+If you come into this open path
+
+35
+00:02:19,806 --> 00:02:24,010
+and choose to hit the spiny,
+you can transition by entering
+
+36
+00:02:24,010 --> 00:02:27,213
+at this location and leaving at this
+location, transition to the open state.
+
+37
+00:02:27,213 --> 00:02:28,581
+So if you're in the closed state
+
+38
+00:02:28,581 --> 00:02:32,218
+and you follow this path,
+you go to the open state in this.
+
+39
+00:02:32,285 --> 00:02:35,121
+If you're in the open state already,
+nothing happens.
+
+40
+00:02:35,121 --> 00:02:38,892
+And then the other crucial one
+is in order to traverse
+
+41
+00:02:39,058 --> 00:02:42,262
+the close line, you have to first
+get the spiny to the left.
+
+42
+00:02:42,395 --> 00:02:46,199
+So if you're in the open state
+and you do this traversal
+
+43
+00:02:46,266 --> 00:02:51,037
+from here to here,
+you must change to the closed state.
+
+44
+00:02:51,104 --> 00:02:53,506
+So this is a state diagram of a gadget,
+
+45
+00:02:53,506 --> 00:02:57,744
+and we're going to define what/how
+these can work in general.
+
+46
+00:02:57,744 --> 00:02:59,679
+But the idea is you draw some arrows
+
+47
+00:02:59,679 --> 00:03:01,948
+and on some of them
+you write down a state name
+
+48
+00:03:01,948 --> 00:03:05,051
+and that means you go to that state
+when you do that traversal.
+
+49
+00:03:05,051 --> 00:03:09,389
+Here's
+a redrawing of the same thing, hand-drawn.
+
+50
+00:03:09,389 --> 00:03:12,825
+But I wanted to show two examples
+from Lecture
+
+51
+00:03:12,825 --> 00:03:16,229
+6, just to give a few more...
+
+52
+00:03:16,262 --> 00:03:18,998
+to show you a few more aspects
+of these kinds of diagrams.
+
+53
+00:03:18,998 --> 00:03:22,936
+So one gadget was the directed
+antiparallel NAND.
+
+54
+00:03:22,936 --> 00:03:27,907
+This was gadget with these two directed
+paths in opposite directions.
+
+55
+00:03:27,907 --> 00:03:29,876
+That's the antiparallel aspect.
+
+56
+00:03:29,876 --> 00:03:34,214
+And the NAND aspect was if you traverse
+the top one, the bottom one disappears.
+
+57
+00:03:34,214 --> 00:03:36,716
+And if you traverse
+the bottom one, the top one disappears.
+
+58
+00:03:36,716 --> 00:03:39,419
+So you can express that
+with a three-state gadget.
+
+59
+00:03:39,419 --> 00:03:43,089
+So one more state than the door
+where when you do this
+
+60
+00:03:43,089 --> 00:03:46,125
+top traversal,
+you go to the top state and the top state,
+
+61
+00:03:46,125 --> 00:03:49,429
+you still have the top traversal,
+but the bottom one disappears.
+
+62
+00:03:49,529 --> 00:03:52,865
+And similarly, at the bottom, when you do
+the bottom traversal, you go to
+
+63
+00:03:52,865 --> 00:03:58,504
+the bottom state which just has that arrow
+and you lose the other one.
+
+64
+00:03:58,571 --> 00:04:00,607
+And another example from
+
+65
+00:04:00,607 --> 00:04:05,478
+that lecture was the undirected
+noncrossing matched crumblersrs.
+
+66
+00:04:05,578 --> 00:04:11,517
+So this was a gadget where you could go in
+either direction on each path here.
+
+67
+00:04:11,517 --> 00:04:13,920
+So I'm going to draw
+that as a double arrow
+
+68
+00:04:13,920 --> 00:04:18,925
+and -- for both of the paths --
+and if you do any traversal,
+
+69
+00:04:18,925 --> 00:04:23,496
+everything crumbles and so you're left
+with no possible traversal.
+
+70
+00:04:23,563 --> 00:04:26,899
+So I wanted to highlight here
+that when you have a bidirectional edge
+
+71
+00:04:26,899 --> 00:04:30,036
+like this, you write a different state
+-- potentially
+
+72
+00:04:30,036 --> 00:04:31,904
+you could write a different state
+for each arrowhead.
+
+73
+00:04:31,904 --> 00:04:34,073
+If I traverse this way,
+I might go to one state.
+
+74
+00:04:34,073 --> 00:04:36,909
+If I traverse this way,
+I might go to another state.
+
+75
+00:04:36,909 --> 00:04:38,511
+In this case,
+they all go to the same state.
+
+76
+00:04:38,511 --> 00:04:42,982
+But potentially
+this could be four different states.
+
+77
+00:04:43,082 --> 00:04:44,984
+In addition, you could write more than one
+
+78
+00:04:44,984 --> 00:04:48,087
+state on one of these arrows, meaning it's
+nondeterministic what happens.
+
+79
+00:04:48,087 --> 00:04:50,223
+You could choose to do one thing
+or another.
+
+80
+00:04:50,223 --> 00:04:53,526
+So let's try to formalize all of that
+
+81
+00:04:53,593 --> 00:04:58,164
+pictures into mathematics.
+
+82
+00:04:58,264 --> 00:05:01,968
+So we're going to define a gadget
+
+83
+00:05:02,068 --> 00:05:07,206
+to consist of three things.
+
+84
+00:05:07,307 --> 00:05:16,983
+Q is going to be a finite set of states.
+
+85
+00:05:17,083 --> 00:05:18,651
+These are just labels.
+
+86
+00:05:18,651 --> 00:05:24,991
+L is a finite set of locations.
+
+87
+00:05:25,091 --> 00:05:26,326
+Which are also just labels.
+
+88
+00:05:26,326 --> 00:05:30,330
+So we're going to think of them
+more like vertices in a graph
+
+89
+00:05:30,430 --> 00:05:34,901
+and then t Oh, one thing I want to mention
+
+90
+00:05:34,967 --> 00:05:37,036
+in order to express concepts
+
+91
+00:05:37,036 --> 00:05:40,039
+like antiparallel here,
+
+92
+00:05:40,239 --> 00:05:43,543
+which is meaningful only when we're
+thinking about gadgets in the plane.
+
+93
+00:05:43,609 --> 00:05:47,146
+When we're in the plane, we need to know
+not just there are four locations
+
+94
+00:05:47,146 --> 00:05:50,817
+here, we need to know
+the order that they appear.
+
+95
+00:05:50,917 --> 00:05:54,320
+Let's say
+a clockwise order around the gadget.
+
+96
+00:05:54,387 --> 00:05:55,855
+Otherwise, it's
+
+97
+00:05:55,855 --> 00:05:58,391
+hard to talk about things like crossings.
+
+98
+00:05:58,391 --> 00:06:03,763
+So for planar,
+
+99
+00:06:03,830 --> 00:06:10,370
+we have a cyclic ordering
+
+100
+00:06:10,436 --> 00:06:12,338
+of L.
+
+101
+00:06:12,338 --> 00:06:29,255
+And then the third thing is transitions.
+
+102
+00:06:29,355 --> 00:06:30,156
+Transitions.
+
+103
+00:06:30,156 --> 00:06:34,527
+We're going to write in the form
+
+104
+00:06:34,627 --> 00:06:37,063
+state, comma, location, arrow,
+
+105
+00:06:37,063 --> 00:06:50,343
+state, comma, location.
+
+106
+00:06:50,443 --> 00:06:51,844
+So the meaning is,
+
+107
+00:06:51,844 --> 00:06:56,516
+if the gadget is in state
+q, and the player enters...
+
+108
+00:06:56,516 --> 00:06:59,819
+the agent enters at location
+a, then it's possible
+
+109
+00:07:00,019 --> 00:07:04,323
+to reach state r with the
+
+110
+00:07:04,424 --> 00:07:08,127
+agent leaving at location b.
+
+111
+00:07:08,227 --> 00:07:13,299
+This is a lot of words, but it's
+equivalent to these kinds of diagrams.
+
+112
+00:07:13,366 --> 00:07:18,337
+And yeah, let me add a little more words
+
+113
+00:07:18,337 --> 00:07:21,474
+so we can talk about
+how the agent moves around.
+
+114
+00:07:21,474 --> 00:08:01,447
+Probably be clearer.
+
+115
+00:08:01,547 --> 00:08:03,282
+So while the gadget cares about what
+
+116
+00:08:03,282 --> 00:08:06,986
+state it's in, in some sense, the agent
+just wants to traverse the gadget.
+
+117
+00:08:07,053 --> 00:08:10,790
+And so we talk about a traversal
+of the agent, whereas a transition
+
+118
+00:08:10,957 --> 00:08:13,426
+is something that happens in the gadget.
+
+119
+00:08:13,493 --> 00:08:14,594
+So traversal is just
+
+120
+00:08:14,594 --> 00:08:18,331
+defined by two locations, a and b.
+
+121
+00:08:18,364 --> 00:08:22,335
+You have some gadget here
+and you want to know, is it possible
+
+122
+00:08:22,335 --> 00:08:28,140
+for the agent to get from a to b
+given that the gadget is in some state.
+
+123
+00:08:28,174 --> 00:08:30,576
+q. So that's...
+
+124
+00:08:30,576 --> 00:08:32,612
+we're going to call that legal, it’s
+possible
+
+125
+00:08:32,612 --> 00:08:37,783
+if there's some transition of the form (q,
+a) → (r, b) for some state r.
+
+126
+00:08:37,850 --> 00:08:39,619
+And there might be more than one r.
+
+127
+00:08:39,619 --> 00:08:40,486
+That’s what I was saying:
+
+128
+00:08:40,486 --> 00:08:43,189
+you could have multiple possible states
+on this transition.
+
+129
+00:08:43,189 --> 00:08:47,026
+We would write, for example, r
+and also r prime
+
+130
+00:08:47,093 --> 00:08:49,795
+are different things that could happen.
+
+131
+00:08:49,795 --> 00:08:50,997
+Internal to the gadget.
+
+132
+00:08:50,997 --> 00:08:52,798
+When you do the a-to-b traversal
+
+133
+00:08:52,798 --> 00:08:57,637
+might be also zero,
+then it's not a legal traversal and so on.
+
+134
+00:08:57,737 --> 00:08:59,705
+It's useful to distinguish
+
+135
+00:08:59,705 --> 00:09:05,244
+the deterministic case
+
+136
+00:09:05,311 --> 00:09:06,913
+where there's only one
+
+137
+00:09:06,913 --> 00:09:12,385
+such r.
+
+138
+00:09:12,485 --> 00:09:30,269
+It's a little bit stronger actually.
+
+139
+00:09:30,369 --> 00:09:33,906
+So deterministic means
+that if I give you the initial state
+
+140
+00:09:33,906 --> 00:09:37,443
+and the location that I start at,
+then there's only one thing
+
+141
+00:09:37,443 --> 00:09:40,980
+that can happen, both in terms of state
+and in terms of location.
+
+142
+00:09:41,080 --> 00:09:44,150
+So if the agent goes in here,
+there's only one place it can come out
+
+143
+00:09:44,383 --> 00:09:47,186
+and there's only one state we can reach.
+
+144
+00:09:47,186 --> 00:09:51,023
+So a lot of the gadgets
+we'll be talking about are deterministic.
+
+145
+00:09:51,090 --> 00:09:53,926
+These gadgets are almost
+completely deterministic,
+
+146
+00:09:53,926 --> 00:09:56,128
+except in some interpretation.
+
+147
+00:09:56,128 --> 00:09:59,599
+The open button here
+
+148
+00:09:59,665 --> 00:10:03,436
+in the closed state,
+you could choose to take this traversal
+
+149
+00:10:03,436 --> 00:10:06,405
+or there's always possible
+to stay in the same location
+
+150
+00:10:06,405 --> 00:10:09,775
+without doing
+without doing any transition.
+
+151
+00:10:09,842 --> 00:10:16,248
+So I would call this in some sense
+a nondeterministic open button.
+
+152
+00:10:16,315 --> 00:10:16,949
+All right.
+
+153
+00:10:16,949 --> 00:10:19,952
+Speaking of buttons, let me define
+
+154
+00:10:20,019 --> 00:10:46,712
+button.
+
+155
+00:10:46,812 --> 00:10:50,182
+So a button is a location
+that can only be used
+
+156
+00:10:50,249 --> 00:10:53,486
+in a way the only valid traversal
+is from it to itself.
+
+157
+00:10:53,486 --> 00:10:55,021
+You can never go from a to somewhere else.
+
+158
+00:10:55,021 --> 00:10:59,525
+You can never go from somewhere else
+to a. So
+
+159
+00:10:59,625 --> 00:11:02,194
+in the door we have an open button,
+
+160
+00:11:02,194 --> 00:11:05,798
+but all the other possible traversals
+
+161
+00:11:05,865 --> 00:11:22,615
+in those examples are called tunnels.
+
+162
+00:11:22,715 --> 00:11:28,154
+A tunnel is if a and b and b...
+
+163
+00:11:28,187 --> 00:11:31,857
+and a-to-b
+and b-to-a are the only possible
+
+164
+00:11:31,957 --> 00:11:37,329
+traversals involving a and b.
+
+165
+00:11:37,396 --> 00:11:40,766
+I should say valid here.
+
+166
+00:11:40,866 --> 00:11:45,638
+This is over all states.
+
+167
+00:11:45,705 --> 00:11:51,043
+So you can never go from a-to-c
+or c-to-a or
+
+168
+00:11:51,110 --> 00:11:52,778
+these things.
+
+169
+00:11:52,778 --> 00:11:55,247
+So almost all of the
+
+170
+00:11:55,247 --> 00:11:58,884
+possible traversals in these
+gadgets are tunnels.
+
+171
+00:11:58,884 --> 00:12:01,887
+These guys are paired up. It's never...
+
+172
+00:12:01,987 --> 00:12:04,323
+this edge might disappear
+-- it's not always...
+
+173
+00:12:04,323 --> 00:12:07,727
+it doesn't always exist -- but it never
+reconnects to some other location.
+
+174
+00:12:07,993 --> 00:12:09,495
+You could certainly imagine such a gadget,
+
+175
+00:12:09,495 --> 00:12:13,199
+but most of the gadgets we're going to
+talk about today are tunnel gadgets.
+
+176
+00:12:13,299 --> 00:12:18,404
+Tunnel gadget means that
+all of the traversals are within tunnels.
+
+177
+00:12:18,471 --> 00:12:22,742
+This is obviously not a tunnel gadget
+because it has one button. But
+
+178
+00:12:22,842 --> 00:12:25,044
+yeah.
+
+179
+00:12:25,044 --> 00:12:25,611
+All right.
+
+180
+00:12:25,611 --> 00:12:28,647
+And I'll just mention for people who know
+finite automata,
+
+181
+00:12:28,881 --> 00:12:33,085
+you can also think of a gadget
+as a finite automaton
+
+182
+00:12:33,152 --> 00:12:36,422
+over the language of traversals.
+
+183
+00:12:36,522 --> 00:12:39,558
+And if you know what finite automata mean,
+that will make lots of sense.
+
+184
+00:12:39,558 --> 00:12:40,659
+Otherwise, don't worry about it.
+
+185
+00:12:40,659 --> 00:12:44,163
+It's just another way
+to think about the same thing.
+
+186
+00:12:44,263 --> 00:12:49,835
+Okay, so next
+I want to define a system of gadgets.
+
+187
+00:12:49,835 --> 00:12:52,304
+This is where I take a bunch of gadgets.
+
+188
+00:12:52,304 --> 00:12:56,142
+Quite often it will be a bunch of copies
+of the exact same gadget.
+
+189
+00:12:56,142 --> 00:12:57,977
+This is the door gadget.
+
+190
+00:12:57,977 --> 00:12:59,712
+Actually, it's a slightly different door
+gadget
+
+191
+00:12:59,712 --> 00:13:03,682
+where the open button
+has been replaced with an open tunnel.
+
+192
+00:13:03,749 --> 00:13:07,586
+So it's a three tunnel gadget;
+it has open, traverse,
+
+193
+00:13:07,586 --> 00:13:12,925
+close,
+color coded here, green, blue and red.
+
+194
+00:13:12,992 --> 00:13:15,094
+The traverse line I'm going to draw dotted
+
+195
+00:13:15,094 --> 00:13:19,198
+if it's currently closed and solid
+if it's currently open.
+
+196
+00:13:19,298 --> 00:13:21,600
+So you take a bunch of gadgets
+
+197
+00:13:21,600 --> 00:13:24,537
+and some initial state for those gadgets
+
+198
+00:13:24,537 --> 00:13:28,307
+like open or closed
+and then you wire them together.
+
+199
+00:13:28,374 --> 00:13:29,341
+That's what I want to define.
+
+200
+00:13:29,341 --> 00:13:30,910
+Now, this is called the connection graph.
+
+201
+00:13:30,910 --> 00:13:34,146
+It's all the black lines in this diagram.
+
+202
+00:13:34,246 --> 00:13:41,787
+So let's go here.
+
+203
+00:13:41,854 --> 00:13:43,622
+We call this system of gadgets
+
+204
+00:13:43,622 --> 00:14:01,340
+or sometimes a network.
+
+205
+00:14:01,407 --> 00:14:04,410
+So we have a bunch of gadgets
+
+206
+00:14:04,476 --> 00:14:12,918
+and we have initial state for each
+
+207
+00:14:12,985 --> 00:14:15,921
+and we have a
+
+208
+00:14:15,921 --> 00:14:25,364
+connection graph
+
+209
+00:14:25,431 --> 00:14:35,341
+on the gadgets’ locations.
+
+210
+00:14:35,441 --> 00:14:37,910
+So all of these
+
+211
+00:14:37,910 --> 00:14:40,012
+spots are locations of
+
+212
+00:14:40,012 --> 00:14:43,148
+this is a six locations,
+this gadget, six locations of this gadget.
+
+213
+00:14:43,382 --> 00:14:44,717
+Those are vertices in a graph
+
+214
+00:14:44,717 --> 00:14:46,352
+and we're just going to draw connections
+between them.
+
+215
+00:14:46,352 --> 00:14:48,988
+We can also add vertices in-between.
+
+216
+00:14:48,988 --> 00:14:52,424
+These are like the branching hallway
+we mentioned in Lecture 6.
+
+217
+00:14:52,491 --> 00:14:56,161
+Today, we're going to basically assume
+branching hallways always exist,
+
+218
+00:14:56,228 --> 00:14:57,830
+not worry about those.
+
+219
+00:14:57,830 --> 00:14:59,999
+What this is saying...
+
+220
+00:14:59,999 --> 00:15:03,002
+I think I have a picture here.
+
+221
+00:15:03,168 --> 00:15:07,239
+If we look at a connected component
+of this connection graph,
+
+222
+00:15:07,306 --> 00:15:12,678
+this is basically a location in the system
+in between the gadgets, so to speak.
+
+223
+00:15:12,745 --> 00:15:15,314
+So you can, for example, traverse
+the gadget here
+
+224
+00:15:15,314 --> 00:15:18,117
+and now you're in this orange section.
+
+225
+00:15:18,117 --> 00:15:19,418
+You can go to any
+
+226
+00:15:19,418 --> 00:15:23,455
+location within that orange section,
+within that connected component.
+
+227
+00:15:23,522 --> 00:15:25,958
+And the idea is that's freely traversable.
+
+228
+00:15:25,958 --> 00:15:28,761
+Doesn't change any state.
+Nothing interesting happens.
+
+229
+00:15:28,761 --> 00:15:33,599
+You can use that
+to go from gadget to gadget.
+
+230
+00:15:33,699 --> 00:15:39,471
+So connected components,
+
+231
+00:15:39,538 --> 00:15:41,707
+I'm going to call
+
+232
+00:15:41,707 --> 00:15:53,552
+system locations.
+
+233
+00:15:53,652 --> 00:15:55,955
+It's useful to think of this as a graph.
+
+234
+00:15:55,955 --> 00:15:59,291
+I mean, you can think of it
+as just gluing together locations.
+
+235
+00:15:59,291 --> 00:16:02,594
+I think it's a little easier to draw
+pictures when you think of it as a graph.
+
+236
+00:16:02,661 --> 00:16:05,965
+And it's also maybe a little clearer
+to talk about...
+
+237
+00:16:06,031 --> 00:16:10,736
+This is supposed to be over here, sorry:
+this is about the connection graph.
+
+238
+00:16:10,803 --> 00:16:13,605
+Connected
+components are called system locations,
+
+239
+00:16:13,605 --> 00:16:19,345
+and we're going to call the system planar
+
+240
+00:16:19,445 --> 00:16:29,054
+if the gadgets plus the connection graph
+
+241
+00:16:29,121 --> 00:16:32,591
+are noncrossing.
+
+242
+00:16:32,658 --> 00:16:37,730
+I won't be super precise about that, but
+I think it's pretty clear what it means.
+
+243
+00:16:37,796 --> 00:16:40,132
+This is not a planar system.
+
+244
+00:16:40,132 --> 00:16:41,233
+It's got tons of crossings.
+
+245
+00:16:41,233 --> 00:16:44,636
+These over unders.
+
+246
+00:16:44,703 --> 00:16:46,271
+So there are some places
+
+247
+00:16:46,271 --> 00:16:52,778
+where you can branch, like here,
+and these are not those places;
+
+248
+00:16:52,778 --> 00:16:56,448
+these over-unders mean crossing
+without the ability to traverse.
+
+249
+00:16:56,515 --> 00:16:59,651
+Okay so now
+
+250
+00:16:59,718 --> 00:17:09,194
+I want to talk about reachability.
+
+251
+00:17:09,261 --> 00:17:12,331
+The main problem we're interested
+in solving in this kind of setup
+
+252
+00:17:12,398 --> 00:17:17,036
+is, we're given system,
+
+253
+00:17:17,102 --> 00:17:20,739
+and we're given a start location,
+
+254
+00:17:20,806 --> 00:17:25,344
+and we're given a goal location,
+
+255
+00:17:25,411 --> 00:17:30,115
+and we want to know can the agent
+
+256
+00:17:30,182 --> 00:17:32,418
+get from a to b, or in this case
+
+257
+00:17:32,418 --> 00:17:39,324
+s to t, via
+
+258
+00:17:39,425 --> 00:17:42,428
+some sequence of traversals
+
+259
+00:17:42,594 --> 00:17:51,270
+of the various gadgets in the system.
+
+260
+00:17:51,370 --> 00:17:53,539
+Plus you get to use connections
+
+261
+00:17:53,539 --> 00:17:58,677
+in the connection graph for free.
+
+262
+00:17:58,744 --> 00:18:01,547
+So that's a decision problem
+and it's often
+
+263
+00:18:01,547 --> 00:18:07,186
+going to be PSPACE-complete,
+but it depends what gadgets you allow.
+
+264
+00:18:07,252 --> 00:18:09,855
+So here's a little example.
+
+265
+00:18:09,855 --> 00:18:13,258
+We have this as our initial location.
+
+266
+00:18:13,425 --> 00:18:16,395
+This is our goal
+and it's possible to do so
+
+267
+00:18:16,395 --> 00:18:19,098
+via this long sequence of reversals.
+
+268
+00:18:19,098 --> 00:18:22,301
+And if you watch closely
+as this guy comes through, it,
+
+269
+00:18:22,334 --> 00:18:25,337
+for example, crosses
+a clothesline, this edge becomes dashed.
+
+270
+00:18:25,370 --> 00:18:28,373
+So the gadgets are changing state
+Every time you do a traversal,
+
+271
+00:18:28,574 --> 00:18:32,344
+you potentially change
+the state of that gadget
+
+272
+00:18:32,444 --> 00:18:34,813
+and then you're able to still traverse
+that gadget again
+
+273
+00:18:34,813 --> 00:18:36,648
+and this Tercel sequence,
+
+274
+00:18:36,648 --> 00:18:40,285
+many gadgets get traversed
+a couple of times, at least in general.
+
+275
+00:18:40,285 --> 00:18:43,288
+It could even be exponentially many times.
+
+276
+00:18:43,422 --> 00:18:46,291
+And each time you interact with it,
+you interact with it,
+
+277
+00:18:46,291 --> 00:18:48,227
+whatever the state currently is.
+
+278
+00:18:48,227 --> 00:18:49,728
+So here we got to the goal.
+
+279
+00:18:49,728 --> 00:18:52,264
+The answer is yes.
+
+280
+00:18:52,264 --> 00:18:53,732
+All right, so that's reachability.
+
+281
+00:18:53,732 --> 00:18:58,137
+The...
+
+282
+00:18:58,303 --> 00:19:01,273
+in some sense,
+the main goal we're trying to get to
+
+283
+00:19:01,273 --> 00:19:08,380
+is understanding
+when reachability is hard.
+
+284
+00:19:08,447 --> 00:19:09,481
+So let me give you
+
+285
+00:19:09,481 --> 00:19:22,227
+a couple of examples of such results.
+
+286
+00:19:22,327 --> 00:19:25,197
+If we have door gadgets,
+like that picture,
+
+287
+00:19:25,197 --> 00:19:28,233
+this is PSPACE-complete: reachability
+
+288
+00:19:28,233 --> 00:19:33,372
+is PSPACE-complete.
+
+289
+00:19:33,438 --> 00:19:36,542
+This is a new phrasing of results
+from last class.
+
+290
+00:19:36,542 --> 00:19:41,280
+Actually, we prove this
+reducing from pressure plates.
+
+291
+00:19:41,280 --> 00:19:45,851
+Just another way
+to think about the same thing.
+
+292
+00:19:45,918 --> 00:19:47,386
+Another result we
+
+293
+00:19:47,386 --> 00:19:51,890
+proved in Lecture
+6 is planar reachability,
+
+294
+00:19:51,990 --> 00:20:00,532
+with say
+
+295
+00:20:00,532 --> 00:20:09,875
+an antiparallel NAND,
+
+296
+00:20:09,975 --> 00:20:13,378
+is NP-complete.
+
+297
+00:20:13,478 --> 00:20:15,113
+So you don't always get
+PSPACE-completeness.
+
+298
+00:20:15,113 --> 00:20:17,583
+It depends what set of gadgets
+you're allowed to use.
+
+299
+00:20:17,583 --> 00:20:21,720
+Often we'll think there's just one gadget
+you get to use many times,
+
+300
+00:20:21,820 --> 00:20:22,788
+but these are two examples.
+
+301
+00:20:22,788 --> 00:20:25,257
+This one
+we guaranteed planar in Lecture 6.
+
+302
+00:20:25,257 --> 00:20:30,229
+There were no crossings needed,
+which is nice.
+
+303
+00:20:30,295 --> 00:20:30,796
+Cool.
+
+304
+00:20:30,796 --> 00:20:34,700
+So the point of theorems like this is,
+now you have...
+
+305
+00:20:34,733 --> 00:20:38,971
+you take your favorite video game like
+Super Mario Brothers and you have this...
+
+306
+00:20:39,004 --> 00:20:44,176
+you're going to have a uh,
+a bouquet of possible gadgets
+
+307
+00:20:44,243 --> 00:20:47,045
+that would suffice to prove hardness.
+
+308
+00:20:47,045 --> 00:20:51,216
+So we know if we can build a door,
+all we need is a door -- plus a crossover
+
+309
+00:20:51,216 --> 00:20:52,351
+because this is planar reach...
+
+310
+00:20:52,351 --> 00:20:56,688
+er, not planar reachability -- then
+you prove your problem is PSPACE-complete.
+
+311
+00:20:56,755 --> 00:20:58,757
+We're going to strengthen
+that theorem in a second.
+
+312
+00:20:58,757 --> 00:21:02,761
+Or, if we can build an antiparallel NAND,
+we know that our game is NP-hard.
+
+313
+00:21:02,761 --> 00:21:05,030
+The hardness goes through.
+We're not necessarily in NP.
+
+314
+00:21:05,030 --> 00:21:08,967
+It depends what game you're making
+or what game you're analyzing.
+
+315
+00:21:09,067 --> 00:21:09,334
+Okay.
+
+316
+00:21:09,334 --> 00:21:11,236
+But the point of this study,
+
+317
+00:21:11,236 --> 00:21:14,306
+one point of the study
+is to get a whole range of gadgets,
+
+318
+00:21:14,306 --> 00:21:16,608
+any one of which proves
+your problem is hard
+
+319
+00:21:16,608 --> 00:21:20,012
+so you have more possible goals
+of what to build.
+
+320
+00:21:20,112 --> 00:21:23,115
+There's another fun thing you can do,
+
+321
+00:21:23,148 --> 00:21:28,186
+which is called simulation.
+
+322
+00:21:28,253 --> 00:21:30,522
+This is a way to relate gadgets
+to each other.
+
+323
+00:21:30,522 --> 00:21:34,192
+It's closely related to reductions,
+and we've actually seen a bunch
+
+324
+00:21:34,192 --> 00:21:39,364
+of simulations in Lecture 6, for example,
+we showed, for example,
+
+325
+00:21:39,364 --> 00:21:42,801
+if you're given an undirected
+noncrossing NAND
+
+326
+00:21:42,868 --> 00:21:45,504
+you can build in this way
+
+327
+00:21:45,504 --> 00:21:49,174
+what is effectively
+an undirected crossing NAND.
+
+328
+00:21:49,174 --> 00:21:53,045
+This was a conversion
+from noncrossing to crossing;
+
+329
+00:21:53,145 --> 00:21:55,380
+also works for a match crumblersrs.
+
+330
+00:21:55,380 --> 00:21:56,748
+This is what we call a simulation.
+
+331
+00:21:56,748 --> 00:22:00,786
+Let me try to write down a definition,
+though an exact definition is a little bit
+
+332
+00:22:00,852 --> 00:22:05,457
+tedious, I’ll
+
+333
+00:22:05,624 --> 00:22:09,795
+say what the main parts are.
+
+334
+00:22:09,795 --> 00:22:15,367
+So we want to simulate gadget G.
+
+335
+00:22:15,367 --> 00:22:24,643
+We're going to do that
+using a system of gadgets,
+
+336
+00:22:24,710 --> 00:22:27,946
+let's
+say gadgets that belong to some family H.
+
+337
+00:22:27,946 --> 00:22:31,183
+Often this is just going to be
+a single gadget, Capital H.
+
+338
+00:22:31,249 --> 00:22:34,920
+But in general we could use a bunch of
+different gadgets to simulate another one.
+
+339
+00:22:34,920 --> 00:22:39,925
+Plus a mapping
+
+340
+00:22:40,025 --> 00:22:43,628
+from locations of G
+
+341
+00:22:43,695 --> 00:22:48,266
+to system locations.
+
+342
+00:22:48,367 --> 00:22:50,235
+And each location of G should map
+
+343
+00:22:50,235 --> 00:22:57,309
+to a distinct system
+
+344
+00:22:57,309 --> 00:23:03,415
+location.
+
+345
+00:23:03,482 --> 00:23:06,485
+Okay, the idea is, over here for example,
+
+346
+00:23:06,485 --> 00:23:10,188
+we're trying to simulate a crossing NAND
+
+347
+00:23:10,255 --> 00:23:14,459
+and these things that are marked in black,
+those are supposed to be
+
+348
+00:23:14,459 --> 00:23:18,730
+the locations that correspond to the four
+locations of the crossing NAND right.
+
+349
+00:23:18,730 --> 00:23:22,667
+So here, it's a connected component,
+which is just this one location.
+
+350
+00:23:22,667 --> 00:23:24,870
+In general,
+it might be attached to other gadgets.
+
+351
+00:23:24,870 --> 00:23:31,443
+But those are the four locations
+that correspond, with this mapping.
+
+352
+00:23:31,543 --> 00:23:34,246
+And then
+
+353
+00:23:34,246 --> 00:23:37,082
+what we need to satisfy out of this system
+
+354
+00:23:37,082 --> 00:23:41,420
+is that traversal sequences are the same
+
+355
+00:23:41,486 --> 00:23:45,490
+or according to the obvious
+
+356
+00:23:45,490 --> 00:23:55,600
+correspondence between the two.
+
+357
+00:23:55,667 --> 00:23:58,937
+So I'm not saying
+
+358
+00:23:59,037 --> 00:24:02,574
+transitions, right:
+the internal state of these gadgets,
+
+359
+00:24:02,574 --> 00:24:07,746
+there's not necessarily
+a way to relate them.
+
+360
+00:24:07,746 --> 00:24:14,453
+But the traversal sequences, that's
+what the robot can do,
+
+361
+00:24:14,519 --> 00:24:18,190
+the agent,
+
+362
+00:24:18,256 --> 00:24:19,724
+those are...
+
+363
+00:24:19,724 --> 00:24:21,159
+those need to correspond.
+
+364
+00:24:21,159 --> 00:24:28,400
+Cool.
+
+365
+00:24:28,467 --> 00:24:33,872
+So in particular, if you have a simulation
+like this, you get a reduction
+
+366
+00:24:33,972 --> 00:24:37,742
+in the like NP or PSPACE sense,
+
+367
+00:24:37,843 --> 00:24:39,177
+assuming this...
+
+368
+00:24:39,177 --> 00:24:43,515
+This simulation is going to have
+some constant size, presumably.
+
+369
+00:24:43,515 --> 00:24:48,053
+So you can just take each gadget
+G, plug in the system,
+
+370
+00:24:48,119 --> 00:24:51,823
+and you get a reduction from reachability
+
+371
+00:24:51,890 --> 00:25:03,101
+with G to reachability with H.
+
+372
+00:25:03,168 --> 00:25:05,704
+Hopefully
+I got that in the right direction. Yes.
+
+373
+00:25:05,704 --> 00:25:10,041
+So we get that this these gadgets H are
+at least as hard as G.
+
+374
+00:25:10,041 --> 00:25:14,212
+If G is hard,
+we learn that H is hard in the usual way.
+
+375
+00:25:14,212 --> 00:25:18,717
+So we can use simulations
+to prove hardness.
+
+376
+00:25:18,817 --> 00:25:21,887
+But it's also pretty interesting in its
+own right, we're going to see some cool
+
+377
+00:25:21,887 --> 00:25:23,488
+simulation results.
+
+378
+00:25:23,488 --> 00:25:24,256
+All right.
+
+379
+00:25:24,256 --> 00:25:26,992
+So that's kind of the framework,
+the general framework.
+
+380
+00:25:26,992 --> 00:25:31,563
+Now we're going to see a bunch
+of more specific results that are
+
+381
+00:25:31,663 --> 00:25:35,600
+big families of gadgets
+that are really interesting.
+
+382
+00:25:35,667 --> 00:25:39,170
+So let's start with the so-called door
+framework.
+
+383
+00:25:39,237 --> 00:25:40,605
+So we've seen this door gadget.
+
+384
+00:25:40,605 --> 00:25:44,009
+This is the nth drawing of it,
+a little different from before.
+
+385
+00:25:44,009 --> 00:25:44,476
+Again, I'm
+
+386
+00:25:44,476 --> 00:25:49,948
+going to draw it as a three tunnel gadget,
+but the open could have been a button.
+
+387
+00:25:50,048 --> 00:25:51,816
+Either way is interesting.
+
+388
+00:25:51,816 --> 00:25:54,286
+But there are other ways to...
+
+389
+00:25:54,286 --> 00:25:57,255
+And the edges could also be directed
+or undirected.
+
+390
+00:25:57,255 --> 00:26:01,226
+All those versions are interesting
+and PSPACE-complete.
+
+391
+00:26:01,293 --> 00:26:03,228
+There are some simpler door gadgets too.
+
+392
+00:26:03,228 --> 00:26:07,933
+So let's say we take the traverse line
+and connect it to a close line.
+
+393
+00:26:08,033 --> 00:26:10,335
+Then we make something
+
+394
+00:26:10,335 --> 00:26:11,636
+called self-close.
+
+395
+00:26:11,636 --> 00:26:13,305
+This is a self-closing door.
+
+396
+00:26:13,305 --> 00:26:16,775
+Still has two states,
+but now only two tunnels.
+
+397
+00:26:16,875 --> 00:26:18,243
+The open tunnel is as before.
+
+398
+00:26:18,243 --> 00:26:21,212
+If you traverse
+it, you go to the open state.
+
+399
+00:26:21,313 --> 00:26:23,682
+The self-close tunnel is only possible
+
+400
+00:26:23,682 --> 00:26:26,918
+in the open state: you can't do it
+in the closed state, just like traverse.
+
+401
+00:26:26,985 --> 00:26:28,253
+And when you do it, the door
+
+402
+00:26:28,253 --> 00:26:33,024
+closes behind you: you transition
+to the closed state immediately.
+
+403
+00:26:33,091 --> 00:26:34,025
+So this is nice.
+
+404
+00:26:34,025 --> 00:26:37,195
+It's simpler to build a self-closing door
+and then a door.
+
+405
+00:26:37,228 --> 00:26:41,366
+There's only two tunnels instead of three.
+
+406
+00:26:41,433 --> 00:26:43,535
+And another cool gadget
+
+407
+00:26:43,535 --> 00:26:47,906
+you get from removing this traversal
+in this state.
+
+408
+00:26:47,973 --> 00:26:51,910
+So then we get this picture
+which is completely symmetric between
+
+409
+00:26:51,910 --> 00:26:53,144
+open and closed.
+
+410
+00:26:53,144 --> 00:26:55,146
+If I swap open and close,
+I get the same gadget.
+
+411
+00:26:55,146 --> 00:26:57,015
+So they're just labels.
+
+412
+00:26:57,015 --> 00:26:59,117
+There's basically two tunnels,
+
+413
+00:26:59,117 --> 00:27:02,053
+exactly one of which is always open.
+
+414
+00:27:02,053 --> 00:27:04,956
+And in this state, the bottom one is open.
+
+415
+00:27:04,956 --> 00:27:06,591
+When you traverse it, you switch states.
+
+416
+00:27:06,591 --> 00:27:08,493
+In this state, the top one is open.
+
+417
+00:27:08,493 --> 00:27:11,096
+When you traverse it, you switch states.
+
+418
+00:27:11,196 --> 00:27:15,533
+This is a symmetric self-closing door.
+
+419
+00:27:15,533 --> 00:27:20,205
+And the nice theorem
+
+420
+00:27:20,305 --> 00:27:26,745
+-- maybe I'll go up here,
+
+421
+00:27:26,811 --> 00:27:37,822
+adding to our hardness collection
+-- is that
+
+422
+00:27:37,889 --> 00:27:48,833
+planar reachability
+
+423
+00:27:48,900 --> 00:27:54,439
+is PSPACE-complete
+
+424
+00:27:54,506 --> 00:28:02,514
+for any door
+gadget, just need one of them:
+
+425
+00:28:02,580 --> 00:28:04,349
+could be a door,
+could be a self-closing door,
+
+426
+00:28:04,349 --> 00:28:07,619
+it could be a symmetric self-closing door,
+could have directed tunnels, could have
+
+427
+00:28:07,719 --> 00:28:10,889
+undirected tunnels, open could be a button
+or it could be a tunnel.
+
+428
+00:28:11,089 --> 00:28:15,226
+All of those are hard
+in the planar setting,
+
+429
+00:28:15,293 --> 00:28:17,796
+which is nice.
+
+430
+00:28:17,796 --> 00:28:23,768
+Let me first give you another way to think
+about these doors is through an example.
+
+431
+00:28:23,768 --> 00:28:25,437
+So let's play a game.
+
+432
+00:28:25,437 --> 00:28:29,641
+This is a real video
+game called Sokobond, where you...
+
+433
+00:28:29,741 --> 00:28:33,812
+normally you're pushing around atoms
+to make molecules,
+
+434
+00:28:33,912 --> 00:28:36,381
+but we're going to ignore that mechanic
+and we're just going to think of,
+
+435
+00:28:36,381 --> 00:28:39,551
+you have these big molecules
+that move as a single block.
+
+436
+00:28:39,551 --> 00:28:41,986
+Otherwise it's like pushing blocks.
+
+437
+00:28:42,053 --> 00:28:43,888
+So this is a door.
+
+438
+00:28:43,888 --> 00:28:46,224
+We're
+going to build one of each of the doors.
+
+439
+00:28:46,224 --> 00:28:50,862
+So here, for example, we cannot traverse
+because this rigid object
+
+440
+00:28:50,862 --> 00:28:53,865
+is stuck between these walls.
+
+441
+00:28:53,965 --> 00:28:55,867
+But we can come in this open line
+
+442
+00:28:55,867 --> 00:28:59,838
+and push the object down
+and now it's open.
+
+443
+00:28:59,838 --> 00:29:01,973
+We can follow the traverse line.
+
+444
+00:29:01,973 --> 00:29:05,343
+But in order to do the close line,
+we have to move
+
+445
+00:29:05,343 --> 00:29:06,911
+the molecule back where it was.
+
+446
+00:29:06,911 --> 00:29:08,947
+So we close the door.
+
+447
+00:29:08,947 --> 00:29:13,151
+Okay, now let's do the same thing,
+but with a self-closing door.
+
+448
+00:29:13,218 --> 00:29:19,924
+So now we're currently in the open state
+and we can follow the self-close line.
+
+449
+00:29:20,024 --> 00:29:22,727
+But when we do so,
+we have to push the molecule up to the...
+
+450
+00:29:22,727 --> 00:29:26,297
+up one, and then we wouldn't
+be able to do self-close again.
+
+451
+00:29:26,297 --> 00:29:30,602
+So we closed, but we could always
+reopen from the open line.
+
+452
+00:29:30,702 --> 00:29:32,403
+And here's a symmetric self-closing door.
+
+453
+00:29:32,403 --> 00:29:36,307
+Nicely this diagram,
+at least the purple part, is rotationally
+
+454
+00:29:36,407 --> 00:29:38,510
+180 degrees symmetric.
+
+455
+00:29:38,510 --> 00:29:40,745
+So here we do a self-close
+
+456
+00:29:40,745 --> 00:29:43,748
+where we push this guy up
+in order to get down here
+
+457
+00:29:43,982 --> 00:29:48,353
+and then symmetrically to do a self-open,
+we'd have to go like that
+
+458
+00:29:48,353 --> 00:29:52,157
+and push it back down
+and we would not be able to do an open
+
+459
+00:29:52,223 --> 00:29:56,327
+move again,
+just like a symmetric self-closing door.
+
+460
+00:29:56,394 --> 00:29:58,263
+All right.
+So that gives you some intuition maybe.
+
+461
+00:29:58,263 --> 00:30:01,666
+This is three different proofs
+that this game is PSPACE-complete.
+
+462
+00:30:01,666 --> 00:30:06,304
+But we can also take our proof
+from last class
+
+463
+00:30:06,404 --> 00:30:08,773
+and say, well,
+we just don't need a crossover anymore
+
+464
+00:30:08,773 --> 00:30:12,677
+because now we know doors
+themselves can build crossovers.
+
+465
+00:30:12,744 --> 00:30:16,948
+So it's enough to just build a door.
+
+466
+00:30:17,048 --> 00:30:18,416
+Let me show you some more applications,
+
+467
+00:30:18,416 --> 00:30:21,920
+then I'll say a little bit more
+about how we analyze...
+
+468
+00:30:21,920 --> 00:30:23,955
+how we prove things about doors.
+
+469
+00:30:23,955 --> 00:30:27,826
+Here is a Legend of Zelda, Oracle Seasons
+has this cool magnetic glove
+
+470
+00:30:27,826 --> 00:30:29,994
+where
+if you're close enough to a steel ball,
+
+471
+00:30:29,994 --> 00:30:33,298
+you can pull it towards you
+or push it away from you.
+
+472
+00:30:33,398 --> 00:30:36,401
+And here is a regular door.
+
+473
+00:30:36,467 --> 00:30:38,303
+This is in the closed state, for example.
+
+474
+00:30:38,303 --> 00:30:41,806
+It's not possible to do this traversal
+because this guy's in the way.
+
+475
+00:30:42,073 --> 00:30:43,308
+You can't push or pull it here.
+
+476
+00:30:43,308 --> 00:30:46,978
+And if you try to push or pull from here,
+you're too far away from the ball.
+
+477
+00:30:47,078 --> 00:30:50,448
+There's a limited range,
+but you could come
+
+478
+00:30:50,448 --> 00:30:54,118
+in the open line and repel the ball
+and push it down to this state.
+
+479
+00:30:54,219 --> 00:30:56,588
+Then you're able to do the traverse
+
+480
+00:30:56,588 --> 00:30:58,890
+and if you want to do the close,
+the ball's in the way.
+
+481
+00:30:58,890 --> 00:31:01,392
+So you have to repel it away from here
+
+482
+00:31:01,392 --> 00:31:06,097
+and then you can close,
+but you'll be over in the state.
+
+483
+00:31:06,197 --> 00:31:08,333
+Here is a pulling blocks game.
+
+484
+00:31:08,333 --> 00:31:11,636
+This is Pull!, which means forced pulls.
+
+485
+00:31:11,636 --> 00:31:15,673
+Whenever I move away from a block
+like here, I must pull it with me.
+
+486
+00:31:15,740 --> 00:31:20,378
+That lets you build
+this kind of one way gadget, A diode.
+
+487
+00:31:20,445 --> 00:31:23,348
+This is actually from a previous version
+of this class.
+
+488
+00:31:23,348 --> 00:31:25,216
+And let me get the URL out of the way.
+
+489
+00:31:25,216 --> 00:31:28,253
+You can play these games interactively,
+
+490
+00:31:28,386 --> 00:31:32,457
+these puzzles interactively,
+if you click on the links
+
+491
+00:31:32,523 --> 00:31:35,526
+at the bottom of your screen
+below the slide.
+
+492
+00:31:35,727 --> 00:31:38,730
+So here is a self-closing door.
+
+493
+00:31:38,930 --> 00:31:41,032
+This is the main self-closing mechanism.
+
+494
+00:31:41,032 --> 00:31:45,270
+So we come through this diode
+and when we walk left, we pull this square
+
+495
+00:31:45,270 --> 00:31:49,107
+to the left, which prevents us
+from going down in the future
+
+496
+00:31:49,173 --> 00:31:52,644
+until we come to the
+open line and pull it back.
+
+497
+00:31:52,710 --> 00:31:55,780
+So there's a self-closing door
+and just a few pictures
+
+498
+00:31:55,780 --> 00:31:59,584
+to prove
+that this game is PSPACE-complete.
+
+499
+00:31:59,684 --> 00:32:01,853
+Here is Legend of Zelda:
+Breath of the Wild.
+
+500
+00:32:01,853 --> 00:32:03,855
+This also applies to Tears of the Kingdom.
+
+501
+00:32:03,855 --> 00:32:06,257
+If you have platforms
+that you can move around within
+
+502
+00:32:06,257 --> 00:32:10,161
+some limited range, then in particular,
+this is from the actual game.
+
+503
+00:32:10,228 --> 00:32:14,899
+You can move them around
+to get to a desired location.
+
+504
+00:32:14,966 --> 00:32:18,536
+But that's so here's that lower
+part of the level
+
+505
+00:32:18,636 --> 00:32:20,505
+in order to traverse,
+you come through here,
+
+506
+00:32:20,505 --> 00:32:23,041
+you pick this guy up
+and you move it over there.
+
+507
+00:32:23,041 --> 00:32:26,644
+But then if you leave here, you can't
+reset this back to the beginning.
+
+508
+00:32:26,878 --> 00:32:28,313
+So it's a self-closing door.
+
+509
+00:32:28,313 --> 00:32:30,782
+And the way to reopen
+it is to come through some other path
+
+510
+00:32:30,782 --> 00:32:34,519
+-- this is not in the actual level
+-- and pick this up and move it over.
+
+511
+00:32:34,519 --> 00:32:36,521
+Because you have a remote control.
+
+512
+00:32:36,521 --> 00:32:37,155
+You might not be able
+
+513
+00:32:37,155 --> 00:32:41,693
+to get through this barrier,
+but you're able to move the platform over.
+
+514
+00:32:41,759 --> 00:32:45,330
+So we got a self-closing
+door. So PSPACE-
+complete.
+
+515
+00:32:45,430 --> 00:32:46,731
+You can also
+
+516
+00:32:46,731 --> 00:32:50,568
+apply this self-closing door framework
+to a whole bunch of 3D
+
+517
+00:32:50,568 --> 00:32:54,839
+Mario games from Super Mario
+64 to Super Mario Odyssey
+
+518
+00:32:54,939 --> 00:32:59,210
+and even Captain Toad, which is sort of a
+Mario game, a Mario inspired game.
+
+519
+00:32:59,210 --> 00:33:02,981
+Here is the Super Mario
+64 [reduction] implemented.
+
+520
+00:33:03,047 --> 00:33:07,652
+So we have this Boo
+and some quicksand/lava that,
+
+521
+00:33:07,652 --> 00:33:10,989
+if you touch, you die.
+
+522
+00:33:11,055 --> 00:33:12,890
+And so you can do this
+
+523
+00:33:12,890 --> 00:33:16,094
+crazy mechanic
+of pushing the Boo to the other side.
+
+524
+00:33:16,094 --> 00:33:19,097
+So we're moving this Boo up here
+
+525
+00:33:19,097 --> 00:33:23,434
+and then you can actually push it
+through a wall
+
+526
+00:33:23,534 --> 00:33:27,205
+and that sets the Boo for later
+traversal down this way.
+
+527
+00:33:27,305 --> 00:33:29,540
+So this is actually
+a symmetric self-closing door.
+
+528
+00:33:29,540 --> 00:33:33,077
+If if the Boo's here, you can do this
+reversal and then you leave here.
+
+529
+00:33:33,244 --> 00:33:35,980
+You can't actually walk
+through the door normally.
+
+530
+00:33:36,047 --> 00:33:38,983
+But then, if the Boo’s up here,
+then you can take it back.
+
+531
+00:33:38,983 --> 00:33:42,920
+So one of these two traversals
+would be possible and it switches the,
+
+532
+00:33:43,021 --> 00:33:46,691
+uh, which one is available for next time.
+
+533
+00:33:46,758 --> 00:33:49,327
+Super Mario Odyssey for fun.
+
+534
+00:33:49,327 --> 00:33:53,264
+This is a game mostly about alien hats,
+but it also has fun characters
+
+535
+00:33:53,264 --> 00:33:58,302
+like the Jaxi, which is a cat
+you jump on and you can ride it
+
+536
+00:33:58,302 --> 00:34:02,140
+until you hit some bump
+
+537
+00:34:02,206 --> 00:34:04,942
+and then it stops and stays there.
+
+538
+00:34:04,942 --> 00:34:07,812
+So this is going to keep track
+of which state we're in.
+
+539
+00:34:07,812 --> 00:34:09,814
+We can ride it to the right.
+
+540
+00:34:09,814 --> 00:34:12,583
+And this purple stuff is poison,
+it kills you.
+
+541
+00:34:12,583 --> 00:34:15,987
+And so the idea is if you come in here
+and you jump on this A button,
+
+542
+00:34:15,987 --> 00:34:18,990
+it will create this platform
+for a few seconds.
+
+543
+00:34:18,990 --> 00:34:23,694
+Then you ride the Jaxi over and you cross
+
+544
+00:34:23,795 --> 00:34:25,163
+and then the Jaxi is on the right.
+
+545
+00:34:25,163 --> 00:34:29,000
+And so you won't be able to do that again,
+assuming this is too far to jump.
+
+546
+00:34:29,067 --> 00:34:33,137
+But later you can come with B, create
+that platform, and ride the Jaxi over.
+
+547
+00:34:33,137 --> 00:34:35,807
+So this is again
+a symmetric self-closing door.
+
+548
+00:34:35,807 --> 00:34:40,311
+So very useful gadgets for proving games
+PSPACE-complete.
+
+549
+00:34:40,411 --> 00:34:42,880
+All right.
+
+550
+00:34:42,880 --> 00:34:46,117
+So let me tell you a cool
+
+551
+00:34:46,117 --> 00:35:02,333
+simulation result.
+
+552
+00:35:02,400 --> 00:35:08,439
+It turns out if you take
+any one of the door
+
+553
+00:35:08,506 --> 00:35:11,809
+gadgets -- door, self-closing door,
+symmetric self-closing door
+
+554
+00:35:11,909 --> 00:35:15,680
+-- each of them can simulate
+every other gadget in the universe.
+
+555
+00:35:15,780 --> 00:35:19,150
+So they are, in some sense,
+the most powerful gadgets,
+
+556
+00:35:19,217 --> 00:35:23,020
+even though they have just a few states
+and tunnels.
+
+557
+00:35:23,087 --> 00:35:25,289
+This example I showed you
+
+558
+00:35:25,289 --> 00:35:28,693
+of a system of gadgets before
+is actually a proof of this theorem.
+
+559
+00:35:28,693 --> 00:35:30,261
+But I won't cover this form.
+
+560
+00:35:30,261 --> 00:35:32,463
+I'm going to show you a simpler one
+
+561
+00:35:32,463 --> 00:35:34,465
+that's kind of nice
+using self-closing doors.
+
+562
+00:35:34,465 --> 00:35:36,067
+And separately,
+you can show that every door
+
+563
+00:35:36,067 --> 00:35:37,702
+can simulate a self-closing door.
+
+564
+00:35:37,702 --> 00:35:39,971
+Now we're going use a self-closing door
+to simulate anything.
+
+565
+00:35:39,971 --> 00:35:42,673
+But first we're going to simulate
+a self-closing door
+
+566
+00:35:42,673 --> 00:35:45,676
+with a bunch of open lines
+and a bunch of self-close lines.
+
+567
+00:35:45,910 --> 00:35:48,746
+And this is the picture
+to make that happen.
+
+568
+00:35:48,746 --> 00:35:49,480
+So we're...
+
+569
+00:35:49,480 --> 00:35:52,483
+for a self-closing door,
+we're going to use green for open
+
+570
+00:35:52,550 --> 00:35:55,419
+and purple with an X through it to say,
+if you traverse this,
+
+571
+00:35:55,419 --> 00:36:00,525
+it will self-destruct,
+it will close until you open it again.
+
+572
+00:36:00,591 --> 00:36:02,260
+If it's dashed, it's currently closed.
+
+573
+00:36:02,260 --> 00:36:06,697
+So all these gadgets are currently closed
+and this central one is going to be
+
+574
+00:36:06,898 --> 00:36:10,401
+controlling the overall state of the door,
+whether it's open.
+
+575
+00:36:10,501 --> 00:36:12,069
+So currently it's open.
+
+576
+00:36:12,069 --> 00:36:16,707
+So let's say we came through this location
+of corresponds to this one
+
+577
+00:36:16,807 --> 00:36:20,178
+and we open this door.
+
+578
+00:36:20,244 --> 00:36:24,415
+So one, two, three and four
+are all closed, except now we open three
+
+579
+00:36:24,515 --> 00:36:27,585
+and now we come through here,
+we self-close door 0.
+
+580
+00:36:27,585 --> 00:36:31,289
+So we're going to switch from the open
+state to the closed state down here.
+
+581
+00:36:31,389 --> 00:36:32,557
+And now where can we go?
+
+582
+00:36:32,557 --> 00:36:36,561
+We could try to go exit
+through this location, but this is closed.
+
+583
+00:36:36,627 --> 00:36:38,696
+Only one of these doors will be open.
+
+584
+00:36:38,696 --> 00:36:42,500
+And when we when we traverse it here,
+it will self-close,
+
+585
+00:36:42,567 --> 00:36:45,937
+restoring us to the state where [doors]
+1, 2, 3, and 4 are all closed.
+
+586
+00:36:46,003 --> 00:36:49,874
+But we exit at the location
+that corresponds to where we entered.
+
+587
+00:36:49,941 --> 00:36:53,911
+So this is a sort of multiplexer
+for self-closing doors.
+
+588
+00:36:53,911 --> 00:36:57,048
+And now we're going to use that
+to build an arbitrary gadget.
+
+589
+00:36:57,048 --> 00:37:02,753
+Say this three-state
+three-location four-transition gadget.
+
+590
+00:37:02,853 --> 00:37:03,454
+So we're going to
+
+591
+00:37:03,454 --> 00:37:06,457
+take one self-closing door for each state
+
+592
+00:37:06,591 --> 00:37:09,660
+and then we're going to have our locations
+-- A, B, C -- down here,
+
+593
+00:37:09,894 --> 00:37:12,496
+and we're going to take each traversal
+
+594
+00:37:12,496 --> 00:37:14,899
+one by one and just sort of implement it
+in the obvious way.
+
+595
+00:37:14,899 --> 00:37:19,136
+This traversal says that-- sorry,
+this transition says that in state
+
+596
+00:37:19,136 --> 00:37:24,308
+1 we can go from A to B
+and we end up in state 3.
+
+597
+00:37:24,375 --> 00:37:28,579
+So state 1 is here,
+we're going to start at A, location
+
+598
+00:37:28,579 --> 00:37:32,883
+A, and self-close 1 -- that's
+only going to be possible if 1 was open.
+
+599
+00:37:32,950 --> 00:37:35,820
+I didn't mention, but exactly one of these
+or at most
+
+600
+00:37:35,820 --> 00:37:38,022
+one of these [doors]
+is going to be open at any moment.
+
+601
+00:37:38,022 --> 00:37:39,624
+That's what state we're in.
+
+602
+00:37:39,624 --> 00:37:42,360
+So if we self-close 1,
+that means simultaneously
+
+603
+00:37:42,360 --> 00:37:45,329
+that we were just in state 1,
+but now we're no longer in that state.
+
+604
+00:37:45,329 --> 00:37:49,367
+And then we're going to route that
+to an open tunnel for state 3,
+
+605
+00:37:49,367 --> 00:37:51,002
+because that's
+what we want to transition to.
+
+606
+00:37:51,002 --> 00:37:53,170
+And then we connect that to location B.
+
+607
+00:37:53,170 --> 00:37:55,206
+And we've implemented that transition.
+
+608
+00:37:55,206 --> 00:37:59,877
+And we do that repeatedly for each
+
+609
+00:37:59,977 --> 00:38:01,012
+transition
+
+610
+00:38:01,012 --> 00:38:03,681
+and they join together at the locations
+here.
+
+611
+00:38:03,681 --> 00:38:08,252
+But that implements exactly the behavior
+that you want from the gadget,
+
+612
+00:38:08,319 --> 00:38:10,421
+because when you're at the same location,
+you can do
+
+613
+00:38:10,421 --> 00:38:13,424
+those transitions.
+
+614
+00:38:13,658 --> 00:38:14,558
+Cool.
+
+615
+00:38:14,558 --> 00:38:15,359
+So that's...
+
+616
+00:38:15,359 --> 00:38:17,862
+Now, of course, when we do this,
+we get these self-closing doors
+
+617
+00:38:17,862 --> 00:38:19,530
+with lots of open lines and close lines.
+
+618
+00:38:19,530 --> 00:38:23,367
+That's why I needed to build that first.
+
+619
+00:38:23,467 --> 00:38:26,203
+In general, there are going to be
+crossings in this diagram
+
+620
+00:38:26,203 --> 00:38:27,605
+and I'll just wave my hands and say
+
+621
+00:38:27,605 --> 00:38:29,774
+there's a crossover
+gadget using self-closing doors.
+
+622
+00:38:29,774 --> 00:38:33,144
+But it's fairly involved -- not what
+
+623
+00:38:33,144 --> 00:38:36,213
+I want to go through today
+-- but it's possible.
+
+624
+00:38:36,213 --> 00:38:40,885
+And so you get planarity too.
+
+625
+00:38:40,885 --> 00:38:43,054
+Cool.
+
+626
+00:38:43,054 --> 00:38:46,023
+We call the door
+-- all these door gadgets --
+
+627
+00:38:46,023 --> 00:38:49,894
+universal
+when they can simulate everything.
+
+628
+00:38:49,894 --> 00:39:31,569
+Cool.
+
+629
+00:39:31,669 --> 00:39:32,169
+This just
+
+630
+00:39:32,169 --> 00:39:35,373
+says if you can do a transition,
+you can immediately undo it.
+
+631
+00:39:35,373 --> 00:39:38,676
+If in state q, you can get to state r,
+
+632
+00:39:38,676 --> 00:39:42,980
+via a to b, then in state r,
+you can go from b to a
+
+633
+00:39:42,980 --> 00:39:47,485
+and you get back to state q
+or you can get back to state q.
+
+634
+00:39:47,551 --> 00:39:48,786
+Pretty natural notion.
+
+635
+00:39:48,786 --> 00:39:51,889
+We were originally thinking about this
+in the context of games
+
+636
+00:39:51,889 --> 00:39:54,892
+where you can push and pull blocks
+where every move is reversible.
+
+637
+00:39:54,992 --> 00:39:57,328
+There are lots of video games
+where your moves are reversible.
+
+638
+00:39:57,328 --> 00:40:00,331
+It's nice for puzzle games
+because then you can never get stuck,
+
+639
+00:40:00,531 --> 00:40:02,700
+though obviously not all games work
+that way.
+
+640
+00:40:02,700 --> 00:40:06,537
+And I believe all the gadgets we've seen
+so far are not reversible.
+
+641
+00:40:06,604 --> 00:40:08,873
+So here is a gadget that is reversible
+
+642
+00:40:08,873 --> 00:40:11,976
+and it's an important
+one called the Locking 2-Toggle.
+
+643
+00:40:12,076 --> 00:40:13,644
+It has three states.
+
+644
+00:40:13,644 --> 00:40:17,181
+These dotted lines are just for intuition
+and they don't mean anything.
+
+645
+00:40:17,181 --> 00:40:19,150
+In this diagram.
+
+646
+00:40:19,250 --> 00:40:20,184
+There is a neutral
+
+647
+00:40:20,184 --> 00:40:24,088
+state where two reversals are possible,
+these two arrows.
+
+648
+00:40:24,188 --> 00:40:25,055
+And here let's...
+
+649
+00:40:25,055 --> 00:40:26,624
+I have an animation of this one.
+
+650
+00:40:26,624 --> 00:40:30,928
+If you traverse one of these tunnels,
+that tunnel reverses direction
+
+651
+00:40:31,028 --> 00:40:32,563
+and the other one disappears.
+
+652
+00:40:32,563 --> 00:40:34,865
+So the only thing you can do
+from this state
+
+653
+00:40:34,865 --> 00:40:38,569
+actually is the reverse transition,
+which is go back across that line.
+
+654
+00:40:38,569 --> 00:40:40,704
+Then you're back to the neutral state
+
+655
+00:40:40,704 --> 00:40:43,707
+and you can choose whichever
+one of these you want to do.
+
+656
+00:40:43,707 --> 00:40:47,845
+It is sort of locking in whether the top
+or the bottom was the last thing traversed
+
+657
+00:40:47,845 --> 00:40:51,048
+from left to right, until you reset it
+and then you're back
+
+658
+00:40:51,048 --> 00:40:54,051
+to the unset state.
+
+659
+00:40:54,185 --> 00:40:57,421
+So that's a locking 2-toggle.
+
+660
+00:40:57,421 --> 00:41:14,371
+And it turns out to be important
+in the following sense.
+
+661
+00:41:14,472 --> 00:41:19,543
+So we're going to characterize
+
+662
+00:41:19,710 --> 00:41:23,247
+exactly
+when certain a set of gadgets are...
+
+663
+00:41:23,314 --> 00:41:28,185
+have a hard reachability problem,
+
+664
+00:41:28,252 --> 00:41:33,791
+which is given a set of
+
+665
+00:41:33,891 --> 00:41:39,230
+reversible
+
+666
+00:41:39,296 --> 00:41:44,635
+deterministic
+
+667
+00:41:44,702 --> 00:41:48,405
+tunnel gadgets.
+
+668
+00:41:48,472 --> 00:41:50,808
+So three requirements
+
+669
+00:41:50,808 --> 00:41:53,978
+on the gadgets here,
+but the main one is reversibility.
+
+670
+00:41:53,978 --> 00:41:56,113
+Then we're also going to assume
+deterministic
+
+671
+00:41:56,113 --> 00:41:59,550
+and that all of the traversals
+
+672
+00:41:59,550 --> 00:42:04,455
+are according to tunnels.
+
+673
+00:42:04,522 --> 00:42:07,992
+Then we have
+
+674
+00:42:08,058 --> 00:42:13,030
+reachability
+
+675
+00:42:13,130 --> 00:42:19,136
+is PSPACE-complete if and only if
+
+676
+00:42:19,203 --> 00:42:23,941
+I give you a few equivalent things.
+
+677
+00:42:24,008 --> 00:42:27,144
+So the first one is that it's equivalent
+to planar
+
+678
+00:42:27,144 --> 00:42:32,383
+reachability being PSPACE-complete.
+
+679
+00:42:32,449 --> 00:42:35,819
+So in this setting,
+
+680
+00:42:35,886 --> 00:42:38,489
+you never need crossovers,
+or you always get crossovers
+
+681
+00:42:38,489 --> 00:42:42,059
+for free: if your problem
+is PSPACE-complete, then so is...
+
+682
+00:42:42,059 --> 00:42:45,863
+if reachability is PSPACE-complete,
+so is planar reachability.
+
+683
+00:42:45,930 --> 00:42:53,370
+And the next one
+
+684
+00:42:53,470 --> 00:42:56,807
+is that some gadget in your set
+
+685
+00:42:56,874 --> 00:42:58,042
+has interacting
+
+686
+00:42:58,042 --> 00:43:08,052
+tunnels.
+
+687
+00:43:08,118 --> 00:43:24,134
+I think go vertical here.
+
+688
+00:43:24,201 --> 00:43:26,203
+So interacting tunnels
+
+689
+00:43:26,203 --> 00:43:31,408
+means that traversing some tunnel
+
+690
+00:43:31,508 --> 00:43:34,445
+affects
+the traversability of another tunnel.
+
+691
+00:43:34,445 --> 00:43:42,553
+It’s important
+that it's a different tunnel.
+
+692
+00:43:42,620 --> 00:43:44,488
+So it might increase or decrease
+
+693
+00:43:44,488 --> 00:43:48,492
+the traversability of some tunnel
+in some other direction,
+
+694
+00:43:48,559 --> 00:43:59,303
+but that's all you need.
+
+695
+00:43:59,370 --> 00:44:00,037
+So this is great.
+
+696
+00:44:00,037 --> 00:44:04,675
+If I give you a gadget that is reversible,
+deterministic, and tunnel,
+
+697
+00:44:04,742 --> 00:44:07,778
+you can just check every possible
+traversal, see in every state,
+
+698
+00:44:07,945 --> 00:44:09,446
+see whether any one of them
+
+699
+00:44:09,446 --> 00:44:13,050
+affects traversability of another tunnel
+via that transition.
+
+700
+00:44:13,150 --> 00:44:18,389
+If so, you've got interacting tunnels
+and your problem is PSPACE-complete.
+
+701
+00:44:18,455 --> 00:44:19,923
+Great.
+
+702
+00:44:19,923 --> 00:44:23,293
+But there's another cool characterization
+
+703
+00:44:23,360 --> 00:44:27,131
+which is, it’s also the case,
+if you ever have gadgets
+
+704
+00:44:27,131 --> 00:44:30,834
+that are hard, they simulate
+
+705
+00:44:30,901 --> 00:44:34,405
+a locking 2-toggle.
+
+706
+00:44:34,471 --> 00:44:40,844
+So this gadget is in some
+sense the simplest gadget
+
+707
+00:44:40,911 --> 00:44:42,546
+that is PSPACE-complete
+
+708
+00:44:42,546 --> 00:44:46,483
+within this family of reversible,
+deterministic, tunnel gadgets.
+
+709
+00:44:46,550 --> 00:44:48,686
+So in some sense, locking 2-toggle
+
+710
+00:44:48,686 --> 00:44:52,156
+is the only thing you need to think
+about building in your video game.
+
+711
+00:44:52,222 --> 00:44:53,090
+In practice,
+
+712
+00:44:53,090 --> 00:44:57,194
+other gadgets might be easier to build
+or depending on the game you're doing.
+
+713
+00:44:57,194 --> 00:44:59,396
+But in a certain sense,
+what this is showing is
+
+714
+00:44:59,396 --> 00:45:02,499
+whatever you can build,
+it can also build a locking 2-toggle.
+
+715
+00:45:02,499 --> 00:45:04,034
+So you could have also built it.
+
+716
+00:45:04,034 --> 00:45:09,406
+It just might be,
+you know, a constant factor, larger.
+
+717
+00:45:09,473 --> 00:45:10,274
+Cool.
+
+718
+00:45:10,274 --> 00:45:12,543
+So this is when you’re PSPACE-complete.
+
+719
+00:45:12,543 --> 00:45:17,648
+If you're not PSPACE-complete, you are
+
+720
+00:45:17,748 --> 00:45:19,917
+polynomial.
+
+721
+00:45:19,917 --> 00:45:21,685
+In fact,
+
+722
+00:45:21,685 --> 00:45:25,355
+you're in a smaller class, which is called
+nondeterministic log space,
+
+723
+00:45:25,355 --> 00:45:28,358
+which we won't talk about much
+in this class, but it's basically
+
+724
+00:45:28,358 --> 00:45:31,862
+what you can do with shortest paths.
+
+725
+00:45:31,862 --> 00:45:34,098
+Cool.
+
+726
+00:45:34,098 --> 00:45:37,901
+So I want to sketch a proof of this
+theorem because I feel like it's pretty
+
+727
+00:45:37,901 --> 00:45:41,939
+core to how you get to understand
+large families of gadgets.
+
+728
+00:45:42,039 --> 00:45:45,676
+We're taking any reversible
+deterministic gadget and use...
+
+729
+00:45:45,676 --> 00:45:47,277
+that's hard, and using it...
+
+730
+00:45:47,277 --> 00:45:50,547
+or that has interacting tunnels
+-- that's the cleaner thing to say
+
+731
+00:45:50,647 --> 00:45:53,650
+-- any reversible deterministic gadget
+that has interacting tunnels.
+
+732
+00:45:53,851 --> 00:45:57,421
+We're going to be able to convert it;
+we're going to be able to simulate
+
+733
+00:45:57,421 --> 00:46:01,391
+a locking 2-toggle with it. So
+
+734
+00:46:01,458 --> 00:46:03,560
+let's do it.
+
+735
+00:46:03,560 --> 00:46:07,598
+This is a picture of a generic,
+in some sense
+
+736
+00:46:07,698 --> 00:46:11,335
+reversible, deterministic, tunnel gadget
+that has interacting tunnels.
+
+737
+00:46:11,335 --> 00:46:15,439
+So the idea is that
+there's some transition, say in state
+
+738
+00:46:15,439 --> 00:46:20,010
+1, we do this tunnel traversal
+and we go to state 2.
+
+739
+00:46:20,010 --> 00:46:26,150
+And before this arrow was not there,
+and after, this arrow is there.
+
+740
+00:46:26,150 --> 00:46:31,955
+This is generic because we know that,
+if you can do this
+
+741
+00:46:32,122 --> 00:46:36,160
+transition, let's say to state 2,
+we know that the reverse is then possible.
+
+742
+00:46:36,326 --> 00:46:41,565
+So from here you can do two, then
+from here you can do you can go to one.
+
+743
+00:46:41,632 --> 00:46:44,635
+And so if you think of it
+going from here to here,
+
+744
+00:46:44,802 --> 00:46:47,271
+you are adding
+traversability of this tunnel.
+
+745
+00:46:47,271 --> 00:46:49,907
+But if you think of it
+going from here to here,
+
+746
+00:46:49,907 --> 00:46:52,943
+you are removing
+the traversability of this tunnel.
+
+747
+00:46:52,943 --> 00:46:57,748
+So just by relabeling one or two, this is
+the only this must happen somewhere.
+
+748
+00:46:57,848 --> 00:47:00,851
+Now, the other stuff,
+the empty arrowheads, the question marks,
+
+749
+00:47:01,051 --> 00:47:03,086
+we don't know whether this traversal
+is possible or not.
+
+750
+00:47:03,086 --> 00:47:05,756
+There might also be other tunnels.
+
+751
+00:47:05,823 --> 00:47:08,959
+And we're putting question marks to say
+we don't know what state happens there
+
+752
+00:47:08,959 --> 00:47:13,230
+or even whether it's possible,
+but this must exist within your gadget.
+
+753
+00:47:13,297 --> 00:47:16,533
+So now I'm going to use this
+to build a locking 2-toggle.
+
+754
+00:47:16,633 --> 00:47:18,368
+First, we're going to build...
+
+755
+00:47:18,368 --> 00:47:20,537
+we're going to split into two cases.
+
+756
+00:47:20,537 --> 00:47:24,708
+What I'd really like is just a directed
+edge, an edge that you can't
+
+757
+00:47:24,708 --> 00:47:28,946
+traverse in some direction, but
+you can traverse in the other direction.
+
+758
+00:47:29,012 --> 00:47:32,182
+Okay, so one possibility
+is that exists already in the gadget.
+
+759
+00:47:32,349 --> 00:47:35,586
+For example,
+maybe this empty arrowhead isn't there,
+
+760
+00:47:35,686 --> 00:47:38,155
+then here's a directed edge
+and just kind of ignore
+
+761
+00:47:38,155 --> 00:47:42,092
+the rest of the gadget and say, here's
+the directed edge in this state right now.
+
+762
+00:47:42,192 --> 00:47:43,460
+You can't go this way.
+
+763
+00:47:43,460 --> 00:47:45,963
+But you can go this way. After that,
+who knows what happens?
+
+764
+00:47:45,963 --> 00:47:48,732
+But initially it's like that.
+
+765
+00:47:48,732 --> 00:47:52,336
+Or, that's not in the gadget already.
+
+766
+00:47:52,402 --> 00:47:55,339
+Then we know that,
+if I have this arrow to the right,
+
+767
+00:47:55,339 --> 00:47:58,008
+there must also be an arrow to the left;
+otherwise I had a directed edge.
+
+768
+00:47:58,008 --> 00:48:00,177
+So I can fill in this arrow,
+
+769
+00:48:00,177 --> 00:48:03,881
+I can fill in this arrow,
+fill in this arrow, and erase this arrow.
+
+770
+00:48:03,981 --> 00:48:05,449
+Otherwise
+I would have had a directed edge.
+
+771
+00:48:05,449 --> 00:48:08,752
+So my picture now
+looks like it's a little more solid.
+
+772
+00:48:08,819 --> 00:48:11,388
+I know what transitions are possible
+among these tunnels.
+
+773
+00:48:11,388 --> 00:48:13,891
+I don't know what states
+some of them go to.
+
+774
+00:48:13,891 --> 00:48:14,224
+Okay.
+
+775
+00:48:14,224 --> 00:48:21,798
+But we can take that gadget and just glue
+together two of the locations and say
+
+776
+00:48:21,865 --> 00:48:24,434
+from here to here is a directed edge.
+
+777
+00:48:24,434 --> 00:48:26,870
+First, you see you can't enter this way.
+
+778
+00:48:26,870 --> 00:48:29,840
+But I claim
+I can go through this way and get out here
+
+779
+00:48:29,973 --> 00:48:33,210
+because I know that
+if I go across this way, I get to state 2.
+
+780
+00:48:33,277 --> 00:48:37,180
+And then I don't know what state this goes
+to, but it is possible to traverse here.
+
+781
+00:48:37,414 --> 00:48:40,050
+So now this
+this gadget is in some unknown state,
+
+782
+00:48:40,050 --> 00:48:42,853
+but at least it was possible
+to go from here to here once.
+
+783
+00:48:42,853 --> 00:48:46,223
+So I'm thinking that that is a directed
+edge.
+
+784
+00:48:46,290 --> 00:48:46,590
+Okay.
+
+785
+00:48:46,590 --> 00:48:49,826
+Now we built directed edges, we're
+going to build what's called a 1-toggle.
+
+786
+00:48:49,826 --> 00:48:55,666
+1-toggle is this gadget: very simple state
+diagram, two states, one tunnel.
+
+787
+00:48:55,732 --> 00:48:57,668
+Each time you traverse the tunnel,
+
+788
+00:48:57,668 --> 00:49:00,837
+it flips states
+and also the tunnel flips directions.
+
+789
+00:49:01,004 --> 00:49:03,440
+So in the left state,
+you can only go right to left.
+
+790
+00:49:03,440 --> 00:49:07,544
+When you do so, you enter the right state
+from where you can only go left to right.
+
+791
+00:49:07,544 --> 00:49:11,949
+This is like one
+half of a locking 2-toggle,
+
+792
+00:49:12,049 --> 00:49:14,484
+without any locking -- hence the name.
+
+793
+00:49:14,484 --> 00:49:16,019
+We started with 1-toggles,
+
+794
+00:49:16,019 --> 00:49:19,723
+then we built 2-toggles, and then locking
+2-toggles, in the history.
+
+795
+00:49:19,790 --> 00:49:22,559
+Okay,
+so I claim if I take my directed edge
+
+796
+00:49:22,559 --> 00:49:26,430
+gadget, which you can think of this way,
+where in one state
+
+797
+00:49:26,530 --> 00:49:31,768
+I can't go here, but I can go across here
+and enter some other state,
+
+798
+00:49:31,768 --> 00:49:36,239
+which I don't know a lot about, but I do
+know that I can do the reverse traversal.
+
+799
+00:49:36,306 --> 00:49:38,976
+And the other thing, I have no idea.
+
+800
+00:49:39,076 --> 00:49:41,845
+Okay,
+So I'm going to take two of these gadgets,
+
+801
+00:49:41,845 --> 00:49:45,749
+one in this first state
+and one in this second state,
+
+802
+00:49:45,749 --> 00:49:49,553
+but reflected, and glue them together
+like this.
+
+803
+00:49:49,553 --> 00:49:51,655
+And I claim this is a 1-toggle.
+
+804
+00:49:51,655 --> 00:49:52,756
+Let's see why.
+
+805
+00:49:52,756 --> 00:49:56,293
+First, if I try to go from right to left,
+I get stuck.
+
+806
+00:49:56,360 --> 00:49:59,629
+So I'd have to unwind
+and reset everything.
+
+807
+00:49:59,696 --> 00:50:01,932
+But if I go from left to right
+
+808
+00:50:01,932 --> 00:50:04,935
+when I traverse here,
+I switch to the other state for this guy.
+
+809
+00:50:04,935 --> 00:50:07,838
+I can go back
+
+810
+00:50:07,838 --> 00:50:11,575
+and then if I continue,
+
+811
+00:50:11,641 --> 00:50:15,979
+I go to the other state for this guy,
+which is this one flipped.
+
+812
+00:50:15,979 --> 00:50:19,883
+And so now you see that
+it's impossible to go this way.
+
+813
+00:50:19,950 --> 00:50:22,452
+So the next thing I must do
+is go from right to left.
+
+814
+00:50:22,452 --> 00:50:24,588
+So it's exactly a 1-toggle.
+
+815
+00:50:24,588 --> 00:50:25,789
+So that's kind of cool.
+
+816
+00:50:25,789 --> 00:50:27,057
+Now that we have 1-toggles...
+
+817
+00:50:27,057 --> 00:50:29,793
+Here, I've repeated the directed edge
+construction, the 1-toggle construction.
+
+818
+00:50:29,793 --> 00:50:32,796
+Here are my 1-toggles.
+
+819
+00:50:32,796 --> 00:50:37,200
+I'm going to glue two of those together
+with two copies of the original gadget
+
+820
+00:50:37,267 --> 00:50:38,235
+here and here.
+
+821
+00:50:38,235 --> 00:50:43,740
+This one is rotated 180°.
+
+822
+00:50:43,840 --> 00:50:44,574
+This is fun.
+
+823
+00:50:44,574 --> 00:50:50,047
+So the claim is this is a locking 2-toggle
+in the neutral state.
+
+824
+00:50:50,147 --> 00:50:55,185
+One thing to notice is
+I cannot go this way
+
+825
+00:50:55,252 --> 00:51:00,023
+because of this 1-toggle, and I cannot go
+this way because of this 1-toggle.
+
+826
+00:51:00,090 --> 00:51:02,959
+There's two traversals
+possible: this one and this one.
+
+827
+00:51:02,959 --> 00:51:04,294
+And they are symmetric.
+
+828
+00:51:04,294 --> 00:51:05,929
+So let's do the bottom one.
+
+829
+00:51:05,929 --> 00:51:07,798
+First I go across here, I have...
+
+830
+00:51:07,798 --> 00:51:10,033
+I enter some weird state,
+which I don't know much about.
+
+831
+00:51:10,033 --> 00:51:13,070
+I do know that there's a return
+path, but that's about it.
+
+832
+00:51:13,136 --> 00:51:15,038
+Then I must go through this 1-toggle.
+
+833
+00:51:15,038 --> 00:51:18,475
+It does a 1-toggle thing,
+and then I go through this gadget.
+
+834
+00:51:18,475 --> 00:51:20,877
+It transitions to state 1, rotated 180°.
+
+835
+00:51:20,877 --> 00:51:23,313
+Check it’s this guy.
+
+836
+00:51:23,313 --> 00:51:25,182
+And now what can I do?
+
+837
+00:51:25,182 --> 00:51:29,052
+So now
+both of these toggles are pointing left
+
+838
+00:51:29,119 --> 00:51:34,257
+and I can't go this way.
+
+839
+00:51:34,324 --> 00:51:36,860
+I can't go this way
+because I know in this state
+
+840
+00:51:36,860 --> 00:51:38,695
+there is no arrow in this direction.
+
+841
+00:51:38,695 --> 00:51:44,134
+That's where we were kind of using
+that this arrow disappeared in the state.
+
+842
+00:51:44,234 --> 00:51:45,836
+So now I can't use the top line at all.
+
+843
+00:51:45,836 --> 00:51:46,903
+I'm locked.
+
+844
+00:51:46,903 --> 00:51:49,906
+I also can't go left or right
+on the bottom because of this one toggle.
+
+845
+00:51:49,906 --> 00:51:52,676
+The only thing I can do is unwind
+what I just did.
+
+846
+00:51:52,676 --> 00:51:54,911
+So that's a locking 2-toggle.
+
+847
+00:51:54,911 --> 00:51:55,445
+Pretty cool.
+
+848
+00:51:55,445 --> 00:51:58,815
+Okay.
+
+849
+00:51:58,882 --> 00:52:00,450
+Other fun fact is there...
+
+850
+00:52:00,450 --> 00:52:01,785
+in the planar setting,
+
+851
+00:52:01,785 --> 00:52:04,888
+there are many different
+locking 2-toggles.
+
+852
+00:52:04,955 --> 00:52:06,490
+There are three different
+locking 2-toggles:
+
+853
+00:52:06,490 --> 00:52:08,225
+parallel, antiparallel, crossing.
+
+854
+00:52:08,225 --> 00:52:09,659
+They can all simulate each other.
+
+855
+00:52:09,659 --> 00:52:11,728
+And then you can build a crossover.
+
+856
+00:52:11,728 --> 00:52:16,399
+And you also have to prove that locking
+2-toggles are PSPACE-hard.
+
+857
+00:52:16,466 --> 00:52:18,802
+But to do that you need a...
+
+858
+00:52:18,802 --> 00:52:20,670
+or one way to do it
+-- the way we normally do
+
+859
+00:52:20,670 --> 00:52:23,106
+it -- is the reduction
+from Nondeterministic Constraint Logic,
+
+860
+00:52:23,106 --> 00:52:24,641
+which is what
+we're covering in the next lecture.
+
+861
+00:52:24,641 --> 00:52:30,780
+So I will not show
+you a proof of that here.
+
+862
+00:52:30,847 --> 00:52:32,983
+Instead,
+I will show you some applications.
+
+863
+00:52:32,983 --> 00:52:35,886
+So here is another Legend of Zelda: Oracle
+
+864
+00:52:35,886 --> 00:52:39,523
+of Seasons mechanic, which is minecarts.
+
+865
+00:52:39,523 --> 00:52:43,193
+Minecarts are these things
+you can hop into and then you ride them
+
+866
+00:52:43,193 --> 00:52:46,696
+to till you get to a terminal, let's say.
+
+867
+00:52:46,696 --> 00:52:49,366
+And these green things
+you can only traverse
+
+868
+00:52:49,366 --> 00:52:52,002
+when you're in a minecart,
+you can't walk through them.
+
+869
+00:52:52,002 --> 00:52:54,971
+So in particular, it's impossible
+for Link to get through here.
+
+870
+00:52:54,971 --> 00:52:56,840
+It's impossible
+for Link to get through here.
+
+871
+00:52:56,840 --> 00:53:01,044
+So you have to enter initially
+through on this cart or in this one.
+
+872
+00:53:01,111 --> 00:53:02,779
+This is going to be a locking 2-toggle.
+
+873
+00:53:02,779 --> 00:53:07,150
+Let's say we go up this one
+and now we're able to control this switch
+
+874
+00:53:07,150 --> 00:53:10,153
+which controls how this track works.
+
+875
+00:53:10,353 --> 00:53:13,356
+But it's actually how we want it right
+now, let's say.
+
+876
+00:53:13,557 --> 00:53:15,959
+And we can go on this cart.
+
+877
+00:53:15,959 --> 00:53:18,828
+And when you're in a cart in this game,
+you get...
+
+878
+00:53:18,828 --> 00:53:20,030
+you have almost no control.
+
+879
+00:53:20,030 --> 00:53:23,200
+So you have to follow the cart
+till you get to the end.
+
+880
+00:53:23,300 --> 00:53:25,969
+Now we're here and we can exit.
+Let's say this way.
+
+881
+00:53:25,969 --> 00:53:28,538
+And the key thing is now
+this cart is out of the way.
+
+882
+00:53:28,538 --> 00:53:33,009
+So it's possible
+for Link to exit through here.
+
+883
+00:53:33,109 --> 00:53:35,679
+And of course you can reverse all that.
+
+884
+00:53:35,679 --> 00:53:38,848
+Or maybe not, of course,
+but you can reverse all that.
+
+885
+00:53:38,949 --> 00:53:42,519
+On the other hand, if while this cart...
+
+886
+00:53:42,619 --> 00:53:46,489
+while this cart is down here,
+if you tried to do the same thing from
+
+887
+00:53:46,489 --> 00:53:50,694
+the other side, you can switch the thing
+and take this cart here.
+
+888
+00:53:50,694 --> 00:53:52,963
+But you would bump into the existing cart.
+
+889
+00:53:52,963 --> 00:53:54,864
+And let's say that's not allowed.
+
+890
+00:53:54,864 --> 00:53:57,634
+It's a little more complicated
+in the actual game.
+
+891
+00:53:57,634 --> 00:54:01,071
+And so that means you
+if this is locked in the left state,
+
+892
+00:54:01,304 --> 00:54:02,772
+you can't transition into the right state.
+
+893
+00:54:02,772 --> 00:54:06,276
+until you've unwound
+and rode this cart back to here.
+
+894
+00:54:06,276 --> 00:54:08,878
+But then you have to leave
+the way you came.
+
+895
+00:54:08,878 --> 00:54:11,881
+So you get a locking 2-toggle.
+
+896
+00:54:11,948 --> 00:54:16,152
+Here is maybe a somewhat easier
+one to see -- well, it’s a messier gadget.
+
+897
+00:54:16,152 --> 00:54:19,956
+This is a different pulling blocks
+game called Pull?.
+
+898
+00:54:19,956 --> 00:54:21,258
+This is with optional pulls.
+
+899
+00:54:21,258 --> 00:54:23,026
+When you walk away from a block,
+
+900
+00:54:23,026 --> 00:54:26,096
+you can pull
+if you want to, but you don't have to.
+
+901
+00:54:26,162 --> 00:54:28,965
+This is trickier to show hard.
+
+902
+00:54:28,965 --> 00:54:31,401
+Here, for example, is a 1-toggle
+in that setting.
+
+903
+00:54:31,401 --> 00:54:33,536
+You have to pull those in order to...
+
+904
+00:54:33,536 --> 00:54:33,737
+I mean,
+
+905
+00:54:33,737 --> 00:54:35,138
+you don't have to from the game mechanics,
+
+906
+00:54:35,138 --> 00:54:37,674
+but you have to in order
+to get to the new location.
+
+907
+00:54:37,674 --> 00:54:38,708
+So you get a 1-toggle.
+
+908
+00:54:38,708 --> 00:54:42,979
+And out of a bunch of those 1-toggles,
+you can build almost a locking 2-toggle.
+
+909
+00:54:42,979 --> 00:54:48,218
+It starts up a little weird,
+but it's roughly a locking 2-toggle.
+
+910
+00:54:48,318 --> 00:54:51,021
+I've by now shown you a bunch of different
+pulling blocks results.
+
+911
+00:54:51,021 --> 00:54:53,957
+So for fun
+I thought I'd show you a table of
+
+912
+00:54:53,957 --> 00:54:56,426
+basically all the combinations
+you could imagine
+
+913
+00:54:56,426 --> 00:55:01,531
+of the strength of pulls,
+whether your pull is optional or required,
+
+914
+00:55:01,631 --> 00:55:04,200
+whether your game has gravity in it.
+
+915
+00:55:04,200 --> 00:55:10,040
+So, like, all of these reductions,
+for example, work even if the
+
+916
+00:55:10,040 --> 00:55:16,112
+the blocks are subject to gravity,
+because they're all supported from below.
+
+917
+00:55:16,212 --> 00:55:18,682
+But I am
+
+918
+00:55:18,682 --> 00:55:21,851
+I allowing fixed blocks
+in all of these games.
+
+919
+00:55:21,851 --> 00:55:26,489
+If you don't have fixed blocks,
+most of these problems are open.
+
+920
+00:55:26,556 --> 00:55:28,425
+So basically
+all of these are PSPACE-complete.
+
+921
+00:55:28,425 --> 00:55:32,629
+This is also from an earlier version
+of this class, a bunch of students
+
+922
+00:55:32,629 --> 00:55:37,167
+from that class,
+except there's one which is Push?,
+
+923
+00:55:37,167 --> 00:55:41,538
+so optional pulls, strength
+one, fixed blocks, gravity.
+
+924
+00:55:41,604 --> 00:55:46,242
+That combination we know is NP-hard;
+that was actually in Lecture 6.
+
+925
+00:55:46,309 --> 00:55:49,879
+But we don't know
+whether it's PSPACE-complete.
+
+926
+00:55:49,946 --> 00:55:53,183
+We do know it’s PSPACE-complete
+if you allow thin walls or strength 2
+
+927
+00:55:53,183 --> 00:55:53,717
+and so on.
+
+928
+00:55:53,717 --> 00:55:58,021
+So mostly settled for pulling blocks.
+
+929
+00:55:58,088 --> 00:56:03,193
+All right.
+
+930
+00:56:03,259 --> 00:56:04,861
+Any questions?
+
+931
+00:56:04,861 --> 00:56:07,263
+Take a little break.
+
+932
+00:56:07,263 --> 00:56:08,732
+So the next topic.
+
+933
+00:56:08,732 --> 00:56:09,199
+Oh, sorry.
+
+934
+00:56:09,199 --> 00:56:15,372
+I have one more example,
+which is pivoting robots.
+
+935
+00:56:15,438 --> 00:56:18,108
+These are robots that can spin around
+edges.
+
+936
+00:56:18,108 --> 00:56:19,609
+They exist in real life.
+
+937
+00:56:19,609 --> 00:56:20,777
+And you might want to know,
+
+938
+00:56:20,777 --> 00:56:24,547
+given two configurations of these robots,
+can I go from one to the other?
+
+939
+00:56:24,647 --> 00:56:27,417
+Can I reconfigure from one
+to the other while...
+
+940
+00:56:27,417 --> 00:56:30,887
+with the whole super robot
+remaining connected at all times?
+
+941
+00:56:30,887 --> 00:56:33,123
+This turns out to be PSPACE-complete via
+
+942
+00:56:33,123 --> 00:56:38,561
+a very beautiful
+but also complicated reduction from
+
+943
+00:56:38,628 --> 00:56:40,897
+using locking 2-toggles, building
+a locking 2-toggle.
+
+944
+00:56:40,897 --> 00:56:41,698
+Here even building
+
+945
+00:56:41,698 --> 00:56:44,734
+a branching hallway is kind of tricky,
+because you have to be sure
+
+946
+00:56:44,734 --> 00:56:48,738
+to maintain connectivity
+of all the robots, but it can be done.
+
+947
+00:56:48,805 --> 00:56:50,373
+Also for hexagons.
+
+948
+00:56:50,373 --> 00:56:55,612
+I think these makes
+some pretty nice diagrams for gadgets.
+
+949
+00:56:55,678 --> 00:56:57,680
+Okay.
+
+950
+00:56:57,680 --> 00:56:58,348
+Yeah.
+
+951
+00:56:58,348 --> 00:57:00,150
+You said we want to reconfiguration...
+
+952
+00:57:00,150 --> 00:57:03,186
+Reconfigure from one state to another.
+
+953
+00:57:03,253 --> 00:57:04,587
+Right, good question.
+
+954
+00:57:04,587 --> 00:57:05,955
+But here we’re just getting an agent.
+
+955
+00:57:05,955 --> 00:57:07,857
+Yes, so what I’ve...
+
+956
+00:57:07,857 --> 00:57:10,960
+everything I've been talking about
+so far has been about...
+
+957
+00:57:11,060 --> 00:57:14,397
+I think I erased it.
+
+958
+00:57:14,464 --> 00:57:16,366
+I've been talking about reachability
+
+959
+00:57:16,366 --> 00:57:19,369
+which is, can a robot
+get from one spot to another?
+
+960
+00:57:19,502 --> 00:57:22,505
+Here we're interested in reconfiguration
+
+961
+00:57:22,572 --> 00:57:25,008
+where we want to actually
+
+962
+00:57:25,008 --> 00:57:28,778
+we're given a target state
+for every gadget in the system.
+
+963
+00:57:28,878 --> 00:57:32,015
+Maybe not even a target location
+for the robot.
+
+964
+00:57:32,248 --> 00:57:33,550
+And there is a paper which I'm
+
+965
+00:57:33,550 --> 00:57:36,553
+not going to talk about much here,
+but I did want to mention
+
+966
+00:57:36,619 --> 00:57:39,889
+about reconfiguration
+instead of reachability
+
+967
+00:57:39,956 --> 00:57:42,091
+and often reachability
+
+968
+00:57:42,091 --> 00:57:46,329
+Often reconfiguration is also hard
+in particular for reversible gadgets.
+
+969
+00:57:46,329 --> 00:57:50,467
+It turns out,
+if the reachability problem is hard,
+
+970
+00:57:50,467 --> 00:57:52,202
+then reconfiguration is also hard.
+
+971
+00:57:52,202 --> 00:57:53,703
+Among other things.
+
+972
+00:57:53,703 --> 00:57:58,842
+Sometimes reconfiguration is easier,
+sometimes it's harder, than
+
+973
+00:57:58,908 --> 00:58:00,276
+reachability in general.
+
+974
+00:58:00,276 --> 00:58:03,680
+But reconfiguration with locking
+2-toggles is also hard.
+
+975
+00:58:03,680 --> 00:58:06,683
+And that's what we're using here.
+
+976
+00:58:06,850 --> 00:58:08,818
+Cool.
+
+977
+00:58:08,818 --> 00:58:10,854
+Thank you.
+
+978
+00:58:10,854 --> 00:58:13,890
+Uh, right.
+
+979
+00:58:14,090 --> 00:58:16,059
+One more thing.
+
+980
+00:58:16,059 --> 00:58:18,495
+In the reversible
+deterministic gadget setting,
+
+981
+00:58:18,495 --> 00:58:21,498
+here are some more gadgets
+for you to play with.
+
+982
+00:58:21,498 --> 00:58:24,334
+Of course, locking 2-toggle
+sort of the main one that matters.
+
+983
+00:58:24,334 --> 00:58:28,137
+But if you think about the two-state
+two-tunnel gadgets,
+
+984
+00:58:28,137 --> 00:58:31,741
+which does not include the locking
+2-toggle because that's three states,
+
+985
+00:58:31,841 --> 00:58:35,512
+there are only a few different things
+you could have on each tunnel.
+
+986
+00:58:35,578 --> 00:58:39,616
+You could have a toggle where every time
+you traverse it, it changes directions.
+
+987
+00:58:39,682 --> 00:58:41,484
+You could have an edge that does nothing.
+
+988
+00:58:41,484 --> 00:58:43,052
+Those aren't really interesting.
+
+989
+00:58:43,052 --> 00:58:44,587
+I would call those trivial.
+
+990
+00:58:44,587 --> 00:58:47,223
+It's always available or never available.
+
+991
+00:58:47,223 --> 00:58:51,194
+You could have a lock where -- this is
+like the traverse line of a door --
+
+992
+00:58:51,261 --> 00:58:54,531
+where in one state you can go through it
+and the other state you can't.
+
+993
+00:58:54,597 --> 00:58:57,433
+And you could have a tripwire
+where it's always traversable
+
+994
+00:58:57,433 --> 00:59:01,337
+and every time you traverse it,
+it changes the state of the gadget.
+
+995
+00:59:01,404 --> 00:59:05,975
+So you can take -- for two tunnels
+-- you take any pair of these.
+
+996
+00:59:06,075 --> 00:59:09,646
+It turns out every pair
+of nontrivial tunnels
+
+997
+00:59:09,646 --> 00:59:14,484
+is PSPACE-complete,
+in any of the planar orientations.
+
+998
+00:59:14,551 --> 00:59:19,088
+So in particular,
+there's a nice one called the 2-toggle.
+
+999
+00:59:19,088 --> 00:59:22,992
+This actually predates
+the locking 2-toggle, but
+
+1000
+00:59:22,992 --> 00:59:27,263
+it's in some sense, yeah, a little less
+fundamental than the locking 2-toggle.
+
+1001
+00:59:27,330 --> 00:59:29,399
+In fact,
+these gadgets can all simulate each other.
+
+1002
+00:59:29,399 --> 00:59:33,469
+So they're kind of equivalent
+in the hierarchy of gadgets.
+
+1003
+00:59:33,570 --> 00:59:35,438
+but are locking 2-toggle
+cannot simulate this.
+
+1004
+00:59:35,438 --> 00:59:38,441
+These are not as basic as the
+
+1005
+00:59:38,675 --> 00:59:41,678
+as a locking 2-toggle Okay.
+
+1006
+00:59:41,844 --> 00:59:46,849
+And an application of this, for example,
+is building a 2-toggle
+
+1007
+00:59:46,950 --> 00:59:51,187
+in another Oracle of Seasonss mechanic,
+which is these 4-spinners.
+
+1008
+00:59:51,187 --> 00:59:54,490
+A 4-spinner is in...
+is either blue or red.
+
+1009
+00:59:54,591 --> 00:59:57,594
+When it's blue,
+if you visit it, it traverses
+
+1010
+00:59:57,627 --> 01:00:00,930
+counterclockwise
+and then it switches to red.
+
+1011
+01:00:00,997 --> 01:00:05,435
+And if you come back when it's red, it
+will it will move you clockwise.
+
+1012
+01:00:05,468 --> 01:00:07,003
+So it's a reversible gadget.
+
+1013
+01:00:07,003 --> 01:00:10,473
+And so maybe unsurprisingly,
+you can use this reversible setup
+
+1014
+01:00:10,473 --> 01:00:14,243
+and you can build the 2-toggle
+ultimately out of four 4-spinners,
+
+1015
+01:00:14,310 --> 01:00:16,446
+which is kind of cool.
+
+1016
+01:00:16,512 --> 01:00:17,614
+Or here is a
+
+1017
+01:00:17,614 --> 01:00:22,719
+turnstile mechanism, which appears
+in a bunch of different games,
+
+1018
+01:00:22,719 --> 01:00:26,189
+including Super Mario Odyssey,
+where when...
+
+1019
+01:00:26,189 --> 01:00:28,291
+You see there's a little pivot here.
+
+1020
+01:00:28,291 --> 01:00:31,160
+When I walk through this turnstile,
+it rotates 90 degrees.
+
+1021
+01:00:31,160 --> 01:00:32,161
+And you can
+
+1022
+01:00:32,161 --> 01:00:35,732
+use that to build a crossing 2-toggle
+or an antiparallel locking 2-toggle.
+
+1023
+01:00:35,965 --> 01:00:38,901
+So having all these different gadgets
+that are hard is useful.
+
+1024
+01:00:38,901 --> 01:00:42,171
+Sometimes it's easier to build one
+than the other depending what game
+
+1025
+01:00:42,171 --> 01:00:45,174
+you are building things in.
+
+1026
+01:00:45,375 --> 01:00:46,609
+Okay,
+
+1027
+01:00:46,609 --> 01:00:50,546
+next topic is pushing blocks,
+so we talked about pulling blocks a bunch.
+
+1028
+01:00:50,613 --> 01:00:53,850
+This is a slide from Lecture 4,
+
+1029
+01:00:53,850 --> 01:00:58,554
+I think, where we have
+lots of hardness results.
+
+1030
+01:00:58,554 --> 01:01:01,391
+We've only talked about the NP-hardness
+results so far.
+
+1031
+01:01:01,391 --> 01:01:05,028
+I want to talk about this one
+-- PSPACE-completeness of Sokoban --
+
+1032
+01:01:05,128 --> 01:01:09,198
+and this one, which was an open problem
+back when we recorded Lecture 4,
+
+1033
+01:01:09,332 --> 01:01:12,869
+but is now known to be PSPACE-complete,
+
+1034
+01:01:12,935 --> 01:01:16,005
+using gadgets
+and a particularly interesting
+
+1035
+01:01:16,239 --> 01:01:18,141
+aspect of gadgets
+called checkable gadgets.
+
+1036
+01:01:18,141 --> 01:01:20,877
+So let me show you that.
+
+1037
+01:01:20,943 --> 01:01:23,613
+First, let
+me tell you a little bit about Sokoban.
+
+1038
+01:01:23,613 --> 01:01:26,049
+I think you know the rules already.
+
+1039
+01:01:26,049 --> 01:01:27,717
+It's like Push-1F.
+
+1040
+01:01:27,717 --> 01:01:29,852
+So you can... there are fixed blocks.
+
+1041
+01:01:29,852 --> 01:01:32,321
+There are blocks
+you can push one at a time.
+
+1042
+01:01:32,321 --> 01:01:34,657
+But instead of the usual goal
+
+1043
+01:01:34,657 --> 01:01:37,026
+-- with Push-1,
+the goal is to get the robot from A to B
+
+1044
+01:01:37,026 --> 01:01:41,097
+-- with Sokoban, you have a bunch of dots
+on the playing field and you need to
+
+1045
+01:01:41,264 --> 01:01:45,601
+cover every dot with a box,
+and number of dots equals number of boxes.
+
+1046
+01:01:45,668 --> 01:01:47,804
+So this is an old game
+
+1047
+01:01:47,804 --> 01:01:50,373
+and exists in a zillion forms.
+
+1048
+01:01:50,373 --> 01:01:52,742
+And it was proved PSPACE-complete.
+
+1049
+01:01:52,742 --> 01:01:53,843
+This is one of the first
+
+1050
+01:01:53,843 --> 01:01:58,181
+PSPACE-completeness results
+for a puzzle game, I believe: 1997.
+
+1051
+01:01:58,181 --> 01:02:02,752
+It was proved by this guy, Joe Culberson,
+who was on the Chinook team
+
+1052
+01:02:02,752 --> 01:02:07,290
+that solved 8 × 8 checkers in 1992.
+
+1053
+01:02:07,356 --> 01:02:10,293
+And then, in my head,
+
+1054
+01:02:10,293 --> 01:02:12,862
+Joe was like looking for
+the next game to solve.
+
+1055
+01:02:12,862 --> 01:02:14,697
+And so he looked at Sokoban
+
+1056
+01:02:14,697 --> 01:02:18,868
+and proved PSPACE-completeness
+by building a Turing machine in Sokoban.
+
+1057
+01:02:18,868 --> 01:02:21,637
+It's a very complicated
+and cool reduction.
+
+1058
+01:02:21,637 --> 01:02:25,374
+But with a modern lens
+-- we have lots more technology now
+
+1059
+01:02:25,374 --> 01:02:30,546
+for proving PSPACE-completeness
+-- it turns out just one of these gadgets
+
+1060
+01:02:30,613 --> 01:02:33,616
+in his picture is a self-closing door.
+
+1061
+01:02:33,783 --> 01:02:37,754
+And so that one gadget
+we now know proves PSPACE-completeness,
+
+1062
+01:02:37,820 --> 01:02:40,289
+even in the planar setting.
+
+1063
+01:02:40,289 --> 01:02:41,691
+So let me show you how it works.
+
+1064
+01:02:41,691 --> 01:02:44,861
+It's built out of a few subgadgets.
+
+1065
+01:02:44,961 --> 01:02:47,630
+The first one is a diode.
+
+1066
+01:02:47,630 --> 01:02:51,467
+So this is a gadget
+you can traverse from left to right,
+
+1067
+01:02:51,567 --> 01:02:54,370
+but not in the other direction,
+
+1068
+01:02:54,370 --> 01:02:58,708
+provided that gray block stays
+in one of these two spots
+
+1069
+01:02:58,775 --> 01:03:02,812
+which in Sokoban is easy to force by
+just saying it must return to this spot.
+
+1070
+01:03:02,812 --> 01:03:05,414
+In Push-1F,
+we're going to have to worry...
+
+1071
+01:03:05,414 --> 01:03:07,483
+I'm going to try to adapt this proof
+to Push-1F.
+
+1072
+01:03:07,483 --> 01:03:11,521
+In Push-1F, we have to worry about
+wedging the block into the corner.
+
+1073
+01:03:11,754 --> 01:03:14,757
+Then this gadget is completely open
+and broken.
+
+1074
+01:03:14,824 --> 01:03:16,926
+So we're going to avoid this.
+
+1075
+01:03:16,926 --> 01:03:20,930
+But for now it's a diode in Sokoban.
+
+1076
+01:03:20,930 --> 01:03:23,800
+Next gadget is a 1-toggle.
+
+1077
+01:03:23,800 --> 01:03:26,002
+Okay, we know what a 1-toggle is.
+
+1078
+01:03:26,002 --> 01:03:27,603
+This is a nice way to do it.
+
+1079
+01:03:27,603 --> 01:03:30,072
+And in Sokoban,
+It's easy to force these blocks
+
+1080
+01:03:30,072 --> 01:03:33,743
+to stay away from each other
+and on these little tracks.
+
+1081
+01:03:33,843 --> 01:03:34,644
+That's the gadget
+
+1082
+01:03:34,644 --> 01:03:38,548
+in Sokoban, where they each
+have a dot underneath them.
+
+1083
+01:03:38,614 --> 01:03:42,451
+And you can see to get here,
+I have to move these blocks
+
+1084
+01:03:42,518 --> 01:03:45,421
+in pairs to the right.
+
+1085
+01:03:45,421 --> 01:03:47,623
+And then if I erase these two squares
+
+1086
+01:03:47,623 --> 01:03:51,928
+out of the 1-toggle,
+I get what we call a precursor.
+
+1087
+01:03:51,994 --> 01:03:52,862
+It's a little weird.
+
+1088
+01:03:52,862 --> 01:03:56,833
+It behaves like a 1-toggle down here,
+but you can always escape to the top.
+
+1089
+01:03:56,933 --> 01:04:01,470
+So the way I like to think about it
+is it remembers the last time you exited:
+
+1090
+01:04:01,470 --> 01:04:05,208
+did you exit on the right last
+or exit on the left last?
+
+1091
+01:04:05,308 --> 01:04:10,813
+And if you last exited on the left,
+you cannot enter on the right.
+
+1092
+01:04:10,880 --> 01:04:12,515
+That's how a 1-toggle works.
+
+1093
+01:04:12,515 --> 01:04:13,416
+So when we...
+
+1094
+01:04:13,416 --> 01:04:16,219
+we're going to draw this gadget like this.
+
+1095
+01:04:16,219 --> 01:04:21,290
+This actually is a nontunnel gadget
+because you can get...
+
+1096
+01:04:21,390 --> 01:04:24,894
+this location is reachable
+from both this one and this one.
+
+1097
+01:04:24,961 --> 01:04:27,463
+This is not a tunnel.
+
+1098
+01:04:27,530 --> 01:04:28,531
+I'm going to draw it like
+
+1099
+01:04:28,531 --> 01:04:32,401
+this little T with an arrow saying
+you cannot currently enter from here.
+
+1100
+01:04:32,401 --> 01:04:33,936
+So this arrow can move over here.
+
+1101
+01:04:33,936 --> 01:04:37,773
+Then if I leave this way,
+then the arrow will move over here
+
+1102
+01:04:37,773 --> 01:04:41,510
+to say
+you cannot enter this way, like a toggle.
+
+1103
+01:04:41,611 --> 01:04:44,747
+Okay, so now I claim
+if I combine these gadgets in this way
+
+1104
+01:04:44,747 --> 01:04:47,583
+with the precursor in the center,
+two diodes and a toggle,
+
+1105
+01:04:47,583 --> 01:04:49,051
+this is a self-closing door.
+
+1106
+01:04:49,051 --> 01:04:51,354
+So let's just walk through it.
+
+1107
+01:04:51,354 --> 01:04:55,224
+First, the self-closing is down this path.
+
+1108
+01:04:55,224 --> 01:04:56,659
+So I walk through the diode,
+
+1109
+01:04:56,659 --> 01:04:59,462
+I walk through the precursor,
+which toggles it to the other side.
+
+1110
+01:04:59,462 --> 01:05:00,696
+Then I walk through the diode. Great.
+
+1111
+01:05:00,696 --> 01:05:06,035
+Now I won't be able to do that again
+because that arrow blocks me.
+
+1112
+01:05:06,035 --> 01:05:11,507
+And if I want to open, I can come down
+from the top, which toggles that guy.
+
+1113
+01:05:11,607 --> 01:05:15,912
+I could go over to the right here
+and leave, but it would leave this toggle
+
+1114
+01:05:15,912 --> 01:05:19,415
+in a bad state,
+which in Sokoban we can just prevent.
+
+1115
+01:05:19,682 --> 01:05:21,751
+We'll have to worry about that later.
+
+1116
+01:05:21,751 --> 01:05:25,121
+The intended solution is you go over here
+which toggles this
+
+1117
+01:05:25,221 --> 01:05:27,890
+and then you leave up the top
+because you can always leave up the top.
+
+1118
+01:05:27,890 --> 01:05:31,861
+So now you've reset this to an open state
+and that's back to how it was.
+
+1119
+01:05:31,861 --> 01:05:33,696
+And now you can self-close again.
+
+1120
+01:05:33,696 --> 01:05:37,600
+So self-closing door,
+Sokoban is PSPACE-complete.
+
+1121
+01:05:37,667 --> 01:05:42,104
+Let's try to make it work for Push-1F.
+
+1122
+01:05:42,204 --> 01:05:45,441
+So we're going to take
+
+1123
+01:05:45,541 --> 01:05:46,208
+initially this
+
+1124
+01:05:46,208 --> 01:05:50,012
+diode
+gadget, and we have these intended uses
+
+1125
+01:05:50,079 --> 01:05:50,880
+-- where you use it
+
+1126
+01:05:50,880 --> 01:05:55,151
+like a diode -- and these breaking uses
+-- where you wedge it into the corner --
+
+1127
+01:05:55,217 --> 01:06:00,489
+and we're going to focus on
+just these top three rows of the diagram.
+
+1128
+01:06:00,556 --> 01:06:04,126
+And what I'd like to do is force the block
+to stay on this little track.
+
+1129
+01:06:04,226 --> 01:06:08,130
+And I'm going to do that by saying, well,
+at the end of my construction, somehow
+
+1130
+01:06:08,197 --> 01:06:10,900
+I'm going to force the robot to have to go
+
+1131
+01:06:10,900 --> 01:06:13,769
+through this traversal
+from this location to this location.
+
+1132
+01:06:13,769 --> 01:06:15,338
+I don't know how they go inside,
+
+1133
+01:06:15,338 --> 01:06:18,808
+but you must go from here to here
+and then you must go from here to here.
+
+1134
+01:06:18,874 --> 01:06:20,042
+And if the block is wedged
+
+1135
+01:06:20,042 --> 01:06:24,013
+in one of these corners,
+one of these traverses will be impossible.
+
+1136
+01:06:24,080 --> 01:06:25,848
+So I'm going to forbid
+
+1137
+01:06:25,848 --> 01:06:30,519
+these broken uses by saying at the end,
+you must do these checking traversals.
+
+1138
+01:06:30,586 --> 01:06:33,422
+If they're impossible,
+you won't be able to solve the puzzle.
+
+1139
+01:06:33,422 --> 01:06:35,057
+If they're possible, you'll be okay.
+
+1140
+01:06:35,057 --> 01:06:38,494
+And so we can basically assume
+because we know this is coming at the end,
+
+1141
+01:06:38,494 --> 01:06:42,231
+we can assume we're in these good states
+where things are not broken.
+
+1142
+01:06:42,331 --> 01:06:43,299
+So that's the intuition.
+
+1143
+01:06:43,299 --> 01:06:44,300
+Let me write down a.
+
+1144
+01:06:44,300 --> 01:06:57,213
+theorem,
+or I guess a definition and a theorem.
+
+1145
+01:06:57,313 --> 01:06:57,913
+We're going to call
+
+1146
+01:06:57,913 --> 01:07:03,886
+this not a diode, but a checkable diode,
+so that you can get diode
+
+1147
+01:07:03,919 --> 01:07:14,130
+behavior, provided
+you check it at the end.
+
+1148
+01:07:14,230 --> 01:07:16,198
+So a checkable G
+
+1149
+01:07:16,198 --> 01:07:19,702
+is going to consist of another gadget...
+
+1150
+01:07:19,769 --> 01:07:22,772
+So G is a gadget and it's a checkable G
+
+1151
+01:07:22,938 --> 01:07:27,676
+If we have another gadget
+G’ plus a sequence of traversals,
+
+1152
+01:07:27,743 --> 01:07:31,347
+which we call
+
+1153
+01:07:31,380 --> 01:07:35,518
+check
+
+1154
+01:07:35,518 --> 01:07:40,956
+traversals,
+
+1155
+01:07:41,057 --> 01:07:43,592
+such that
+
+1156
+01:07:43,592 --> 01:07:47,129
+G equals G’
+
+1157
+01:07:47,196 --> 01:07:58,774
+restricted to good states
+
+1158
+01:07:58,841 --> 01:08:04,113
+where check
+
+1159
+01:08:04,146 --> 01:08:16,258
+traversals are possible.
+
+1160
+01:08:16,358 --> 01:08:19,728
+So a gadget has a bunch of states,
+I'm going to call it a state good
+
+1161
+01:08:19,795 --> 01:08:21,764
+If it's possible from that state
+
+1162
+01:08:21,764 --> 01:08:25,434
+to do the check reversals
+in order, and broken otherwise.
+
+1163
+01:08:25,501 --> 01:08:31,707
+And I would like one thing which is,
+
+1164
+01:08:31,807 --> 01:08:38,180
+if your gadget is in a broken state,
+it stays broken -- no matter what you do.
+
+1165
+01:08:38,247 --> 01:08:41,117
+So we want broken states
+
+1166
+01:08:41,117 --> 01:08:43,018
+to be closed
+
+1167
+01:08:43,018 --> 01:08:47,289
+under traversals.
+
+1168
+01:08:47,289 --> 01:08:52,995
+Which is true, for example,
+in this gadget:
+
+1169
+01:08:52,995 --> 01:08:56,065
+if you wedge the block in a corner, it's
+not getting out.
+
+1170
+01:08:56,232 --> 01:09:00,936
+So once you're broken, you stay broken.
+
+1171
+01:09:01,036 --> 01:09:03,873
+So I'm going to say...
+
+1172
+01:09:03,873 --> 01:09:09,645
+So this is a checkable
+whatever this gadget is --
+
+1173
+01:09:09,645 --> 01:09:13,382
+if I add the rows, it becomes a diode,
+but it's not quite a diode yet.
+
+1174
+01:09:13,449 --> 01:09:18,487
+Because these traversals
+are going to be possible
+
+1175
+01:09:18,487 --> 01:09:22,024
+only in the states where this block is
+in one of those two spots.
+
+1176
+01:09:22,124 --> 01:09:25,828
+And so it's going to act
+like the top diagram, not like the bottom,
+
+1177
+01:09:25,828 --> 01:09:32,034
+as a checkable that-gadget.
+
+1178
+01:09:32,034 --> 01:09:34,436
+Great.
+
+1179
+01:09:34,436 --> 01:09:37,173
+So what?
+
+1180
+01:09:37,173 --> 01:09:46,482
+Cool thing is planar
+
+1181
+01:09:46,549 --> 01:09:50,419
+reachability
+
+1182
+01:09:50,486 --> 01:09:56,659
+with G
+
+1183
+01:09:56,725 --> 01:09:57,393
+reduces
+
+1184
+01:09:57,393 --> 01:10:03,032
+to planar
+
+1185
+01:10:03,032 --> 01:10:08,137
+reachability
+
+1186
+01:10:08,237 --> 01:10:13,175
+with G’, together with
+
+1187
+01:10:13,275 --> 01:10:18,047
+two gadgets MSC and SO,
+
+1188
+01:10:18,113 --> 01:10:21,183
+which are these gadgets.
+
+1189
+01:10:21,283 --> 01:10:24,420
+I don't really want to say much about them
+other than they're very simple.
+
+1190
+01:10:24,420 --> 01:10:25,187
+You can only...
+
+1191
+01:10:25,187 --> 01:10:28,390
+they only have like one or two transitions
+and then they're dead.
+
+1192
+01:10:28,457 --> 01:10:32,628
+So they're relatively easy to build in in
+a lot of games, or that's the hypothesis.
+
+1193
+01:10:32,695 --> 01:10:37,566
+So if we ignore those for a second,
+what this is saying is reachability with G
+
+1194
+01:10:37,566 --> 01:10:40,569
+-- which is like the diode, say, the diode
+we want to build,
+
+1195
+01:10:40,669 --> 01:10:46,175
+but we don't know how -- reduces
+to reachability with our checkable gadget.
+
+1196
+01:10:46,275 --> 01:10:47,876
+So that's great. It's...
+
+1197
+01:10:47,876 --> 01:10:51,046
+we can pretend that
+we actually had the gadget
+
+1198
+01:10:51,046 --> 01:10:55,017
+that we wanted,
+where we've restricted to the good states.
+
+1199
+01:10:55,217 --> 01:10:57,519
+Even though we don't know how to build it,
+we know that at the end
+
+1200
+01:10:57,519 --> 01:11:00,990
+we'll be able to force
+all the checking reversals to happen.
+
+1201
+01:11:01,056 --> 01:11:02,691
+That's where we use these other gadgets.
+
+1202
+01:11:02,691 --> 01:11:07,129
+The way we prove this is,
+at the end of the construction,
+
+1203
+01:11:07,129 --> 01:11:10,766
+when you reach the original goal,
+we're going to wire things up
+
+1204
+01:11:10,766 --> 01:11:13,769
+so then the robot is forced
+to basically close off
+
+1205
+01:11:13,769 --> 01:11:17,539
+all the old transitions
+that were possible, and only enable
+
+1206
+01:11:17,539 --> 01:11:18,941
+the checking traversals,
+
+1207
+01:11:18,941 --> 01:11:21,944
+and then force those checking traversals
+to happen in order.
+
+1208
+01:11:21,977 --> 01:11:23,846
+And then there's the real goal.
+
+1209
+01:11:23,846 --> 01:11:25,481
+And so the only way to get there will be
+
+1210
+01:11:25,481 --> 01:11:29,218
+if you actually kept
+every gadget in a good state.
+
+1211
+01:11:29,318 --> 01:11:33,722
+So I'm not going to prove that,
+but that's the intuition.
+
+1212
+01:11:33,822 --> 01:11:36,692
+So let's apply this
+
+1213
+01:11:36,692 --> 01:11:37,893
+to Push-1F.
+
+1214
+01:11:37,893 --> 01:11:41,597
+So first you have to build
+those little gadgets: SO and MSC.
+
+1215
+01:11:41,797 --> 01:11:47,069
+It's doable
+with some pushing blocks technology.
+
+1216
+01:11:47,169 --> 01:11:49,705
+Now we get this fun operation,
+
+1217
+01:11:49,705 --> 01:11:52,975
+which I didn't name it yet:
+we're calling postselect.
+
+1218
+01:11:53,042 --> 01:11:55,678
+That's the restriction to good states.
+
+1219
+01:11:55,678 --> 01:11:59,148
+We're just only considering the gadget
+
+1220
+01:11:59,348 --> 01:12:02,584
+with the subset within the good states.
+
+1221
+01:12:02,685 --> 01:12:05,688
+So we apply that to this piece of a diode.
+
+1222
+01:12:05,688 --> 01:12:09,558
+We then force the block
+to be on this little path,
+
+1223
+01:12:09,625 --> 01:12:11,293
+and then we add
+these two rows at the bottom.
+
+1224
+01:12:11,293 --> 01:12:15,264
+Now we have an actual diode
+or checkable version of that.
+
+1225
+01:12:15,331 --> 01:12:16,765
+Okay, let's do it with the precursor.
+
+1226
+01:12:16,765 --> 01:12:18,067
+Precursor has the same issue.
+
+1227
+01:12:18,067 --> 01:12:22,137
+You can push these blocks into the corner
+and it would just be completely open.
+
+1228
+01:12:22,204 --> 01:12:27,910
+So we're going to focus on the bottom
+three rows here and also add a couple of
+
+1229
+01:12:28,010 --> 01:12:29,578
+pathways.
+
+1230
+01:12:29,578 --> 01:12:32,715
+Then we're going to add these
+to check traversal, say at the end
+
+1231
+01:12:32,715 --> 01:12:33,615
+we must have that.
+
+1232
+01:12:33,615 --> 01:12:38,420
+And then that prevents blocks from being
+wedged in these two spots in the corner.
+
+1233
+01:12:38,487 --> 01:12:41,190
+So now we know, by postselection,
+
+1234
+01:12:41,190 --> 01:12:44,093
+we can assume that the blocks
+stay within here.
+
+1235
+01:12:44,093 --> 01:12:47,096
+Then we're going to add these two
+checking reversals
+
+1236
+01:12:47,129 --> 01:12:49,898
+that will prevent these blocks
+from being mushed together.
+
+1237
+01:12:49,898 --> 01:12:51,934
+And it will,
+
+1238
+01:12:51,934 --> 01:12:54,603
+yeah, force them to be on their
+
+1239
+01:12:54,603 --> 01:12:59,475
+individual tracts here
+and not adjacent to each other.
+
+1240
+01:12:59,541 --> 01:13:00,042
+Great.
+
+1241
+01:13:00,042 --> 01:13:05,647
+So now we have this gadget
+and we just add the rows above and below.
+
+1242
+01:13:05,848 --> 01:13:09,351
+And that's exactly how the precursor
+is supposed to behave.
+
+1243
+01:13:09,418 --> 01:13:10,786
+in Sokoban.
+
+1244
+01:13:10,786 --> 01:13:14,390
+But we built it as a checkable
+gadget in Push-1F.
+
+1245
+01:13:14,390 --> 01:13:18,694
+One more use is in this:
+when we were building the self-closing
+
+1246
+01:13:18,694 --> 01:13:20,396
+door, I said there's this weird thing
+you can do,
+
+1247
+01:13:20,396 --> 01:13:22,631
+where you leave out here and there's...
+
+1248
+01:13:22,631 --> 01:13:25,067
+you left this gadget in a weird state.
+
+1249
+01:13:25,067 --> 01:13:26,402
+In fact, it's a broken state.
+
+1250
+01:13:26,402 --> 01:13:30,939
+If you add this checking traversal
+-- at the end, you need to go through here
+
+1251
+01:13:31,006 --> 01:13:32,875
+-- that's only going to be possible
+
+1252
+01:13:32,875 --> 01:13:35,377
+if you didn't leave this toggle
+in a broken state.
+
+1253
+01:13:35,377 --> 01:13:38,447
+And then, once you're
+in this broken state, you stay broken.
+
+1254
+01:13:38,447 --> 01:13:40,983
+And so if we do postselection,
+that can’t happen.
+
+1255
+01:13:40,983 --> 01:13:45,821
+So now we have a Push-1F self-closing door
+
+1256
+01:13:45,888 --> 01:13:49,591
+in the checkable sense.
+
+1257
+01:13:49,691 --> 01:13:53,328
+So this is not a standard simulation.
+
+1258
+01:13:53,395 --> 01:13:55,998
+We can't simulate G
+
+1259
+01:13:55,998 --> 01:13:57,466
+with G’.
+
+1260
+01:13:57,466 --> 01:14:00,502
+We call it a nonlocal simulation,
+because we're not just plugging in
+
+1261
+01:14:00,502 --> 01:14:02,104
+one little thing for the gadget.
+
+1262
+01:14:02,104 --> 01:14:04,673
+We're actually modifying the whole graph.
+
+1263
+01:14:04,673 --> 01:14:08,677
+But it's basically, for purpose of
+hardness, is just as powerful
+
+1264
+01:14:08,777 --> 01:14:13,782
+and it lets you solve
+big problems like Push-1F.
+
+1265
+01:14:13,782 --> 01:14:16,218
+Cool.
+
+1266
+01:14:16,218 --> 01:14:19,788
+So I have a couple more topics,
+
+1267
+01:14:19,788 --> 01:14:24,660
+but I'm just going to sort of show
+you them very briefly, just as pointers.
+
+1268
+01:14:24,660 --> 01:14:29,832
+If you run into gadgets like this that you
+think might be relevant to your problem.
+
+1269
+01:14:29,898 --> 01:14:36,305
+The first one
+
+1270
+01:14:36,405 --> 01:14:40,709
+is I/O gadgets,
+
+1271
+01:14:40,809 --> 01:14:44,046
+and in particular
+the idea of zero-player motion planning.
+
+1272
+01:14:44,179 --> 01:14:47,516
+So far there's been a robot that can make
+decisions that could go left.
+
+1273
+01:14:47,516 --> 01:14:49,084
+They could go right.
+
+1274
+01:14:49,084 --> 01:14:52,254
+So you have a kind of
+nondeterministic system.
+
+1275
+01:14:52,254 --> 01:14:56,325
+With I/O gadgets,
+you have the potential to make everything
+
+1276
+01:14:56,325 --> 01:14:57,392
+completely deterministic.
+
+1277
+01:14:57,392 --> 01:15:02,831
+What the agent does is determined at
+every stage, with the right assumptions.
+
+1278
+01:15:02,898 --> 01:15:08,036
+But first,
+an I/O gadget is when you can partition
+
+1279
+01:15:08,103 --> 01:15:11,640
+the locations of the gadget
+
+1280
+01:15:11,740 --> 01:15:17,212
+into two types: inputs,
+
+1281
+01:15:17,279 --> 01:15:19,748
+which are just entrances -- places
+
+1282
+01:15:19,748 --> 01:15:24,620
+the agent can go in -- and outputs,
+
+1283
+01:15:24,686 --> 01:15:28,557
+which are places
+where the agent can go out.
+
+1284
+01:15:28,624 --> 01:15:32,461
+But crucially, no location
+you can both go in and go out.
+
+1285
+01:15:32,561 --> 01:15:33,829
+Okay.
+
+1286
+01:15:33,829 --> 01:15:36,832
+All traversals
+must be from an input to an output.
+
+1287
+01:15:36,899 --> 01:15:39,101
+And in addition, we're going
+
+1288
+01:15:39,101 --> 01:15:43,171
+to require,
+
+1289
+01:15:43,272 --> 01:15:48,944
+on the system,
+that there's at most one input
+
+1290
+01:15:49,011 --> 01:15:56,351
+in each system location.
+
+1291
+01:15:56,418 --> 01:15:58,287
+Okay.
+
+1292
+01:15:58,287 --> 01:15:59,688
+So this was a constraint on the gadget.
+
+1293
+01:15:59,688 --> 01:16:02,925
+This is a constraint on the system
+to say that whenever.
+
+1294
+01:16:02,991 --> 01:16:06,728
+So I have some gadgets wired together.
+
+1295
+01:16:06,828 --> 01:16:11,533
+Here is a system location
+I want among all these locations.
+
+1296
+01:16:11,600 --> 01:16:13,702
+At most, one of them to be an input
+
+1297
+01:16:13,702 --> 01:16:16,972
+so that if I'm the agent,
+there's only one place I can go.
+
+1298
+01:16:17,039 --> 01:16:18,640
+Let's say this is an input.
+
+1299
+01:16:18,640 --> 01:16:22,544
+So then I have to go in here and I
+have to do a transition within this gadget
+
+1300
+01:16:22,611 --> 01:16:25,581
+and then whatever location I'm in next,
+there's only one input,
+
+1301
+01:16:25,581 --> 01:16:26,782
+so I've got to go there.
+
+1302
+01:16:26,782 --> 01:16:30,986
+So this leads to what we call
+zero-player motion planning.
+
+1303
+01:16:31,053 --> 01:16:34,056
+And now you can still call it
+
+1304
+01:16:34,156 --> 01:16:36,491
+reachability, but it's more like,
+
+1305
+01:16:36,491 --> 01:16:41,129
+do I reach not can I reach
+because it's determined what happens --
+
+1306
+01:16:41,229 --> 01:16:46,268
+if the gadget is deterministic,
+it's determined what happens.
+
+1307
+01:16:46,368 --> 01:16:51,139
+So this is removing
+nondeterminism in the connection graph,
+
+1308
+01:16:51,139 --> 01:16:54,176
+and if the I/O gadget is deterministic,
+
+1309
+01:16:54,176 --> 01:16:58,614
+then I also have no nondeterminism
+within the gadget.
+
+1310
+01:16:58,680 --> 01:17:04,119
+There's one other constraint
+I want, which is output-disjointness,
+
+1311
+01:17:04,219 --> 01:17:08,523
+which is this here: no two inputs
+
+1312
+01:17:08,624 --> 01:17:10,759
+traverse to the same output.
+
+1313
+01:17:10,759 --> 01:17:14,563
+So for a given output, there's
+only one input that could lead there.
+
+1314
+01:17:14,563 --> 01:17:17,165
+And I'm going to restrict it two states.
+
+1315
+01:17:17,165 --> 01:17:19,134
+So I think this is the set of adjectives:
+
+1316
+01:17:19,134 --> 01:17:23,405
+two-state, deterministic,
+output-disjoint input/output gadgets.
+
+1317
+01:17:23,405 --> 01:17:30,812
+In that setting, all of our gadgets
+are made up of little pieces like this.
+
+1318
+01:17:30,912 --> 01:17:32,714
+So let's start with maybe the switch.
+
+1319
+01:17:32,714 --> 01:17:35,017
+The switch,
+there's two states up and down,
+
+1320
+01:17:35,017 --> 01:17:38,754
+and in the up state, I'll
+go to the top output -- this is an input
+
+1321
+01:17:38,754 --> 01:17:43,425
+-- and in the bottom state,
+I'll go to this output.
+
+1322
+01:17:43,492 --> 01:17:46,495
+This is a tunnel actually
+
+1323
+01:17:46,628 --> 01:17:49,631
+where whenever I traverse it,
+I go to the top state.
+
+1324
+01:17:49,665 --> 01:17:50,732
+This is a toggle.
+
+1325
+01:17:50,732 --> 01:17:54,136
+So every time I traverse it,
+it switches states.
+
+1326
+01:17:54,202 --> 01:17:57,873
+This is a set up switch. So
+
+1327
+01:17:57,973 --> 01:18:02,210
+this is just like the switch
+-- when I enter here and the top state,
+
+1328
+01:18:02,210 --> 01:18:03,679
+I'll go here; in the bottom state,
+I'll go here
+
+1329
+01:18:03,679 --> 01:18:06,748
+-- but in the bottom state,
+I will also change to the top state.
+
+1330
+01:18:06,748 --> 01:18:09,051
+So it always sets me to the up state.
+
+1331
+01:18:09,051 --> 01:18:10,919
+It's like the fusion of these two gadgets.
+
+1332
+01:18:10,919 --> 01:18:13,922
+Of course, there's also the set-down
+and set-down switch.
+
+1333
+01:18:14,089 --> 01:18:18,093
+And finally there's a toggle switch
+where, when I enter, in one state,
+
+1334
+01:18:18,093 --> 01:18:19,961
+I leave here, and the other state,
+I leave here.
+
+1335
+01:18:19,961 --> 01:18:22,564
+And in either case, I switch states.
+
+1336
+01:18:22,564 --> 01:18:25,967
+Now, these two are special:
+we call them unbounded.
+
+1337
+01:18:25,967 --> 01:18:28,603
+Because potentially, you could...
+
+1338
+01:18:28,603 --> 01:18:29,805
+if you have...
+
+1339
+01:18:29,805 --> 01:18:34,009
+if you don't have these,
+the number of state changes you can do in
+
+1340
+01:18:34,009 --> 01:18:37,546
+your gadget is bounded
+because this doesn't change the state,
+
+1341
+01:18:37,746 --> 01:18:41,450
+this always sets it
+up, this always sets it up.
+
+1342
+01:18:41,516 --> 01:18:42,451
+So those
+
+1343
+01:18:42,451 --> 01:18:45,454
+are kind of less interesting
+and put your problem in NP.
+
+1344
+01:18:45,487 --> 01:18:50,826
+But these unbounded things are more
+interesting and can get you PSPACE.
+
+1345
+01:18:50,926 --> 01:18:55,497
+So in particular,
+
+1346
+01:18:55,597 --> 01:19:00,502
+we have this theorem,
+which is among two-state
+
+1347
+01:19:00,502 --> 01:19:11,880
+deterministic output-disjoint gadgets,
+we are PSPACE-complete
+
+1348
+01:19:11,980 --> 01:19:18,286
+if and only if there's an unbounded
+
+1349
+01:19:18,353 --> 01:19:20,155
+piece
+
+1350
+01:19:20,155 --> 01:19:27,729
+and there's more than one
+nontrivial input.
+
+1351
+01:19:27,829 --> 01:19:30,499
+I forgot to even mention
+the trivial inputs; trivial inputs are
+
+1352
+01:19:30,499 --> 01:19:34,035
+where they always do the same thing,
+so they're not interesting.
+
+1353
+01:19:34,269 --> 01:19:45,847
+This is assuming NP does not equal PSPACE.
+
+1354
+01:19:45,947 --> 01:19:50,786
+So this is in some sense the gadgets
+you care about, for PSPACE-completeness,
+
+1355
+01:19:50,786 --> 01:19:56,458
+are when you have an unbounded piece and
+you have at least two of those subunits.
+
+1356
+01:19:56,458 --> 01:19:57,025
+Yeah?
+
+1357
+01:19:57,025 --> 01:19:58,960
+If you have a set-up
+
+1358
+01:19:58,960 --> 01:20:02,030
+and a set-down line on the same gadget,
+does it count as unbounded?
+
+1359
+01:20:02,097 --> 01:20:05,133
+I was wondering that. Yes. It does count.
+
+1360
+01:20:05,200 --> 01:20:07,836
+Okay, sorry.
+So this picture is incomplete.
+
+1361
+01:20:07,836 --> 01:20:12,174
+Also, if you have a set-up and a set-down,
+or like a set-up switch and a set-down,
+
+1362
+01:20:12,174 --> 01:20:15,477
+or something, that's also unbounded,
+because you can then change the state
+
+1363
+01:20:15,477 --> 01:20:17,712
+as many times get.
+I was wondering that as well.
+
+1364
+01:20:17,712 --> 01:20:23,518
+Uh, the only bounded case is when all the
+things point in the same orientation
+
+1365
+01:20:23,618 --> 01:20:27,255
+and you don't have any toggles Cool.
+
+1366
+01:20:27,255 --> 01:20:30,659
+Great.
+
+1367
+01:20:30,759 --> 01:20:34,763
+I guess that is captured by this diagram,
+though there's a lot of words
+
+1368
+01:20:34,763 --> 01:20:35,864
+in this diagram.
+
+1369
+01:20:35,864 --> 01:20:41,636
+In particular, zero player
+-- this is the zero-player row
+
+1370
+01:20:41,636 --> 01:20:46,341
+-- unbounded multiple non-trivial inputs,
+you get PSPACE-completeness.
+
+1371
+01:20:46,408 --> 01:20:50,011
+If you're bounded and zero player,
+you only get P-completeness.
+
+1372
+01:20:50,245 --> 01:20:53,849
+Now, you could also relax this restriction
+
+1373
+01:20:53,882 --> 01:20:58,286
+of at most one
+input in each system location or
+
+1374
+01:20:58,386 --> 01:21:01,122
+and then you get nondeterminism
+in your system again.
+
+1375
+01:21:01,122 --> 01:21:05,360
+Then you're one player and then you still
+have PSPACE-completeness here, naturally,
+
+1376
+01:21:05,527 --> 01:21:08,530
+but you do get NP-completeness
+in the bounded case.
+
+1377
+01:21:08,730 --> 01:21:09,097
+All right.
+
+1378
+01:21:09,097 --> 01:21:13,068
+One more fun fact
+
+1379
+01:21:13,134 --> 01:21:16,805
+is that, uh,
+
+1380
+01:21:16,905 --> 01:21:18,473
+among these gadgets
+
+1381
+01:21:18,473 --> 01:21:22,577
+-- two-state
+deterministic output-disjoint gadgets --
+
+1382
+01:21:22,577 --> 01:21:26,481
+every one of them
+can simulate every other,
+
+1383
+01:21:26,548 --> 01:21:27,749
+and furthermore, they can...
+
+1384
+01:21:27,749 --> 01:21:29,451
+you don't have to have
+all those adjectives.
+
+1385
+01:21:29,451 --> 01:21:34,723
+All of those gadgets can simulate
+every deterministic I/O gadget.
+
+1386
+01:21:34,789 --> 01:21:37,792
+So that's
+pretty much this whole zero-player family.
+
+1387
+01:21:37,859 --> 01:21:40,228
+So this is an example.
+
+1388
+01:21:40,228 --> 01:21:44,299
+Here this is clearly answering
+the question of unbounded.
+
+1389
+01:21:44,399 --> 01:21:47,002
+We have a set-up line and a set-down line.
+
+1390
+01:21:47,002 --> 01:21:49,638
+Alternatively,
+these two could be replaced by a toggle.
+
+1391
+01:21:49,638 --> 01:21:53,174
+Those two gadgets
+
+1392
+01:21:53,174 --> 01:21:56,177
+can simulate every deterministic
+I/O gadget.
+
+1393
+01:21:56,278 --> 01:21:57,779
+So they're universal,
+
+1394
+01:21:57,779 --> 01:22:01,816
+but they're also kind of a basis,
+because they can also simulate each other.
+
+1395
+01:22:01,983 --> 01:22:03,385
+So that's pretty nice.
+
+1396
+01:22:03,385 --> 01:22:06,121
+There's a similar thing
+for the bounded case.
+
+1397
+01:22:06,121 --> 01:22:11,860
+And in the one player
+setting, this gadget...
+
+1398
+01:22:11,860 --> 01:22:15,030
+so when you remove the restriction
+of every system location
+
+1399
+01:22:15,030 --> 01:22:20,735
+should have at most one input,
+this gadget can simulate all gadgets
+
+1400
+01:22:20,835 --> 01:22:23,171
+just like the door.
+
+1401
+01:22:23,171 --> 01:22:24,839
+So that's nice.
+
+1402
+01:22:24,839 --> 01:22:27,542
+There's also a cool open problem here,
+which is
+
+1403
+01:22:27,542 --> 01:22:30,545
+what if you only have a single input?
+
+1404
+01:22:30,578 --> 01:22:33,882
+And I think the interesting case here
+is the toggle switch,
+
+1405
+01:22:33,949 --> 01:22:37,585
+where every time you enter,
+you leave on the opposite location
+
+1406
+01:22:37,652 --> 01:22:40,088
+and you can build
+exponential behavior here.
+
+1407
+01:22:40,088 --> 01:22:43,591
+But the problem is
+probably not PSPACE-complete because
+
+1408
+01:22:43,591 --> 01:22:45,126
+it's in NP intersect coNP and
+
+1409
+01:22:45,226 --> 01:22:46,828
+some other things,
+
+1410
+01:22:46,828 --> 01:22:48,930
+but it's open whether it's NP-hard.
+
+1411
+01:22:48,930 --> 01:22:52,934
+Probably it's not,
+because it's in NP intersect coNP, but
+
+1412
+01:22:53,001 --> 01:22:56,938
+exactly what it's complexity
+is remains a mystery.
+
+1413
+01:22:57,005 --> 01:22:57,505
+All right.
+
+1414
+01:22:57,505 --> 01:22:59,874
+The last...
+
+1415
+01:22:59,874 --> 01:23:03,111
+Oh, then you can apply
+
+1416
+01:23:03,178 --> 01:23:06,514
+this zero-player stuff
+to show that actual games are hard.
+
+1417
+01:23:06,514 --> 01:23:08,516
+There are a lot of video games
+that involve simulation.
+
+1418
+01:23:08,516 --> 01:23:10,685
+Like you design some stuff
+and then you just want to know,
+
+1419
+01:23:10,685 --> 01:23:12,687
+does it achieve my goal?
+
+1420
+01:23:12,687 --> 01:23:17,058
+For example, Factorio, you can prove
+NP-hardness of the train mechanism...
+
+1421
+01:23:17,058 --> 01:23:21,229
+sorry, PSPACE-hardness of the train
+mechanism using
+
+1422
+01:23:21,296 --> 01:23:23,298
+these gadgets.
+
+1423
+01:23:23,298 --> 01:23:23,765
+Okay.
+
+1424
+01:23:23,765 --> 01:23:24,933
+And the last topic,
+
+1425
+01:23:24,933 --> 01:23:26,501
+I just took my handwritten notes
+
+1426
+01:23:26,501 --> 01:23:29,471
+and put them up here
+so I can say it really quickly.
+
+1427
+01:23:29,471 --> 01:23:32,574
+I wanted to tie together
+this motion planning or gadgets
+
+1428
+01:23:32,574 --> 01:23:36,311
+framework we've been talking about,
+with the stuff from Lecture 6.
+
+1429
+01:23:36,378 --> 01:23:39,748
+Whereas now in the class, we're thinking
+about mostly unbounded mechanisms,
+
+1430
+01:23:39,948 --> 01:23:42,751
+unbounded systems/puzzles, where we get
+
+1431
+01:23:42,751 --> 01:23:46,187
+PSPACE-completeness, in Lecture
+6, we were all about NP-completeness.
+
+1432
+01:23:46,354 --> 01:23:50,892
+And there's a nice gadget theory related
+to that, though it's not exactly...
+
+1433
+01:23:50,892 --> 01:23:56,398
+it doesn't exactly cover what's in Lecture
+6, so I have a comparison here. So
+
+1434
+01:23:56,464 --> 01:23:57,966
+there's this notion of DAG gadgets.
+
+1435
+01:23:57,966 --> 01:23:58,867
+Let me...
+
+1436
+01:23:58,867 --> 01:24:02,504
+I did not actually include the definition.
+
+1437
+01:24:02,570 --> 01:24:05,707
+So a DAG gadget.
+
+1438
+01:24:05,707 --> 01:24:10,912
+DAG means Directed Acyclic Graph.
+
+1439
+01:24:10,979 --> 01:24:15,650
+This is where the state-transition graph
+
+1440
+01:24:15,717 --> 01:24:19,154
+is acyclic.
+
+1441
+01:24:19,220 --> 01:24:21,056
+This is not a graph
+we've talked about yet.
+
+1442
+01:24:21,056 --> 01:24:26,628
+The state-transition
+
+1443
+01:24:26,628 --> 01:24:31,099
+graph has a vertex for every state,
+and it has an edge
+
+1444
+01:24:31,099 --> 01:24:34,536
+for every possible transition,
+ignoring the locations.
+
+1445
+01:24:34,636 --> 01:24:37,238
+So you just merge
+all the locations together and just say,
+
+1446
+01:24:37,238 --> 01:24:40,041
+what could I possibly do from this state?
+What states could I get to?
+
+1447
+01:24:40,041 --> 01:24:42,510
+That must be acyclic.
+This is a very strong property.
+
+1448
+01:24:42,510 --> 01:24:45,580
+It says that the number of transitions
+you can do in
+
+1449
+01:24:45,580 --> 01:24:49,117
+your gadget is bounded:
+it's less than the number of states.
+
+1450
+01:24:49,117 --> 01:24:54,022
+You run out of states
+because you can't cycle.
+
+1451
+01:24:54,089 --> 01:24:54,556
+So in
+
+1452
+01:24:54,556 --> 01:24:58,426
+that setting, if you also assume
+your gadget is a tunnel gadget.
+
+1453
+01:24:58,460 --> 01:25:02,730
+So among DAG tunnel gadgets,
+the reachability problem is NP-complete
+
+1454
+01:25:02,730 --> 01:25:06,167
+(we can't we don't know about /
+this doesn't apply to planar reachability,
+
+1455
+01:25:06,167 --> 01:25:11,106
+just reachability) is NP-complete
+if and only if one of two things happens.
+
+1456
+01:25:11,106 --> 01:25:14,142
+And these will sound familiar
+because they're like door
+
+1457
+01:25:14,142 --> 01:25:17,145
+opening and door closing,
+but they're slightly different.
+
+1458
+01:25:17,145 --> 01:25:19,747
+So the easy one is distant opening.
+
+1459
+01:25:19,747 --> 01:25:24,552
+This is, there's some traversal
+that opens a different tunnel.
+
+1460
+01:25:24,619 --> 01:25:27,255
+So this is my picture
+of the generic setup.
+
+1461
+01:25:27,255 --> 01:25:30,258
+There's some traversal
+you can do that switches to an O state
+
+1462
+01:25:30,458 --> 01:25:33,428
+which opens.
+
+1463
+01:25:33,428 --> 01:25:34,796
+This wasn't possible before.
+
+1464
+01:25:34,796 --> 01:25:35,597
+Now it's possible.
+
+1465
+01:25:35,597 --> 01:25:38,266
+Who knows what else happens.
+
+1466
+01:25:38,266 --> 01:25:41,569
+This is related,
+but not the same as from Lecture 6.
+
+1467
+01:25:41,569 --> 01:25:45,640
+We saw opening doors with one button
+which I would draw this way.
+
+1468
+01:25:45,640 --> 01:25:48,109
+We haven't drawn it
+as a state diagram before,
+
+1469
+01:25:48,109 --> 01:25:50,845
+but we have a button that transitions
+to the open state.
+
+1470
+01:25:50,845 --> 01:25:53,681
+And in this state you can traverse it
+many times.
+
+1471
+01:25:53,681 --> 01:25:58,620
+That's something that's not possible
+with a DAG gadget because you can only...
+
+1472
+01:25:58,720 --> 01:26:01,055
+this one will self-destruct at some point.
+
+1473
+01:26:01,055 --> 01:26:03,124
+You won't be able to do
+any more traversals.
+
+1474
+01:26:03,124 --> 01:26:06,227
+This is a slightly more general form where
+
+1475
+01:26:06,294 --> 01:26:07,996
+the gadget becomes eventually
+
+1476
+01:26:07,996 --> 01:26:10,999
+static and stops changing,
+but you can still re-use it.
+
+1477
+01:26:11,166 --> 01:26:14,169
+But morally they're kind of the same.
+
+1478
+01:26:14,169 --> 01:26:15,770
+Just one's a
+
+1479
+01:26:15,770 --> 01:26:19,674
+tunnel instead of a button.
+
+1480
+01:26:19,741 --> 01:26:22,744
+The other option is a little trickier
+to define roughly.
+
+1481
+01:26:22,877 --> 01:26:26,247
+It's that when you do a traversal,
+you're forced to close something else.
+
+1482
+01:26:26,347 --> 01:26:27,882
+But it's a little subtle
+
+1483
+01:26:27,882 --> 01:26:31,786
+because you could close a tunnel
+in one direction and not the other.
+
+1484
+01:26:31,853 --> 01:26:34,556
+And so it turns out what's the right
+definition is There's
+
+1485
+01:26:34,556 --> 01:26:38,893
+some orientation on the tunnels, say
+all of them left to right.
+
+1486
+01:26:38,893 --> 01:26:41,062
+But it doesn't have to be that.
+
+1487
+01:26:41,062 --> 01:26:43,865
+And there's a traversal that closes
+at least one
+
+1488
+01:26:43,865 --> 01:26:48,136
+different tunnel in
+in that direction, in that orientation.
+
+1489
+01:26:48,336 --> 01:26:53,007
+So here's a weird, nondeterministic gadget
+where this is true.
+
+1490
+01:26:53,074 --> 01:26:56,010
+There's a traversal up here
+that goes to c or d: state
+
+1491
+01:26:56,010 --> 01:26:59,847
+c for Closed and state d for closeD.
+
+1492
+01:26:59,948 --> 01:27:03,017
+And in this
+
+1493
+01:27:03,084 --> 01:27:06,821
+one, we
+closed this tunnel in this direction
+
+1494
+01:27:06,888 --> 01:27:11,326
+and in this one
+we closed this tunnel in this direction.
+
+1495
+01:27:11,326 --> 01:27:12,493
+So that would be an example.
+
+1496
+01:27:12,493 --> 01:27:16,898
+It's forced that you closed something but
+it's not forced exactly what you close.
+
+1497
+01:27:16,898 --> 01:27:22,937
+That turns out to be exactly
+what makes this problem NP-hard.
+
+1498
+01:27:23,004 --> 01:27:26,174
+And we can compare that to the closing
+door.
+
+1499
+01:27:26,174 --> 01:27:29,944
+Well,
+there are various closing door gadgets.
+
+1500
+01:27:30,044 --> 01:27:33,481
+But one of them was when you traverse
+this, you close the other path.
+
+1501
+01:27:33,481 --> 01:27:36,284
+This is quite a bit more general
+form of that.
+
+1502
+01:27:36,284 --> 01:27:38,553
+But again, here
+we're only thinking about DAG gadgets
+
+1503
+01:27:38,553 --> 01:27:40,121
+where everything self-destructs.
+
+1504
+01:27:40,121 --> 01:27:44,559
+Here it's something called LDAG gadgets,
+where you also allow loops.
+
+1505
+01:27:44,659 --> 01:27:47,428
+These have not been fully characterized
+in terms of NP-completeness,
+
+1506
+01:27:47,428 --> 01:27:49,097
+whereas these have.
+
+1507
+01:27:49,097 --> 01:27:53,368
+And if you're not NP-complete,
+you're in NL again.
+
+1508
+01:27:53,434 --> 01:27:55,937
+So that's
+the short story about bounded gadgets.
+
+1509
+01:27:55,937 --> 01:27:59,907
+If you're interested in more,
+you can check out the corresponding paper.
+
+1510
+01:27:59,907 --> 01:28:03,511
+This is one of the first papers in gadget
+theory.
+
+1511
+01:28:03,611 --> 01:28:06,681
+You can generalize a lot of this
+to the LDAG scenario.
+
+1512
+01:28:06,748 --> 01:28:11,452
+For the distant opening, though,
+
+1513
+01:28:11,519 --> 01:28:14,555
+we only know how to prove hardness...
+
+1514
+01:28:14,555 --> 01:28:16,491
+if you have a distant opening LDAG,
+
+1515
+01:28:16,491 --> 01:28:19,627
+we know how to prove hardness only
+when you also have a no-return gadget.
+
+1516
+01:28:19,761 --> 01:28:23,631
+Just like we needed with the opening door
+with one button
+
+1517
+01:28:23,698 --> 01:28:25,400
+in the nonplanar scenario.
+
+1518
+01:28:25,400 --> 01:28:29,170
+The just in closing,
+just like with the closing door,
+
+1519
+01:28:29,337 --> 01:28:32,707
+you can always prove
+no hardness with LDAGs.
+
+1520
+01:28:32,807 --> 01:28:35,777
+So a lot of this DAG theory
+
+1521
+01:28:35,777 --> 01:28:39,947
+applies also to the LDAG theory,
+which is nice.
+
+1522
+01:28:40,014 --> 01:28:40,915
+Great.
+
+1523
+01:28:40,915 --> 01:28:46,054
+That is whirlwind tour of the general
+theory of motion planning gadgets.
+
+1524
+01:28:46,054 --> 01:28:50,725
+Very powerful for proving hardness
+of your favorite motion planning problem,
+
+1525
+01:28:50,725 --> 01:28:53,795
+where you have an agent running around
+interacting with local state.
