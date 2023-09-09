@@ -1,0 +1,8876 @@
+﻿1
+00:00:03,141 --> 00:00:04,016
+PROFESSOR: All right.
+
+2
+00:00:04,016 --> 00:00:05,930
+Welcome back to 6.890.
+
+3
+00:00:05,930 --> 00:00:09,780
+Today we start a series of
+lectures on satisfiability.
+
+4
+00:00:09,780 --> 00:00:11,590
+We saw a little bit
+about satisfiability
+
+5
+00:00:11,590 --> 00:00:13,620
+in the first lecture.
+
+6
+00:00:13,620 --> 00:00:16,930
+Now we're going to do it right,
+and do it more intensely,
+
+7
+00:00:16,930 --> 00:00:18,110
+and see a lot of examples.
+
+8
+00:00:18,110 --> 00:00:20,300
+Today we'll just
+see a few examples
+
+9
+00:00:20,300 --> 00:00:24,080
+of using SAT to prove
+NP-completeness or NP-hardness.
+
+10
+00:00:24,080 --> 00:00:28,590
+But over the next lecture or two
+we will see many more examples.
+
+11
+00:00:28,590 --> 00:00:32,560
+And SAT is really the
+most common problem
+
+12
+00:00:32,560 --> 00:00:34,830
+that everyone uses
+to prove NP-hardness.
+
+13
+00:00:34,830 --> 00:00:38,490
+So this is the moment you've
+all been waiting for, I suppose.
+
+14
+00:00:38,490 --> 00:00:41,130
+This is one of the
+motivations for organizing
+
+15
+00:00:41,130 --> 00:00:43,700
+this whole class, so we
+can tell you all about SAT,
+
+16
+00:00:43,700 --> 00:00:46,140
+it's many variations, so
+you get to learn them all,
+
+17
+00:00:46,140 --> 00:00:47,830
+and then see lots
+of different ways
+
+18
+00:00:47,830 --> 00:00:50,510
+you can SAT to
+represent your problems.
+
+19
+00:00:50,510 --> 00:00:52,680
+So without further
+ado, let's get started.
+
+20
+00:00:58,880 --> 00:01:05,080
+Today I'm going to give you
+a whole bunch of problems
+
+21
+00:01:05,080 --> 00:01:09,434
+and definitions, and then we
+will do reductions afterwards.
+
+22
+00:01:09,434 --> 00:01:11,350
+So there's going to be
+a lot of problems here.
+
+23
+00:01:11,350 --> 00:01:13,600
+You probably will have
+trouble remembering them all,
+
+24
+00:01:13,600 --> 00:01:14,540
+there are so many.
+
+25
+00:01:14,540 --> 00:01:16,142
+But in particular,
+the notes serve
+
+26
+00:01:16,142 --> 00:01:17,600
+as a useful reference,
+like, here's
+
+27
+00:01:17,600 --> 00:01:19,600
+all the versions you
+might care about-- here's
+
+28
+00:01:19,600 --> 00:01:22,340
+which ones are hard,
+which ones are easy.
+
+29
+00:01:22,340 --> 00:01:26,550
+So with that in mind,
+get ready for the ride.
+
+30
+00:01:26,550 --> 00:01:30,570
+So the original SAT
+problem is you're
+
+31
+00:01:30,570 --> 00:01:43,680
+given a Boolean formula, which
+is like over the operators
+
+32
+00:01:43,680 --> 00:01:46,105
+AND, OR, and NOT.
+
+33
+00:01:46,105 --> 00:01:47,730
+And in case you look
+at the literature,
+
+34
+00:01:47,730 --> 00:01:54,260
+usually AND is the wedge, OR
+is the vee, and NOT is the neg?
+
+35
+00:01:54,260 --> 00:01:57,050
+I don't know the
+name of that symbol.
+
+36
+00:01:57,050 --> 00:02:08,930
+And it's over n
+variables x_1, x_2, ... x_n.
+
+37
+00:02:08,930 --> 00:02:10,680
+So usually, you're not
+given true or false
+
+38
+00:02:10,680 --> 00:02:14,470
+so that you can construct
+them by saying, x_1 and not x_ 1.
+
+39
+00:02:14,470 --> 00:02:15,220
+That's never true.
+
+40
+00:02:15,220 --> 00:02:16,530
+So that's false, for example.
+
+41
+00:02:16,530 --> 00:02:18,870
+And then you could
+negate that and get true.
+
+42
+00:02:18,870 --> 00:02:21,290
+And the question is, can
+you set the variables
+
+43
+00:02:21,290 --> 00:02:22,470
+to make the formula true?
+
+44
+00:02:35,920 --> 00:02:38,630
+So that's the general problem.
+
+45
+00:02:38,630 --> 00:02:40,330
+This is the very
+first problem proved
+
+46
+00:02:40,330 --> 00:02:44,704
+to be NP-complete by
+Cook and then by Levin.
+
+47
+00:02:44,704 --> 00:02:46,620
+So it's usually called
+the Cook-Levin theorem,
+
+48
+00:02:46,620 --> 00:02:49,550
+that satisfiability
+is NP-complete.
+
+49
+00:02:49,550 --> 00:02:52,070
+And I was looking at
+the paper the other day.
+
+50
+00:02:52,070 --> 00:02:55,870
+It doesn't actually mention
+the notion of NP in that paper.
+
+51
+00:02:55,870 --> 00:02:56,870
+I think that came later.
+
+52
+00:02:56,870 --> 00:03:01,160
+But the notion is there.
+
+53
+00:03:01,160 --> 00:03:12,470
+So I'll give you another
+version of the same problem,
+
+54
+00:03:12,470 --> 00:03:15,100
+essentially, called circuit SAT.
+
+55
+00:03:15,100 --> 00:03:18,050
+This is a useful perspective
+which we will see probably
+
+56
+00:03:18,050 --> 00:03:19,150
+not till next class.
+
+57
+00:03:19,150 --> 00:03:21,995
+But another way
+to think about it.
+
+58
+00:03:21,995 --> 00:03:23,370
+Also makes  the
+NP-completeness
+
+59
+00:03:23,370 --> 00:03:24,536
+a little bit more intuitive.
+
+60
+00:03:32,391 --> 00:03:32,890
+OK.
+
+61
+00:03:32,890 --> 00:03:35,790
+This is kind of the algebraic
+way of thinking about things.
+
+62
+00:03:35,790 --> 00:03:38,310
+You have variables and
+you write operators,
+
+63
+00:03:38,310 --> 00:03:41,030
+and you use parentheses
+and that sort of thing.
+
+64
+00:03:41,030 --> 00:03:42,930
+But if you're more
+graphically inclined,
+
+65
+00:03:42,930 --> 00:03:47,890
+you could imagine you
+have your x_is as wires,
+
+66
+00:03:47,890 --> 00:03:53,279
+they're connected to gates--
+this is an AND gate, this is
+
+67
+00:03:53,279 --> 00:03:57,540
+an OR gate, this is a negation.
+
+68
+00:03:57,540 --> 00:04:03,400
+So you can imagine
+something like this.
+
+69
+00:04:03,400 --> 00:04:09,290
+So you can, generally, copy
+your data and do various things.
+
+70
+00:04:09,290 --> 00:04:11,297
+And then this is the output.
+
+71
+00:04:11,297 --> 00:04:13,255
+And so this is what you
+might call the formula.
+
+72
+00:04:16,270 --> 00:04:21,200
+It is the AND of the
+negation of the OR of x_3
+
+73
+00:04:21,200 --> 00:04:24,030
+and the AND of x_1 and x_2.
+
+74
+00:04:24,030 --> 00:04:27,900
+And then, pop off, it's also
+ANDed with this thing again.
+
+75
+00:04:27,900 --> 00:04:29,890
+So the one advantage
+of circuit SAT
+
+76
+00:04:29,890 --> 00:04:34,040
+is you can reuse complex
+computations, just
+
+77
+00:04:34,040 --> 00:04:35,660
+by copying the signal.
+
+78
+00:04:35,660 --> 00:04:38,860
+Normally, in a formula,
+you'd have to copy and paste
+
+79
+00:04:38,860 --> 00:04:39,990
+that chunk of the formula.
+
+80
+00:04:39,990 --> 00:04:42,310
+So you could imagine this
+lets you write formulas
+
+81
+00:04:42,310 --> 00:04:44,050
+slightly more efficiently.
+
+82
+00:04:44,050 --> 00:04:46,750
+I think it doesn't.
+
+83
+00:04:46,750 --> 00:04:49,770
+If you reuse things, you
+can always write them
+
+84
+00:04:49,770 --> 00:04:51,420
+as a variable over here.
+
+85
+00:04:51,420 --> 00:04:52,292
+Question.
+
+86
+00:04:52,292 --> 00:04:54,046
+AUDIENCE: What about feedback?
+
+87
+00:04:54,046 --> 00:04:55,420
+PROFESSOR: Feedback
+is forbidden.
+
+88
+00:04:55,420 --> 00:04:57,390
+So this should be a
+directed acyclic graph.
+
+89
+00:04:57,390 --> 00:04:57,910
+Yeah.
+
+90
+00:04:57,910 --> 00:05:00,360
+Good question.
+
+91
+00:05:00,360 --> 00:05:06,000
+So it's an acyclic circuit.
+
+92
+00:05:06,000 --> 00:05:08,860
+That would be another problem,
+which is harder than sNP.
+
+93
+00:05:08,860 --> 00:05:12,570
+So circuit SAT is
+NP-complete when it's acyclic
+
+94
+00:05:12,570 --> 00:05:14,895
+and you can convert
+between one and the other.
+
+95
+00:05:14,895 --> 00:05:16,395
+And it's a little
+bit more intuitive
+
+96
+00:05:16,395 --> 00:05:20,590
+that you can write arbitrary
+computations as a circuit.
+
+97
+00:05:20,590 --> 00:05:24,860
+And then this is a question
+of whether you can--
+
+98
+00:05:24,860 --> 00:05:27,100
+the existence of some
+setting of the x_i's
+
+99
+00:05:27,100 --> 00:05:30,110
+is the same thing
+as saying, is there
+
+100
+00:05:30,110 --> 00:05:34,840
+some set of guesses that
+will lead me to a yes answer?
+
+101
+00:05:34,840 --> 00:05:37,070
+So that is intuitively
+like NP and that's
+
+102
+00:05:37,070 --> 00:05:40,080
+roughly how you prove these
+problems are NP-complete.
+
+103
+00:05:40,080 --> 00:05:43,610
+You write the computation--
+the checking computation--
+
+104
+00:05:43,610 --> 00:05:47,730
+to see whether your certificate
+is a valid certificate
+
+105
+00:05:47,730 --> 00:05:50,050
+as a circuit or as a formula.
+
+106
+00:05:50,050 --> 00:05:55,170
+And then the existential
+quantifiers on the x_i's let you
+
+107
+00:05:55,170 --> 00:05:58,890
+do all the guessing to see
+whether they're-- and this is
+
+108
+00:05:58,890 --> 00:05:59,580
+biased, right?
+
+109
+00:05:59,580 --> 00:06:01,040
+It's trying to find a true.
+
+110
+00:06:01,040 --> 00:06:02,420
+And that's exactly what NP does.
+
+111
+00:06:02,420 --> 00:06:07,160
+It's trying to find a true path
+that ends up answering yes.
+
+112
+00:06:07,160 --> 00:06:09,510
+So yes and true
+are symmetric here.
+
+113
+00:06:09,510 --> 00:06:13,830
+So that's the extent of
+complexity theory
+
+114
+00:06:13,830 --> 00:06:15,610
+we'll do today.
+
+115
+00:06:15,610 --> 00:06:18,090
+I'm going to give you
+more versions of SAT.
+
+116
+00:06:18,090 --> 00:06:21,180
+Next one is CNF SAT.
+
+117
+00:06:21,180 --> 00:06:24,270
+CNF stands for
+conjunctive normal form.
+
+118
+00:06:30,220 --> 00:06:32,170
+I hope you all know
+propositional logic.
+
+119
+00:06:32,170 --> 00:06:34,390
+Because we're going to
+be doing a bunch today.
+
+120
+00:06:34,390 --> 00:06:37,610
+So ANDs are also
+called conjunctions,
+
+121
+00:06:37,610 --> 00:06:39,400
+ORs are called disjunctions.
+
+122
+00:06:39,400 --> 00:06:41,640
+This is old terminology.
+
+123
+00:06:41,640 --> 00:06:49,800
+So conjunctive normal form
+means that your formula
+
+124
+00:06:49,800 --> 00:06:51,360
+is an AND of clauses.
+
+125
+00:06:56,830 --> 00:06:57,870
+What's a clause?
+
+126
+00:06:57,870 --> 00:07:03,360
+Well a clause is going
+to be an OR of literals.
+
+127
+00:07:06,412 --> 00:07:07,120
+What's a literal?
+
+128
+00:07:11,320 --> 00:07:16,850
+A literal is going
+to be x_i or not x_i.
+
+129
+00:07:19,400 --> 00:07:20,450
+So these are variables.
+
+130
+00:07:20,450 --> 00:07:22,200
+So variables are
+possible literals
+
+131
+00:07:22,200 --> 00:07:25,210
+and the negations of variables
+and literals, and that's it.
+
+132
+00:07:25,210 --> 00:07:27,430
+And that is CNF SAT.
+
+133
+00:07:27,430 --> 00:07:30,750
+So it's a special case of SAT
+where your formula happens
+
+134
+00:07:30,750 --> 00:07:34,140
+to have this picture.
+
+135
+00:07:34,140 --> 00:07:37,790
+And in general, you can
+convert arbitrary formulas
+
+136
+00:07:37,790 --> 00:07:39,530
+into conjunctive normal form.
+
+137
+00:07:39,530 --> 00:07:43,110
+It's a normal form, meaning
+it's essentially unique.
+
+138
+00:07:43,110 --> 00:07:45,940
+A minimal CNF formula is unique.
+
+139
+00:07:45,940 --> 00:07:47,640
+So there's a known
+transformation
+
+140
+00:07:47,640 --> 00:07:49,084
+to do that, polynomial time.
+
+141
+00:07:49,084 --> 00:07:50,500
+That's how you
+prove this is hard.
+
+142
+00:07:53,370 --> 00:07:55,500
+Another view in this picture--
+
+143
+00:07:55,500 --> 00:08:00,590
+We'll use CNF SAT a lot, usually
+in even more specialized form.
+
+144
+00:08:00,590 --> 00:08:03,100
+But already, one
+useful view-- which
+
+145
+00:08:03,100 --> 00:08:09,090
+we saw a little bit in lecture
+one, we'll see it again today--
+
+146
+00:08:09,090 --> 00:08:13,720
+is you can view such an
+input as a bipartite graph.
+
+147
+00:08:13,720 --> 00:08:22,820
+You have, let's say,
+variables on the one side
+
+148
+00:08:22,820 --> 00:08:26,940
+and clauses on the other side.
+
+149
+00:08:26,940 --> 00:08:28,970
+And then you have two
+types of connections,
+
+150
+00:08:28,970 --> 00:08:33,700
+a clause-- in general, a clause
+is going to have degree three.
+
+151
+00:08:33,700 --> 00:08:38,050
+And let's say the
+dashed edges are negated
+
+152
+00:08:38,050 --> 00:08:40,820
+and the solid edges
+are not negated.
+
+153
+00:08:40,820 --> 00:08:44,785
+So this is a clause that
+involves x_1 or x_2 or not x_3.
+
+154
+00:08:49,980 --> 00:08:51,600
+And in general, each
+of these clauses
+
+155
+00:08:51,600 --> 00:08:57,030
+is going to involve some
+number of variables over here.
+
+156
+00:08:57,030 --> 00:08:59,630
+I said three, but I haven't
+actually gotten to three yet.
+
+157
+00:08:59,630 --> 00:09:02,010
+That is 3SAT.
+
+158
+00:09:02,010 --> 00:09:04,540
+So the most common
+form of CNF SAT we use
+
+159
+00:09:04,540 --> 00:09:13,630
+is called 3SAT, where it's CNF
+SAT in the special case where
+
+160
+00:09:13,630 --> 00:09:18,590
+the clause is an
+or three literals.
+
+161
+00:09:18,590 --> 00:09:22,501
+And you can assume it's
+exactly three or at most three.
+
+162
+00:09:22,501 --> 00:09:24,750
+So that's like saying the
+degree of each of the clause
+
+163
+00:09:24,750 --> 00:09:26,460
+nodes here is exactly three.
+
+164
+00:09:29,010 --> 00:09:30,770
+And that's the
+problem with it we
+
+165
+00:09:30,770 --> 00:09:33,710
+used for proving Super
+Mario Brothers was
+
+166
+00:09:33,710 --> 00:09:36,270
+hard in the first lecture.
+
+167
+00:09:36,270 --> 00:09:38,680
+So in my notes I have
+things nicely indented.
+
+168
+00:09:38,680 --> 00:09:42,590
+So we had CNF SAT, which
+is a special case of SAT,
+
+169
+00:09:42,590 --> 00:09:45,000
+and then 3SAT, which is a
+special case of CNF SAT.
+
+170
+00:09:45,000 --> 00:09:49,752
+A special case of 3SAT that's
+also hard is called 3SAT-5.
+
+171
+00:09:49,752 --> 00:09:51,460
+I don't know that this
+is super standard,
+
+172
+00:09:51,460 --> 00:09:54,710
+but I found at least one
+paper that gives it this name.
+
+173
+00:09:54,710 --> 00:10:04,010
+This says that each
+variable occurs in less than
+
+174
+00:10:04,010 --> 00:10:09,650
+or equal to five clauses, either
+in it's positive or negated
+
+175
+00:10:09,650 --> 00:10:10,680
+form.
+
+176
+00:10:10,680 --> 00:10:15,790
+So this is sometimes called
+max five occurrence 3-SAT.
+
+177
+00:10:15,790 --> 00:10:18,900
+And I think you can even make
+them exactly five occurrances
+
+178
+00:10:18,900 --> 00:10:20,110
+if you want.
+
+179
+00:10:20,110 --> 00:10:22,471
+But, at most, five occurrances
+is usually what you want.
+
+180
+00:10:22,471 --> 00:10:22,970
+Question.
+
+181
+00:10:22,970 --> 00:10:26,124
+AUDIENCE: Is that
+tight? Is 3SAT-4 in P?
+
+182
+00:10:26,124 --> 00:10:27,540
+PROFESSOR: That's
+a good question.
+
+183
+00:10:27,540 --> 00:10:29,240
+3SAT-4?
+
+184
+00:10:29,240 --> 00:10:30,550
+I don't know.
+
+185
+00:10:30,550 --> 00:10:34,274
+I would guess it's tight.
+
+186
+00:10:34,274 --> 00:10:36,440
+Because there are a lot of
+people that mention five,
+
+187
+00:10:36,440 --> 00:10:39,131
+but I haven't seen a mention
+that four is polynomial.
+
+188
+00:10:39,131 --> 00:10:39,630
+All right?
+
+189
+00:10:39,630 --> 00:10:42,020
+So we should figure that out.
+
+190
+00:10:42,020 --> 00:10:42,730
+Other questions?
+
+191
+00:10:42,730 --> 00:10:44,971
+Or it's probably the same one.
+
+192
+00:10:44,971 --> 00:10:45,470
+All right.
+
+193
+00:10:45,470 --> 00:10:47,850
+Here's another
+special case of 3SAT.
+
+194
+00:10:51,940 --> 00:10:52,810
+Monotone 3SAT.
+
+195
+00:10:55,570 --> 00:11:09,475
+This is where each clause is
+all positive or all negative.
+
+196
+00:11:15,240 --> 00:11:17,510
+So of course, if every
+clause is all positive,
+
+197
+00:11:17,510 --> 00:11:21,860
+then you could set all
+the variables to true
+
+198
+00:11:21,860 --> 00:11:23,120
+and you'll satisfy.
+
+199
+00:11:23,120 --> 00:11:25,536
+If all the classes are negative,
+you set all the variables
+
+200
+00:11:25,536 --> 00:11:26,920
+to false and you satisfy.
+
+201
+00:11:26,920 --> 00:11:29,374
+But if half the clauses
+are all positive,
+
+202
+00:11:29,374 --> 00:11:31,540
+half the clauses are all
+negative, then that's hard.
+
+203
+00:11:31,540 --> 00:11:34,100
+That's called monotone 3SAT.
+
+204
+00:11:34,100 --> 00:11:36,340
+I've actually not
+seen this used,
+
+205
+00:11:36,340 --> 00:11:38,965
+but I imagine it is helpful
+in a few situations.
+
+206
+00:11:41,570 --> 00:11:43,080
+This is definitely
+the most common.
+
+207
+00:11:43,080 --> 00:11:45,059
+Almost every proof
+starts with 3SAT.
+
+208
+00:11:45,059 --> 00:11:47,100
+But it's really good to
+know all the extra things
+
+209
+00:11:47,100 --> 00:11:49,600
+you can assume about your 3SAT
+problem and it still be hard.
+
+210
+00:11:52,350 --> 00:11:54,720
+I have more hard versions,
+but before we get there
+
+211
+00:11:54,720 --> 00:11:57,389
+I'm going to tell you
+about some easy versions.
+
+212
+00:11:57,389 --> 00:11:57,930
+And question.
+
+213
+00:11:57,930 --> 00:12:01,480
+AUDIENCE: Is monotone 3SAT-5?
+
+214
+00:12:01,480 --> 00:12:02,870
+PROFESSOR: Another
+good question.
+
+215
+00:12:02,870 --> 00:12:05,880
+Monotone 3SAT-5, is
+that NP complete?
+
+216
+00:12:05,880 --> 00:12:07,540
+I don't know.
+
+217
+00:12:07,540 --> 00:12:09,410
+Partly these were done
+at different times.
+
+218
+00:12:12,250 --> 00:12:14,680
+Monotone 3SAT is mentioned
+in Garey and Johnson
+
+219
+00:12:14,680 --> 00:12:18,650
+as done in 1978, presumably for
+a particular hardness proof.
+
+220
+00:12:18,650 --> 00:12:23,010
+3SAT-5 is probably
+a very old idea.
+
+221
+00:12:23,010 --> 00:12:25,280
+Probably this idea of
+reducing occurances
+
+222
+00:12:25,280 --> 00:12:26,410
+goes to some logic thing.
+
+223
+00:12:26,410 --> 00:12:29,470
+But the earliest reference
+I found was 1998,
+
+224
+00:12:29,470 --> 00:12:32,090
+and most people had forgotten
+about monotone 3SAT by then.
+
+225
+00:12:32,090 --> 00:12:34,556
+So it probably just
+hasn't been considered,
+
+226
+00:12:34,556 --> 00:12:35,430
+but it might be easy.
+
+227
+00:12:35,430 --> 00:12:35,930
+Yeah.
+
+228
+00:12:39,049 --> 00:12:41,340
+AUDIENCE: The construction
+to limit to five variables
+
+229
+00:12:41,340 --> 00:12:45,727
+should I believe work with the
+monotone construction as well.
+
+230
+00:12:45,727 --> 00:12:46,310
+PROFESSOR: OK.
+
+231
+00:12:46,310 --> 00:12:47,170
+Conjecture.
+
+232
+00:12:47,170 --> 00:12:48,050
+Yes, it's hard.
+
+233
+00:12:50,790 --> 00:12:51,290
+OK.
+
+234
+00:12:56,670 --> 00:13:00,970
+But stay tuned for
+a certain answer.
+
+235
+00:13:00,970 --> 00:13:02,650
+So let me tell you
+some polynomial time
+
+236
+00:13:02,650 --> 00:13:05,750
+versions of SAT.
+
+237
+00:13:05,750 --> 00:13:09,350
+The three is tight:
+if you have a clause
+
+238
+00:13:09,350 --> 00:13:13,450
+being an or of two literals,
+but otherwise they're
+
+239
+00:13:13,450 --> 00:13:15,650
+just like 3SAT -- or
+just like CNF SAT,
+
+240
+00:13:15,650 --> 00:13:21,350
+I guess -- then this
+is polynomial time.
+
+241
+00:13:21,350 --> 00:13:26,200
+And let me give you
+a rough sketch why.
+
+242
+00:13:26,200 --> 00:13:30,070
+So if you have an
+or of two literals,
+
+243
+00:13:30,070 --> 00:13:32,940
+that's something like x or y.
+
+244
+00:13:32,940 --> 00:13:35,810
+And the little bit of
+propositional logic
+
+245
+00:13:35,810 --> 00:13:41,880
+you should know is the meaning
+of, let's say, a implies b.
+
+246
+00:13:41,880 --> 00:13:45,000
+Saying this should
+hold-- and a and b
+
+247
+00:13:45,000 --> 00:13:51,657
+are either true or false-- is
+the same as saying not a or b.
+
+248
+00:13:51,657 --> 00:13:54,240
+Because if a is false, then the
+implication tells you nothing.
+
+249
+00:13:54,240 --> 00:13:58,000
+If a is true, then it better
+be the case that b is true.
+
+250
+00:13:58,000 --> 00:13:59,514
+So either a is
+false, in which case
+
+251
+00:13:59,514 --> 00:14:01,430
+you don't worry about
+something, or a is true,
+
+252
+00:14:01,430 --> 00:14:03,310
+and then b better
+be true, as well.
+
+253
+00:14:03,310 --> 00:14:05,580
+So these are the same--
+maybe write triple
+
+254
+00:14:05,580 --> 00:14:08,910
+equals, for these are
+equivalent logical statements.
+
+255
+00:14:08,910 --> 00:14:11,120
+So we can apply
+that here and say
+
+256
+00:14:11,120 --> 00:14:16,140
+x or y is the same thing
+as not x implies y,
+
+257
+00:14:16,140 --> 00:14:17,486
+or not y implies x.
+
+258
+00:14:17,486 --> 00:14:18,110
+It's symmetric.
+
+259
+00:14:18,110 --> 00:14:20,800
+This is now just
+a simple implication.
+
+260
+00:14:20,800 --> 00:14:24,420
+If we ever set x to be
+false, then y must be true.
+
+261
+00:14:24,420 --> 00:14:26,570
+And every clause
+can be converted
+
+262
+00:14:26,570 --> 00:14:27,660
+into such an implication.
+
+263
+00:14:27,660 --> 00:14:30,870
+You can build a graph of
+all such implications.
+
+264
+00:14:30,870 --> 00:14:34,020
+And then, turns out, to
+solve 2SAT, you can just
+
+265
+00:14:34,020 --> 00:14:36,834
+pick your favorite variable,
+x_i, set it to true,
+
+266
+00:14:36,834 --> 00:14:38,500
+follow all implications,
+see whether you
+
+267
+00:14:38,500 --> 00:14:39,710
+get a contradiction.
+
+268
+00:14:39,710 --> 00:14:41,800
+If you don't, then
+the claim is there
+
+269
+00:14:41,800 --> 00:14:43,890
+is a satisfying assignment
+where x_i equals true.
+
+270
+00:14:43,890 --> 00:14:47,000
+So you can try that
+with x_i true, x_i false.
+
+271
+00:14:47,000 --> 00:14:48,740
+If there's any hope,
+then one of them
+
+272
+00:14:48,740 --> 00:14:50,910
+should say no contradiction.
+
+273
+00:14:50,910 --> 00:14:51,970
+Then just run with that.
+
+274
+00:14:51,970 --> 00:14:54,780
+And you can prove by induction
+that won't get stuck.
+
+275
+00:14:54,780 --> 00:14:59,010
+It won't make any
+impossible assignments,
+
+276
+00:14:59,010 --> 00:15:01,840
+unless there was no
+assignment to begin with.
+
+277
+00:15:01,840 --> 00:15:05,850
+So that's why 2SAT is easy
+and one of the situations
+
+278
+00:15:05,850 --> 00:15:07,910
+you should be careful about.
+
+279
+00:15:07,910 --> 00:15:15,330
+On the other hand,
+MAX 2SAT is hard.
+
+280
+00:15:15,330 --> 00:15:17,470
+So MAX 2SAT is
+you're given a 2SAT
+
+281
+00:15:17,470 --> 00:15:20,020
+formula-- you're
+given a 2CNF formula--
+
+282
+00:15:20,020 --> 00:15:23,880
+and normally, we ask for an
+assignment to the variables
+
+283
+00:15:23,880 --> 00:15:26,410
+that satisfies all the
+clauses, but if you just
+
+284
+00:15:26,410 --> 00:15:36,460
+want to satisfy k of them--
+so satisfy k of the clauses.
+
+285
+00:15:36,460 --> 00:15:38,050
+So usually you
+want to maximize k,
+
+286
+00:15:38,050 --> 00:15:40,610
+but let's say, for a decision
+problem, I'll give you k
+
+287
+00:15:40,610 --> 00:15:43,030
+and I want to know, can you
+satisfy k of the clauses?
+
+288
+00:15:43,030 --> 00:15:44,690
+That problem is NP hard.
+
+289
+00:15:49,060 --> 00:15:50,350
+So that can be useful.
+
+290
+00:15:50,350 --> 00:15:52,030
+If you can only
+represent 2SAT clauses,
+
+291
+00:15:52,030 --> 00:15:54,220
+but you can somehow get
+a maximization thing in,
+
+292
+00:15:54,220 --> 00:15:56,660
+then you're golden again.
+
+293
+00:15:56,660 --> 00:15:58,840
+But 2SAT alone is not enough.
+
+294
+00:15:58,840 --> 00:16:04,710
+There are some other
+easy-to-solve versions.
+
+295
+00:16:04,710 --> 00:16:07,390
+This is essentially a
+generalization of 2SAT
+
+296
+00:16:07,390 --> 00:16:08,290
+is Horn SAT.
+
+297
+00:16:11,855 --> 00:16:13,480
+It's maybe a little
+bit more surprising
+
+298
+00:16:13,480 --> 00:16:16,850
+the first time you see it.
+
+299
+00:16:16,850 --> 00:16:19,799
+Again, it's a special
+case of CNF SAT, which
+
+300
+00:16:19,799 --> 00:16:21,090
+you can tell by my indentation.
+
+301
+00:16:27,920 --> 00:16:30,580
+Each clause has at most
+one negative literal.
+
+302
+00:16:34,240 --> 00:16:36,670
+So that means a clause is
+going to look something
+
+303
+00:16:36,670 --> 00:16:40,250
+like-- has one negative?
+
+304
+00:16:40,250 --> 00:16:41,900
+Sorry.
+
+305
+00:16:41,900 --> 00:16:43,400
+Horn is the other way around.
+
+306
+00:16:43,400 --> 00:16:45,530
+We will get-- that
+problem is also solvable.
+
+307
+00:16:45,530 --> 00:16:48,440
+But the one that's called
+Horn SAT is-- there's
+
+308
+00:16:48,440 --> 00:16:50,200
+at most one positive literal.
+
+309
+00:16:50,200 --> 00:16:51,830
+So that means
+you're formula is going
+
+310
+00:16:51,830 --> 00:16:58,999
+to look something like not
+x or not y are not z or w.
+
+311
+00:16:58,999 --> 00:17:00,580
+So there's one positive.
+
+312
+00:17:00,580 --> 00:17:03,310
+The rest are all negated.
+
+313
+00:17:03,310 --> 00:17:06,940
+And we can do some more
+propositional logic.
+
+314
+00:17:06,940 --> 00:17:09,050
+So use De Morgan's theorem.
+
+315
+00:17:09,050 --> 00:17:13,015
+This is the same thing as
+the negation of the AND.
+
+316
+00:17:16,800 --> 00:17:17,300
+OK?
+
+317
+00:17:17,300 --> 00:17:21,280
+And then we can apply
+this helpful rule.
+
+318
+00:17:21,280 --> 00:17:26,890
+And say this is the same thing
+as if x and y and z are true,
+
+319
+00:17:26,890 --> 00:17:30,400
+then w better be true.
+
+320
+00:17:30,400 --> 00:17:35,080
+And so you can use essentially
+the same algorithm that
+
+321
+00:17:35,080 --> 00:17:37,550
+you're-- I mean,
+slightly harder to check.
+
+322
+00:17:37,550 --> 00:17:39,760
+If all three of these
+things are true,
+
+323
+00:17:39,760 --> 00:17:41,860
+then this one better be true.
+
+324
+00:17:41,860 --> 00:17:43,590
+But it's always a guarantee.
+
+325
+00:17:43,590 --> 00:17:46,690
+You know this thing must happen.
+
+326
+00:17:46,690 --> 00:17:50,250
+Just like in 2-SAT, if x
+happened to be set to false,
+
+327
+00:17:50,250 --> 00:17:51,459
+then you know y must be true.
+
+328
+00:17:51,459 --> 00:17:53,458
+So you can just follow
+these implication chains.
+
+329
+00:17:53,458 --> 00:17:55,855
+If you get a contradiction,
+you know you're in trouble.
+
+330
+00:17:55,855 --> 00:17:57,230
+If you don't get
+a contradiction,
+
+331
+00:17:57,230 --> 00:17:58,840
+again, you can
+prove by induction
+
+332
+00:17:58,840 --> 00:18:01,030
+that all will be well.
+
+333
+00:18:01,030 --> 00:18:02,616
+And so you just
+make sure every time
+
+334
+00:18:02,616 --> 00:18:04,740
+you assign a variable you
+don't get a contradiction
+
+335
+00:18:04,740 --> 00:18:09,530
+and you can satisfy
+any Horn formula.
+
+336
+00:18:09,530 --> 00:18:10,180
+So that's cool.
+
+337
+00:18:22,234 --> 00:18:23,650
+So I didn't write
+it on the board,
+
+338
+00:18:23,650 --> 00:18:27,460
+but this is
+polynomially solvable.
+
+339
+00:18:27,460 --> 00:18:33,200
+There's a symmetric version,
+which is called Dual Horn SAT.
+
+340
+00:18:36,520 --> 00:18:41,170
+So this is the same thing, but
+at most one negative literal
+
+341
+00:18:41,170 --> 00:18:43,590
+in each clause.
+
+342
+00:18:43,590 --> 00:18:46,600
+And this is also solvable
+in polynomial time
+
+343
+00:18:46,600 --> 00:18:50,650
+because you can just negate all
+the variables in your formula.
+
+344
+00:18:50,650 --> 00:18:52,150
+And then when you
+get an answer, you
+
+345
+00:18:52,150 --> 00:18:53,910
+can negate all the
+variables again
+
+346
+00:18:53,910 --> 00:18:56,410
+to get the solution to
+the original problem.
+
+347
+00:18:56,410 --> 00:18:58,710
+So because you can
+solve Horn SAT,
+
+348
+00:18:58,710 --> 00:19:00,348
+you can solve Dual Horn SAT.
+
+349
+00:19:06,330 --> 00:19:07,780
+Cool.
+
+350
+00:19:07,780 --> 00:19:14,990
+One more bad case I'll
+mention now is DNF SAT.
+
+351
+00:19:14,990 --> 00:19:19,240
+You might say, well, why do
+we make things ANDs of ORs?
+
+352
+00:19:19,240 --> 00:19:21,090
+What about ORs of ANDs?
+
+353
+00:19:21,090 --> 00:19:23,902
+So DNF is disjunctive
+normal form,
+
+354
+00:19:23,902 --> 00:19:25,735
+meaning the disjunctions
+are on the outside.
+
+355
+00:19:32,640 --> 00:19:42,412
+So the formula is an
+AND of ORs-- sorry.
+
+356
+00:19:42,412 --> 00:19:43,620
+AUDIENCE: It's an OR of ANDs.
+
+357
+00:19:43,620 --> 00:19:44,495
+PROFESSOR: Other way.
+
+358
+00:19:48,690 --> 00:19:54,060
+OR of ANDs of literals.
+
+359
+00:19:54,060 --> 00:19:55,940
+We use some shorthand,
+not-defined clauses
+
+360
+00:19:55,940 --> 00:19:57,856
+here because we don't
+really use this problem,
+
+361
+00:19:57,856 --> 00:20:01,970
+because it's polynomial time.
+
+362
+00:20:01,970 --> 00:20:04,364
+Why is it polynomial time?
+
+363
+00:20:04,364 --> 00:20:06,580
+AUDIENCE: You can just
+evaluate one of the ANDs.
+
+364
+00:20:06,580 --> 00:20:07,960
+PROFESSOR: Just evaluate
+one of the ANDs.
+
+365
+00:20:07,960 --> 00:20:08,210
+If you--
+
+366
+00:20:08,210 --> 00:20:09,110
+AUDIENCE: If it's true.
+
+367
+00:20:09,110 --> 00:20:09,818
+PROFESSOR: Right.
+
+368
+00:20:09,818 --> 00:20:12,420
+It's true if any one
+of these is possible.
+
+369
+00:20:12,420 --> 00:20:15,350
+So you can just check for
+obvious contradictions, like x_i
+
+370
+00:20:15,350 --> 00:20:16,910
+and not x_i.
+
+371
+00:20:16,910 --> 00:20:19,220
+If that happens, then
+that clause is impossible.
+
+372
+00:20:19,220 --> 00:20:20,170
+Throw it away.
+
+373
+00:20:20,170 --> 00:20:22,170
+If any clause has no
+internal contradictions,
+
+374
+00:20:22,170 --> 00:20:23,824
+then just satisfy the clause.
+
+375
+00:20:23,824 --> 00:20:25,560
+OK?
+
+376
+00:20:25,560 --> 00:20:29,520
+It's basically-- the answer is
+yes whenever there is a clause.
+
+377
+00:20:29,520 --> 00:20:32,380
+It could be of the empty
+formula, no clauses.
+
+378
+00:20:32,380 --> 00:20:36,350
+So writing-- you can also
+write any formula into DNF.
+
+379
+00:20:36,350 --> 00:20:40,070
+It's like an enumeration of
+all the true possibilities.
+
+380
+00:20:40,070 --> 00:20:42,880
+But it takes exponential
+time to do so.
+
+381
+00:20:42,880 --> 00:20:45,800
+So it's a funny asymmetry
+between AND and OR.
+
+382
+00:20:45,800 --> 00:20:48,621
+That's life.
+
+383
+00:20:48,621 --> 00:20:49,120
+Yeah.
+
+384
+00:20:49,120 --> 00:20:51,769
+AUDIENCE: I just want
+to say, for Horn SAT,
+
+385
+00:20:51,769 --> 00:20:53,810
+even if you don't have
+Horn SAT or Dual Horn SAT,
+
+386
+00:20:53,810 --> 00:20:56,393
+you might have a formula where
+some renaming-- not necessarily
+
+387
+00:20:56,393 --> 00:20:58,810
+all of the literals--
+but renaming just some
+
+388
+00:20:58,810 --> 00:21:00,610
+of the literals will
+put it in Horn SAT.
+
+389
+00:21:00,610 --> 00:21:01,590
+And that's also in--
+
+390
+00:21:01,590 --> 00:21:02,173
+PROFESSOR: Oh.
+
+391
+00:21:02,173 --> 00:21:03,670
+Just negating some of them.
+
+392
+00:21:03,670 --> 00:21:04,770
+AUDIENCE: Yeah.
+
+393
+00:21:04,770 --> 00:21:06,660
+Like, each time a
+variable occurs,
+
+394
+00:21:06,660 --> 00:21:09,090
+you have to negate all the
+instances of that variable.
+
+395
+00:21:09,090 --> 00:21:11,590
+But these are called
+renamable Horn formulas.
+
+396
+00:21:11,590 --> 00:21:14,937
+And it's also-- finding the
+renaming is linear time.
+
+397
+00:21:14,937 --> 00:21:15,520
+PROFESSOR: OK.
+
+398
+00:21:15,520 --> 00:21:18,595
+So some kind of renamable Horn.
+
+399
+00:21:22,900 --> 00:21:25,066
+And by renaming, you just
+mean negating, right?
+
+400
+00:21:25,066 --> 00:21:25,690
+AUDIENCE: Yeah.
+
+401
+00:21:25,690 --> 00:21:28,860
+The term used in the
+literature is renamable Horn.
+
+402
+00:21:28,860 --> 00:21:35,040
+PROFESSOR: There exists
+a negation of, let's say,
+
+403
+00:21:35,040 --> 00:21:45,790
+some subset of the
+variable's x such that Horn.
+
+404
+00:21:45,790 --> 00:21:46,290
+OK?
+
+405
+00:21:46,290 --> 00:21:47,600
+That's the very concise version.
+
+406
+00:21:47,600 --> 00:21:50,266
+So you get to choose some of the
+variables to negate and make it
+
+407
+00:21:50,266 --> 00:21:53,195
+a Horn clause that's
+also polynomial time.
+
+408
+00:21:53,195 --> 00:21:54,380
+Cool.
+
+409
+00:21:54,380 --> 00:21:55,083
+Thank you.
+
+410
+00:21:58,710 --> 00:22:01,060
+You might be wondering at this
+point, how am I supp-- I mean,
+
+411
+00:22:01,060 --> 00:22:03,027
+do I have to remember
+all of these?
+
+412
+00:22:03,027 --> 00:22:04,360
+And in some sense
+the answer is yes.
+
+413
+00:22:04,360 --> 00:22:07,644
+But there is actually
+a dichotomy theorem
+
+414
+00:22:07,644 --> 00:22:09,310
+that will tell you
+which versions of SAT
+
+415
+00:22:09,310 --> 00:22:12,260
+are polynomial time and
+which versions are NP-hard,
+
+416
+00:22:12,260 --> 00:22:15,330
+and we'll cover that
+in one more page.
+
+417
+00:22:15,330 --> 00:22:19,260
+But I'm-- well, all of these
+are involved in the statement
+
+418
+00:22:19,260 --> 00:22:21,180
+of that dichotomy.
+
+419
+00:22:21,180 --> 00:22:23,770
+Not quite all, but most of them.
+
+420
+00:22:23,770 --> 00:22:25,340
+So it's not exactly a shortcut.
+
+421
+00:22:40,390 --> 00:22:42,730
+I would say a lot of
+the time, the problem
+
+422
+00:22:42,730 --> 00:22:45,160
+you're working with
+does not naturally
+
+423
+00:22:45,160 --> 00:22:46,560
+map onto ANDs and ORs.
+
+424
+00:22:46,560 --> 00:22:49,870
+It sort of involves bits of
+some sort-- there's a 0 and a 1
+
+425
+00:22:49,870 --> 00:22:54,280
+notion-- but they may not really
+correspond to logical notions
+
+426
+00:22:54,280 --> 00:22:55,980
+of true or false.
+
+427
+00:22:55,980 --> 00:22:58,350
+And the operations
+you can do on them
+
+428
+00:22:58,350 --> 00:23:02,130
+may not correspond to AND or
+OR, or anything nice like that.
+
+429
+00:23:02,130 --> 00:23:07,220
+So the next two versions
+of SAT are in that spirit.
+
+430
+00:23:12,160 --> 00:23:15,217
+So this is usually, these
+days, called 1-in-3 SAT,
+
+431
+00:23:15,217 --> 00:23:17,050
+but originally it was
+called exactly-1 3SAT.
+
+432
+00:23:26,260 --> 00:23:29,410
+So this is going to be a little
+bit weirder to write down,
+
+433
+00:23:29,410 --> 00:23:34,350
+but like CNF SAT, the formula is
+the end of a bunch of clauses.
+
+434
+00:23:34,350 --> 00:23:35,890
+So that part's the same.
+
+435
+00:23:35,890 --> 00:23:39,340
+But now we're going
+to make a clause
+
+436
+00:23:39,340 --> 00:23:43,190
+to be a relation on
+three variables, which
+
+437
+00:23:43,190 --> 00:23:57,350
+is that exactly one of, let's
+say, x_i, x_j, and x_k is true.
+
+438
+00:23:57,350 --> 00:24:02,180
+So this means it could be
+true-false-false, x_i is true,
+
+439
+00:24:02,180 --> 00:24:04,710
+but the other two are false,
+it could be x_j is true,
+
+440
+00:24:04,710 --> 00:24:08,720
+the other two are false, or
+it could be that x_sk is true
+
+441
+00:24:08,720 --> 00:24:10,400
+and the other two are false.
+
+442
+00:24:10,400 --> 00:24:13,140
+But those are the only
+happy assignments.
+
+443
+00:24:13,140 --> 00:24:13,640
+Question.
+
+444
+00:24:13,640 --> 00:24:16,197
+AUDIENCE: Is it exactly one
+of three variables or three
+
+445
+00:24:16,197 --> 00:24:17,830
+literals?
+
+446
+00:24:17,830 --> 00:24:20,460
+PROFESSOR: Good question.
+
+447
+00:24:20,460 --> 00:24:23,209
+The original statement
+is its variables,
+
+448
+00:24:23,209 --> 00:24:24,250
+so that's how I wrote it.
+
+449
+00:24:24,250 --> 00:24:26,900
+This is usually called monotone.
+
+450
+00:24:26,900 --> 00:24:30,840
+These days it's usually
+called monotone 1-in-3SAT.
+
+451
+00:24:30,840 --> 00:24:33,000
+I don't know how
+usually exactly.
+
+452
+00:24:33,000 --> 00:24:36,000
+Sometimes it's called
+all-positive 1-in-3SAT.
+
+453
+00:24:38,930 --> 00:24:47,610
+So let's say literals
+equal variables.
+
+454
+00:24:47,610 --> 00:24:50,220
+You could, of course,
+if you want, consider
+
+455
+00:24:50,220 --> 00:24:52,570
+a more general version where
+you can have negations.
+
+456
+00:24:52,570 --> 00:24:56,674
+But you don't need
+to, so why bother.
+
+457
+00:24:56,674 --> 00:24:58,590
+That fact is usually
+forgotten in most proofs.
+
+458
+00:24:58,590 --> 00:25:00,790
+So you'll see in the
+literature a reduction
+
+459
+00:25:00,790 --> 00:25:02,620
+from 1-in-3SAT with
+negations, and they
+
+460
+00:25:02,620 --> 00:25:03,578
+have a negation gadget.
+
+461
+00:25:03,578 --> 00:25:06,610
+It's like, you don't need
+to have a negation gadget.
+
+462
+00:25:06,610 --> 00:25:10,620
+So why not skip it?
+
+463
+00:25:10,620 --> 00:25:11,410
+But there you go.
+
+464
+00:25:11,410 --> 00:25:14,010
+Now I'll just mention
+I'm not a fan of the word
+
+465
+00:25:14,010 --> 00:25:17,460
+monotone here because here
+we have monotone to mean
+
+466
+00:25:17,460 --> 00:25:18,700
+all positive or all negative.
+
+467
+00:25:18,700 --> 00:25:20,225
+Here we mean all positive.
+
+468
+00:25:22,850 --> 00:25:25,150
+Not ideal reuse of terminology.
+
+469
+00:25:25,150 --> 00:25:27,650
+I think that's why sometimes
+this is all positive 1-in-3SAT.
+
+470
+00:25:27,650 --> 00:25:29,084
+Anyway, it's a bit of a mess.
+
+471
+00:25:29,084 --> 00:25:30,750
+But that is the state
+of the literature.
+
+472
+00:25:30,750 --> 00:25:34,710
+So you get it all.
+
+473
+00:25:34,710 --> 00:25:36,130
+All right.
+
+474
+00:25:36,130 --> 00:25:37,235
+Here's another problem.
+
+475
+00:25:41,820 --> 00:25:44,400
+Monotone not-exactly-1 3SAT.
+
+476
+00:25:48,990 --> 00:25:51,540
+I should not have
+any suspense here.
+
+477
+00:25:51,540 --> 00:25:53,810
+This is in P.
+
+478
+00:25:53,810 --> 00:25:55,340
+OK?
+
+479
+00:25:55,340 --> 00:25:56,610
+This is NP-complete.
+
+480
+00:25:56,610 --> 00:25:58,690
+This is also NP-complete.
+
+481
+00:25:58,690 --> 00:26:01,960
+But not-exactly-1
+3SAT is polynomial.
+
+482
+00:26:01,960 --> 00:26:05,760
+So I think you
+know what it means.
+
+483
+00:26:05,760 --> 00:26:10,440
+A clause specifies that-- again,
+we take an AND of clauses.
+
+484
+00:26:10,440 --> 00:26:17,890
+And we want zero, two, or three
+of three variables are true.
+
+485
+00:26:17,890 --> 00:26:21,600
+In other words, exactly
+one of them is false.
+
+486
+00:26:21,600 --> 00:26:22,710
+No.
+
+487
+00:26:22,710 --> 00:26:24,450
+I don't mean that.
+
+488
+00:26:24,450 --> 00:26:28,280
+Exactly one of them being
+false would be 1-in-3SAT again,
+
+489
+00:26:28,280 --> 00:26:31,020
+just by negating
+everything, which we're
+
+490
+00:26:31,020 --> 00:26:33,610
+allowed to do if we want to.
+
+491
+00:26:33,610 --> 00:26:35,400
+But this is different.
+
+492
+00:26:35,400 --> 00:26:38,400
+This is saying, it could
+be everything's false,
+
+493
+00:26:38,400 --> 00:26:40,474
+or it could be one
+thing is false,
+
+494
+00:26:40,474 --> 00:26:42,015
+or it could be zero
+things are false.
+
+495
+00:26:44,960 --> 00:26:47,220
+But not two things are false.
+
+496
+00:26:47,220 --> 00:26:47,720
+OK?
+
+497
+00:26:47,720 --> 00:26:50,640
+This turns out to be polynomial.
+
+498
+00:26:50,640 --> 00:26:55,190
+And do I have-- oh.
+
+499
+00:26:55,190 --> 00:26:58,910
+There's one funny
+thing here, which
+
+500
+00:26:58,910 --> 00:27:01,610
+is if all your clauses
+look like this,
+
+501
+00:27:01,610 --> 00:27:03,970
+you can set all your
+variables to false.
+
+502
+00:27:03,970 --> 00:27:06,370
+So this is sort of
+a trivial problem.
+
+503
+00:27:06,370 --> 00:27:08,100
+But to make it more
+interesting, you
+
+504
+00:27:08,100 --> 00:27:12,980
+can say x_1 equals true,
+just to get you started.
+
+505
+00:27:12,980 --> 00:27:15,260
+So there's no
+trivial solution then
+
+506
+00:27:15,260 --> 00:27:18,000
+and it still turns
+out this is easy.
+
+507
+00:27:18,000 --> 00:27:20,210
+Because if you think
+about this long enough,
+
+508
+00:27:20,210 --> 00:27:23,620
+as I did yesterday,
+this will look something
+
+509
+00:27:23,620 --> 00:27:35,030
+like-- if you have
+three variables,
+
+510
+00:27:35,030 --> 00:27:39,180
+either they're all false--
+then fine-- or if one of them
+
+511
+00:27:39,180 --> 00:27:41,139
+is true, then you better
+have another one true.
+
+512
+00:27:41,139 --> 00:27:43,429
+That's a way of saying if
+there's at least one of them,
+
+513
+00:27:43,429 --> 00:27:44,810
+there better be at least two.
+
+514
+00:27:44,810 --> 00:27:45,680
+That's what we want.
+
+515
+00:27:45,680 --> 00:27:48,520
+This has to be true for
+all shifts of i, j, k.
+
+516
+00:27:48,520 --> 00:27:50,770
+So for each of i, j, k,
+if one of them is true,
+
+517
+00:27:50,770 --> 00:27:53,450
+you want to imply
+the OR of the other.
+
+518
+00:27:53,450 --> 00:28:00,310
+And this is the same
+as NOT x_i or x_j or x_k.
+
+519
+00:28:00,310 --> 00:28:02,810
+Don't need the
+parentheses because it's
+
+520
+00:28:02,810 --> 00:28:04,670
+associative communicative.
+
+521
+00:28:04,670 --> 00:28:09,930
+And that is a dual horn clause.
+
+522
+00:28:09,930 --> 00:28:12,240
+And that's why
+this is polynomial.
+
+523
+00:28:12,240 --> 00:28:12,740
+Question.
+
+524
+00:28:12,740 --> 00:28:14,906
+AUDIENCE: I think I'm
+confused about the definition.
+
+525
+00:28:14,906 --> 00:28:17,640
+Why can't they just
+all be true then?
+
+526
+00:28:17,640 --> 00:28:19,530
+PROFESSOR: Good question.
+
+527
+00:28:19,530 --> 00:28:22,340
+Let's say x_2 is false.
+
+528
+00:28:22,340 --> 00:28:23,800
+I should double check.
+
+529
+00:28:23,800 --> 00:28:27,110
+I don't remember that in the
+statement of the problem.
+
+530
+00:28:27,110 --> 00:28:28,650
+We do not allow negations here.
+
+531
+00:28:28,650 --> 00:28:30,870
+Once you allow negations,
+this trick won't work.
+
+532
+00:28:30,870 --> 00:28:33,497
+But if these appear
+all in positive form,
+
+533
+00:28:33,497 --> 00:28:35,330
+then we can convert
+into the single negative
+
+534
+00:28:35,330 --> 00:28:36,240
+and get dual horn.
+
+535
+00:28:36,240 --> 00:28:36,740
+Question.
+
+536
+00:28:36,740 --> 00:28:39,340
+AUDIENCE: Are you allowed to
+mix the zero, two, and threes?
+
+537
+00:28:39,340 --> 00:28:42,580
+Or does it have to be all
+the clauses have to be--
+
+538
+00:28:42,580 --> 00:28:44,700
+PROFESSOR: All causes
+look like-- all clauses
+
+539
+00:28:44,700 --> 00:28:47,520
+say, zero, two, or three
+of these three variables
+
+540
+00:28:47,520 --> 00:28:49,297
+must be true.
+
+541
+00:28:49,297 --> 00:28:51,630
+You can't have a clause that
+says zero of these are true
+
+542
+00:28:51,630 --> 00:28:52,390
+and two of these are true.
+
+543
+00:28:52,390 --> 00:28:52,610
+AUDIENCE: No.
+
+544
+00:28:52,610 --> 00:28:54,693
+But if you have two of
+these clauses that give you
+
+545
+00:28:54,693 --> 00:28:56,680
+all those choices,
+can you choose
+
+546
+00:28:56,680 --> 00:28:59,690
+one to be zero and then
+have another one be two,
+
+547
+00:28:59,690 --> 00:29:00,220
+or whatever.
+
+548
+00:29:00,220 --> 00:29:01,950
+PROFESSOR: For each clause,
+it's an independent choice
+
+549
+00:29:01,950 --> 00:29:04,720
+whether you have zero, two, or
+three of the variables true.
+
+550
+00:29:04,720 --> 00:29:05,670
+Yeah.
+
+551
+00:29:05,670 --> 00:29:09,620
+So this OR is local
+to the clause.
+
+552
+00:29:09,620 --> 00:29:11,760
+Other questions?
+
+553
+00:29:11,760 --> 00:29:14,230
+So it's still an AND of
+things that-- it's just
+
+554
+00:29:14,230 --> 00:29:15,450
+we have a weirder relation.
+
+555
+00:29:15,450 --> 00:29:17,825
+Instead of just taking the OR
+of a bunch of things, which
+
+556
+00:29:17,825 --> 00:29:19,810
+would be saying at least
+one of them is true,
+
+557
+00:29:19,810 --> 00:29:25,120
+now we allow zero or two or
+three of them to be true.
+
+558
+00:29:25,120 --> 00:29:27,450
+OK.
+
+559
+00:29:27,450 --> 00:29:31,690
+One more version, then
+we'll get to-- well, one
+
+560
+00:29:31,690 --> 00:29:36,240
+and a half more
+versions-- then we'll
+
+561
+00:29:36,240 --> 00:29:37,576
+get to the dichotomy theorem.
+
+562
+00:29:44,380 --> 00:29:46,560
+So next one is
+Not-All-Equal 3SAT.
+
+563
+00:29:56,782 --> 00:29:58,240
+I feel like that's
+about all I need
+
+564
+00:29:58,240 --> 00:30:01,970
+to write down, other than the
+fact that it is NP-complete.
+
+565
+00:30:01,970 --> 00:30:05,680
+But just in case,
+what this means is
+
+566
+00:30:05,680 --> 00:30:11,170
+a clause is something
+like Not-All-Equal
+
+567
+00:30:11,170 --> 00:30:13,100
+of three variables again.
+
+568
+00:30:15,660 --> 00:30:20,810
+And this is what I'm defining
+is going to be the Monotone
+
+569
+00:30:20,810 --> 00:30:26,880
+Not-All-Equal 3SAT--
+which is also hard--
+
+570
+00:30:26,880 --> 00:30:36,010
+where these are variables,
+not just literals.
+
+571
+00:30:36,010 --> 00:30:41,110
+So no negations in Monotone
+Not-All-Equal 3SAT.
+
+572
+00:30:41,110 --> 00:30:42,820
+Again, the original
+proof already
+
+573
+00:30:42,820 --> 00:30:46,770
+had monotonicity in there, so
+there's no work to be done.
+
+574
+00:30:46,770 --> 00:30:47,270
+Cool.
+
+575
+00:30:47,270 --> 00:30:49,370
+So not-all-equal just
+means that they're not
+
+576
+00:30:49,370 --> 00:30:50,740
+all the same values.
+
+577
+00:30:50,740 --> 00:30:54,120
+So that means not all
+true and not all false.
+
+578
+00:30:54,120 --> 00:31:00,980
+Not TTT and not FFF.
+
+579
+00:31:00,980 --> 00:31:02,530
+I really like this
+version of 3SAT
+
+580
+00:31:02,530 --> 00:31:04,520
+because it's
+completely symmetric
+
+581
+00:31:04,520 --> 00:31:06,570
+between true and false.
+
+582
+00:31:06,570 --> 00:31:07,996
+I mean, not at the clause level.
+
+583
+00:31:07,996 --> 00:31:09,370
+Every clause has
+to be satisfied.
+
+584
+00:31:09,370 --> 00:31:11,286
+Those are ANDed together
+in the logical level.
+
+585
+00:31:11,286 --> 00:31:12,745
+But the x_i's are
+treated completely
+
+586
+00:31:12,745 --> 00:31:14,286
+symmetrically between
+true and false.
+
+587
+00:31:14,286 --> 00:31:15,910
+You could just call
+them red and blue.
+
+588
+00:31:15,910 --> 00:31:18,250
+There's no reason to think
+one is true one is false.
+
+589
+00:31:18,250 --> 00:31:23,180
+You just can't have them all be
+the same color within a clause.
+
+590
+00:31:23,180 --> 00:31:23,680
+OK.
+
+591
+00:31:23,680 --> 00:31:26,222
+So you could think of it as
+a problem on hypergraphs.
+
+592
+00:31:26,222 --> 00:31:28,430
+Three uniform hypergraphs,
+you have all these triples
+
+593
+00:31:28,430 --> 00:31:29,550
+of things.
+
+594
+00:31:29,550 --> 00:31:32,460
+You just want them to not
+all be colored the same.
+
+595
+00:31:32,460 --> 00:31:35,140
+So it means two of one, one of
+the other, two trues and one
+
+596
+00:31:35,140 --> 00:31:38,350
+false, two reds and one
+blue, two falses, one true.
+
+597
+00:31:38,350 --> 00:31:40,694
+They're all this--
+those are all good cases
+
+598
+00:31:40,694 --> 00:31:41,860
+and these are the bad cases.
+
+599
+00:31:45,400 --> 00:31:47,790
+Cool.
+
+600
+00:31:47,790 --> 00:31:51,724
+AUDIENCE: So this is
+1-or-2-in-3SAT?
+
+601
+00:31:51,724 --> 00:31:52,390
+PROFESSOR: Yeah.
+
+602
+00:31:52,390 --> 00:31:54,640
+You can think of this
+exactly 1-or-2-
+
+603
+00:31:54,640 --> 00:31:57,720
+in-3SAT, if you want to
+phrase it in this style.
+
+604
+00:31:57,720 --> 00:31:58,220
+OK.
+
+605
+00:31:58,220 --> 00:32:02,300
+So ideally, you should
+remember all of these.
+
+606
+00:32:02,300 --> 00:32:04,910
+But I'll tell you the most
+important ones are regular
+
+607
+00:32:04,910 --> 00:32:07,960
+3SAT-- that's at least one
+of each thing is true--
+
+608
+00:32:07,960 --> 00:32:11,740
+exactly-1 3SAT, or 1-in-3SAT --
+where exactly one of the things
+
+609
+00:32:11,740 --> 00:32:14,540
+is true, and adding
+more things breaks it --
+
+610
+00:32:14,540 --> 00:32:15,890
+and Not-All-Equal 3SAT.
+
+611
+00:32:15,890 --> 00:32:18,150
+Those are the three
+important ones
+
+612
+00:32:18,150 --> 00:32:20,590
+to know from a lower
+bounds perspective.
+
+613
+00:32:20,590 --> 00:32:22,230
+These others are,
+like, be careful
+
+614
+00:32:22,230 --> 00:32:24,271
+that you don't fall into
+one of these things that
+
+615
+00:32:24,271 --> 00:32:28,370
+is polynomial.
+
+616
+00:32:28,370 --> 00:32:30,907
+So occasionally MAX
+2SAT is the one other
+
+617
+00:32:30,907 --> 00:32:31,990
+that would be useful here.
+
+618
+00:32:31,990 --> 00:32:34,050
+But remember these guys.
+
+619
+00:32:34,050 --> 00:32:34,972
+They're super handy.
+
+620
+00:32:34,972 --> 00:32:37,180
+Because what will happen
+when you're proving hardness
+
+621
+00:32:37,180 --> 00:32:39,860
+is you fool around
+and you try to find--
+
+622
+00:32:39,860 --> 00:32:42,830
+you build a gadget that
+has two truths-- two
+
+623
+00:32:42,830 --> 00:32:45,320
+possible ways to satisfy it.
+
+624
+00:32:45,320 --> 00:32:48,260
+Call one red and one blue
+or one true and one false.
+
+625
+00:32:48,260 --> 00:32:52,250
+And then you try different
+ways to combine three of them.
+
+626
+00:32:52,250 --> 00:32:55,140
+And you're trying to get--
+you need some other things--
+
+627
+00:32:55,140 --> 00:32:57,290
+but you're trying to
+get clause gadgets.
+
+628
+00:32:57,290 --> 00:33:04,090
+Trying to get them to--
+when you combine three
+
+629
+00:33:04,090 --> 00:33:06,310
+wires into a little
+gadget, you want
+
+630
+00:33:06,310 --> 00:33:08,140
+them to be constrained somehow.
+
+631
+00:33:08,140 --> 00:33:10,520
+That in order to be
+globally OK, something
+
+632
+00:33:10,520 --> 00:33:12,572
+must hold locally at
+those three things.
+
+633
+00:33:12,572 --> 00:33:14,780
+And it might end up being
+a Not-All-Equal constraint,
+
+634
+00:33:14,780 --> 00:33:16,696
+it might end up being
+an exactly-1 constraint,
+
+635
+00:33:16,696 --> 00:33:19,330
+or it might end up
+being a 3SAT constraint.
+
+636
+00:33:19,330 --> 00:33:22,010
+With some negations
+to make it happy,
+
+637
+00:33:22,010 --> 00:33:25,970
+it should be one of
+those to be hard.
+
+638
+00:33:25,970 --> 00:33:28,590
+If you fall into something like
+this, then that's not good.
+
+639
+00:33:31,350 --> 00:33:32,095
+Question.
+
+640
+00:33:32,095 --> 00:33:36,313
+AUDIENCE: So let's say, since
+this Not-All-Equal thing--
+
+641
+00:33:36,313 --> 00:33:38,620
+let's say you call
+it red and blue.
+
+642
+00:33:38,620 --> 00:33:41,364
+What if you add green?
+
+643
+00:33:41,364 --> 00:33:48,829
+Then would there be-- would
+Not-All-Equal 3SAT be NP-hard,
+
+644
+00:33:48,829 --> 00:33:50,730
+or would you need
+4SAT or something?
+
+645
+00:33:50,730 --> 00:33:51,396
+PROFESSOR: Yeah.
+
+646
+00:33:51,396 --> 00:33:52,580
+So what about ternary truth?
+
+647
+00:33:56,888 --> 00:34:01,349
+I-- there might be a
+problem on that in the PSET.
+
+648
+00:34:01,349 --> 00:34:04,970
+But in general, you would
+have to go through the work
+
+649
+00:34:04,970 --> 00:34:06,230
+to check which problems.
+
+650
+00:34:06,230 --> 00:34:08,910
+I think those are
+pretty uncommon.
+
+651
+00:34:08,910 --> 00:34:11,829
+So usually what you do is
+if you have a gadget that
+
+652
+00:34:11,829 --> 00:34:14,027
+can be solved not two
+ways, but four ways,
+
+653
+00:34:14,027 --> 00:34:16,110
+is you call two of them
+true and two of them false
+
+654
+00:34:16,110 --> 00:34:18,970
+and hope they behave
+more or less identically.
+
+655
+00:34:18,970 --> 00:34:21,349
+So that's the most common
+answer, practically,
+
+656
+00:34:21,349 --> 00:34:22,889
+to what we do.
+
+657
+00:34:22,889 --> 00:34:25,354
+But it certainly is plausible
+with three different values.
+
+658
+00:34:25,354 --> 00:34:26,770
+Some of these are
+going to be hard
+
+659
+00:34:26,770 --> 00:34:29,960
+but I don't know which ones.
+
+660
+00:34:29,960 --> 00:34:32,661
+Hopefully all them, but
+you have to be careful.
+
+661
+00:34:32,661 --> 00:34:34,119
+And definitely the
+next theorem I'm
+
+662
+00:34:34,119 --> 00:34:36,250
+going to talk about--
+the dichotomy theorem--
+
+663
+00:34:36,250 --> 00:34:38,900
+would get more complicated
+with three colors.
+
+664
+00:34:50,500 --> 00:34:51,160
+Nice question.
+
+665
+00:34:55,920 --> 00:35:08,020
+So let's do Schaefer's
+Dichotomy Theorem.
+
+666
+00:35:08,020 --> 00:35:13,770
+This is about which versions
+of SAT are polynomial
+
+667
+00:35:13,770 --> 00:35:15,270
+and which versions
+are NP-complete.
+
+668
+00:35:15,270 --> 00:35:19,470
+With the right set up, every
+problem you can think of
+
+669
+00:35:19,470 --> 00:35:21,480
+is either polynomial
+or NP-complete.
+
+670
+00:35:21,480 --> 00:35:23,760
+There's no things in-between.
+
+671
+00:35:23,760 --> 00:35:25,940
+These are called
+NP-intermediate problems.
+
+672
+00:35:25,940 --> 00:35:28,890
+So it's always going to be
+one extreme or the other,
+
+673
+00:35:28,890 --> 00:35:31,440
+as I'm about to set it up.
+
+674
+00:35:31,440 --> 00:35:34,320
+And this theorem is by Schaefer.
+
+675
+00:35:34,320 --> 00:35:36,330
+And in the very
+same paper he proves
+
+676
+00:35:36,330 --> 00:35:39,000
+Not-All-Equal 3SAT and
+1-in-3SAT are hard.
+
+677
+00:35:39,000 --> 00:35:40,420
+Those are the original proofs.
+
+678
+00:35:40,420 --> 00:35:42,740
+So it's a great paper.
+
+679
+00:35:42,740 --> 00:35:45,690
+I have looked at it many times.
+
+680
+00:35:45,690 --> 00:35:47,620
+It's from 1978.
+
+681
+00:35:47,620 --> 00:35:50,719
+So long time ago.
+
+682
+00:35:50,719 --> 00:35:51,760
+But still quite readable.
+
+683
+00:35:57,120 --> 00:36:00,320
+So I don't know how much-- all
+the last problems we've stated
+
+684
+00:36:00,320 --> 00:36:02,650
+have this property, but
+I'll make it explicit again.
+
+685
+00:36:02,650 --> 00:36:06,490
+That's your formula is going
+to be an AND of clauses.
+
+686
+00:36:06,490 --> 00:36:10,170
+And now we're going to allow
+general kinds of clauses.
+
+687
+00:36:10,170 --> 00:36:13,000
+A clause is just going
+to be any relation
+
+688
+00:36:13,000 --> 00:36:14,585
+on some number of variables.
+
+689
+00:36:17,317 --> 00:36:19,650
+So there won't be any notion
+of literal here because you
+
+690
+00:36:19,650 --> 00:36:23,100
+can put that in the relation.
+
+691
+00:36:23,100 --> 00:36:29,600
+I'll call this a general
+clause and say relation
+
+692
+00:36:29,600 --> 00:36:31,745
+on some variables.
+
+693
+00:36:34,580 --> 00:36:36,720
+So relation is
+something-- I give you
+
+694
+00:36:36,720 --> 00:36:38,900
+a set of truth values
+for those variables
+
+695
+00:36:38,900 --> 00:36:40,280
+and will say yes or no.
+
+696
+00:36:40,280 --> 00:36:41,857
+That's valid or it's invalid.
+
+697
+00:36:41,857 --> 00:36:43,440
+You can think of a
+relation as the set
+
+698
+00:36:43,440 --> 00:36:45,690
+of all assignments of the
+variables that make it true.
+
+699
+00:36:45,690 --> 00:36:48,116
+But you don't have to
+specify that, per se.
+
+700
+00:36:48,116 --> 00:36:49,490
+You just sort of
+know what it is.
+
+701
+00:36:52,290 --> 00:36:52,790
+OK.
+
+702
+00:36:52,790 --> 00:36:55,280
+So I mean, in
+particular, it could
+
+703
+00:36:55,280 --> 00:36:57,600
+be the OR of three
+variables, then we get 3SAT.
+
+704
+00:36:57,600 --> 00:37:00,470
+Or it could be the Not-All-Equal
+constraint on three variables,
+
+705
+00:37:00,470 --> 00:37:02,150
+then it's Not-All-Equal
+3SAT, and so on.
+
+706
+00:37:04,961 --> 00:37:05,460
+OK.
+
+707
+00:37:05,460 --> 00:37:09,020
+We are going to--
+so I guess, sorry.
+
+708
+00:37:09,020 --> 00:37:12,200
+The relationship should be given
+to you as a Boolean formula.
+
+709
+00:37:12,200 --> 00:37:14,800
+So it could be an OR, or
+you can write 1-in-3SAT
+
+710
+00:37:14,800 --> 00:37:15,889
+as a Boolean formula.
+
+711
+00:37:15,889 --> 00:37:16,930
+It's just little tedious.
+
+712
+00:37:16,930 --> 00:37:18,730
+You could say, well it could
+be this, or it could be this,
+
+713
+00:37:18,730 --> 00:37:19,710
+or it could be this.
+
+714
+00:37:19,710 --> 00:37:24,360
+In general, I'm going
+to assume that they're
+
+715
+00:37:24,360 --> 00:37:27,080
+given to you in CNF form.
+
+716
+00:37:27,080 --> 00:37:28,080
+Sorry, that's redundant.
+
+717
+00:37:28,080 --> 00:37:31,510
+CNF has "form" in it.
+
+718
+00:37:31,510 --> 00:37:34,820
+Because any formula
+can be made into CNF.
+
+719
+00:37:34,820 --> 00:37:39,410
+So now CNF is an
+AND of ORs, so this
+
+720
+00:37:39,410 --> 00:37:43,029
+is going to be an AND of what
+we might normally call clauses,
+
+721
+00:37:43,029 --> 00:37:44,570
+but we're already
+in a clause, so I'm
+
+722
+00:37:44,570 --> 00:37:45,820
+going to call this subclauses.
+
+723
+00:37:48,410 --> 00:37:51,907
+Starting to sound like legalese.
+
+724
+00:37:51,907 --> 00:37:52,740
+I made up this word.
+
+725
+00:37:52,740 --> 00:37:54,640
+It's not in the literature.
+
+726
+00:37:54,640 --> 00:37:57,410
+So in general, your formula
+is an AND of clauses,
+
+727
+00:37:57,410 --> 00:37:59,020
+each one is just
+some relation, which
+
+728
+00:37:59,020 --> 00:38:00,640
+we're going to think of
+as an AND of subclauses.
+
+729
+00:38:00,640 --> 00:38:02,848
+Of course, it's really just
+an AND of all the things.
+
+730
+00:38:02,848 --> 00:38:06,250
+But this is trying
+to be general.
+
+731
+00:38:06,250 --> 00:38:09,020
+Because we're going to have
+constraints in the clauses,
+
+732
+00:38:09,020 --> 00:38:11,290
+in particular.
+
+733
+00:38:11,290 --> 00:38:18,810
+So then claim is SAT-- on
+these types of formulas-- so
+
+734
+00:38:18,810 --> 00:38:21,500
+here's the difference, I guess.
+
+735
+00:38:21,500 --> 00:38:25,830
+To define the problem, you
+specify what kind of relations
+
+736
+00:38:25,830 --> 00:38:26,520
+that you allow.
+
+737
+00:38:26,520 --> 00:38:29,250
+So in 3SAT, we say, OK,
+so OR of three things.
+
+738
+00:38:29,250 --> 00:38:32,100
+In CNF SAT, it's an OR
+of k things for any k.
+
+739
+00:38:32,100 --> 00:38:36,210
+In Not-All-Equal 3SAT, it's
+not all equal of three things,
+
+740
+00:38:36,210 --> 00:38:36,710
+and so on.
+
+741
+00:38:36,710 --> 00:38:40,970
+So we give that up front and
+then the decision problem
+
+742
+00:38:40,970 --> 00:38:44,960
+is well, I have
+n variables and I
+
+743
+00:38:44,960 --> 00:38:49,764
+can combine them with these
+clauses however I want.
+
+744
+00:38:49,764 --> 00:38:51,430
+So we need some kind
+of infinity, right?
+
+745
+00:38:51,430 --> 00:38:53,040
+If I gave you a
+specific problem,
+
+746
+00:38:53,040 --> 00:38:55,000
+then it's not going
+to be NP-hard.
+
+747
+00:38:55,000 --> 00:38:56,810
+Like, with these 10
+variables, that's
+
+748
+00:38:56,810 --> 00:38:58,760
+never going to be interesting.
+
+749
+00:38:58,760 --> 00:39:02,090
+So I give you the notion
+of what causes are allowed,
+
+750
+00:39:02,090 --> 00:39:05,570
+what relations are
+permitted, and then I
+
+751
+00:39:05,570 --> 00:39:09,890
+want to consider the class
+of all possible formulas you
+
+752
+00:39:09,890 --> 00:39:12,506
+can build with
+clauses of that type.
+
+753
+00:39:12,506 --> 00:39:14,880
+So you can think of this as
+really more of a clause type,
+
+754
+00:39:14,880 --> 00:39:18,240
+like Not-All-Equal,
+just to be precise here.
+
+755
+00:39:18,240 --> 00:39:21,160
+And then we get
+a version of SAT.
+
+756
+00:39:21,160 --> 00:39:33,590
+And it's going to be polynomial
+if one of four cases happen.
+
+757
+00:39:33,590 --> 00:39:34,540
+At least one.
+
+758
+00:39:34,540 --> 00:39:36,390
+Any one of these
+will make it easy.
+
+759
+00:39:36,390 --> 00:39:38,500
+We have seen almost
+all of these.
+
+760
+00:39:38,500 --> 00:39:45,540
+So first one is setting
+all variables true
+
+761
+00:39:45,540 --> 00:39:48,310
+satisfies the formula.
+
+762
+00:39:48,310 --> 00:39:51,890
+Well not just the formula,
+but all formulas of this type.
+
+763
+00:39:51,890 --> 00:40:07,395
+Or all variables false
+satisfies all clauses.
+
+764
+00:40:10,250 --> 00:40:10,750
+OK.
+
+765
+00:40:10,750 --> 00:40:13,370
+This is a statement over all
+formulas with this clause type,
+
+766
+00:40:13,370 --> 00:40:13,869
+right?
+
+767
+00:40:13,869 --> 00:40:15,660
+So, a statement about
+the clause types.
+
+768
+00:40:15,660 --> 00:40:18,170
+And it's one of the issues we
+were having with not-exactly-1
+
+769
+00:40:18,170 --> 00:40:22,297
+3SAT, because there the
+clause type allowed everything
+
+770
+00:40:22,297 --> 00:40:24,380
+to be false and it also
+had everything to be true,
+
+771
+00:40:24,380 --> 00:40:25,840
+so it was doubly bad.
+
+772
+00:40:25,840 --> 00:40:29,129
+But of course is if you
+have clauses where this
+
+773
+00:40:29,129 --> 00:40:30,670
+is true for all
+the-- you could allow
+
+774
+00:40:30,670 --> 00:40:31,794
+different types of clauses.
+
+775
+00:40:31,794 --> 00:40:34,590
+You could have Not-All-Equal
+plus 1-in-3SAT, that
+
+776
+00:40:34,590 --> 00:40:36,367
+will also be hard, of course.
+
+777
+00:40:36,367 --> 00:40:38,950
+But if all of your clauses have
+this property, then of course,
+
+778
+00:40:38,950 --> 00:40:41,116
+you just globally set the
+variables and you're done.
+
+779
+00:40:43,600 --> 00:40:45,351
+OK.
+
+780
+00:40:45,351 --> 00:40:46,350
+That was the first case.
+
+781
+00:40:57,130 --> 00:40:59,200
+All right.
+
+782
+00:40:59,200 --> 00:41:06,800
+So the next one is that
+it could be the subclauses
+
+783
+00:41:06,800 --> 00:41:13,105
+are all Horn, or all dual Horn.
+
+784
+00:41:18,590 --> 00:41:21,829
+So those are two happy
+cases we saw before.
+
+785
+00:41:21,829 --> 00:41:23,620
+I mean, we can think
+of the overall problem
+
+786
+00:41:23,620 --> 00:41:27,870
+as an AND of the clauses,
+which are ANDs of subclauses,
+
+787
+00:41:27,870 --> 00:41:30,410
+so if everything is a
+Horn or dual Horn thing,
+
+788
+00:41:30,410 --> 00:41:32,340
+then we're happy.
+
+789
+00:41:32,340 --> 00:41:43,070
+And next case is the
+relations are all 2-CNF.
+
+790
+00:41:43,070 --> 00:41:44,810
+So this would be the 2SAT case.
+
+791
+00:41:44,810 --> 00:41:47,230
+If all the relations you're
+working with are in 2-CNF,
+
+792
+00:41:47,230 --> 00:41:49,855
+then when we AND them together,
+you still have a 2-CNF formula,
+
+793
+00:41:49,855 --> 00:41:53,170
+so you can solve it by 2SAT.
+
+794
+00:41:53,170 --> 00:41:55,140
+So these are all
+things we've seen.
+
+795
+00:41:55,140 --> 00:41:59,060
+There's one more
+case we haven't seen.
+
+796
+00:41:59,060 --> 00:42:00,186
+Is there a question?
+
+797
+00:42:00,186 --> 00:42:01,158
+Yeah.
+
+798
+00:42:01,158 --> 00:42:04,074
+AUDIENCE: Isn't 2SAT just a
+subcase of the Horn and dual
+
+799
+00:42:04,074 --> 00:42:05,449
+Horn thing?
+
+800
+00:42:05,449 --> 00:42:06,990
+Because you're always
+going to have--
+
+801
+00:42:06,990 --> 00:42:07,865
+PROFESSOR: It's true.
+
+802
+00:42:07,865 --> 00:42:11,210
+2SAT is a special case of Horn.
+
+803
+00:42:11,210 --> 00:42:13,144
+[INTERPOSING VOICES]
+
+804
+00:42:13,144 --> 00:42:15,102
+AUDIENCE: You could have
+one with two positives
+
+805
+00:42:15,102 --> 00:42:16,560
+and another one
+with two negatives.
+
+806
+00:42:16,560 --> 00:42:17,994
+AUDIENCE: Yeah, that's true.
+
+807
+00:42:17,994 --> 00:42:19,502
+Yeah.
+
+808
+00:42:19,502 --> 00:42:20,960
+PROFESSOR: Ah,
+right, right, right.
+
+809
+00:42:20,960 --> 00:42:21,510
+So I see.
+
+810
+00:42:21,510 --> 00:42:24,720
+So 2-CNF, some of the
+clauses are going to be Horn
+
+811
+00:42:24,720 --> 00:42:26,700
+and some of them are
+dual Horn, I think.
+
+812
+00:42:26,700 --> 00:42:28,770
+So it doesn't fall into
+this because it's not
+
+813
+00:42:28,770 --> 00:42:29,670
+all one or the other.
+
+814
+00:42:29,670 --> 00:42:31,970
+In general, those
+combinations are bad.
+
+815
+00:42:31,970 --> 00:42:34,467
+But 2SAT is always OK.
+
+816
+00:42:34,467 --> 00:42:35,050
+Good question.
+
+817
+00:42:39,920 --> 00:42:48,255
+OK Last case is
+some linear algebra.
+
+818
+00:42:54,940 --> 00:42:56,400
+This is one other
+easy case of SAT
+
+819
+00:42:56,400 --> 00:42:57,800
+which doesn't come
+up very often,
+
+820
+00:42:57,800 --> 00:42:59,430
+so I didn't write it
+as a separate one.
+
+821
+00:43:27,450 --> 00:43:29,680
+So imagine equations like this.
+
+822
+00:43:29,680 --> 00:43:34,440
+I take some number variables,
+I XOR them together and I say,
+
+823
+00:43:34,440 --> 00:43:38,690
+that should be 0, or similar
+thing, I set it equal to 1.
+
+824
+00:43:38,690 --> 00:43:42,600
+Those are what I would call
+linear equation over Zmod2.
+
+825
+00:43:42,600 --> 00:43:45,850
+Because in Zmod2 -- the finite
+field in two elements --
+
+826
+00:43:45,850 --> 00:43:49,990
+addition becomes XOR and
+there's no multiplication here
+
+827
+00:43:49,990 --> 00:43:52,910
+because it's a linear system.
+
+828
+00:43:52,910 --> 00:43:58,330
+So we can solve these things
+because Z2 is a finite field.
+
+829
+00:43:58,330 --> 00:44:00,250
+We can use Gaussian
+elimination if-- even
+
+830
+00:44:00,250 --> 00:44:02,570
+if I have a whole bunch
+of these equations,
+
+831
+00:44:02,570 --> 00:44:06,050
+I can solve them all using
+Gaussian elimination.
+
+832
+00:44:06,050 --> 00:44:07,630
+Or determine that
+they're unsolvable.
+
+833
+00:44:07,630 --> 00:44:13,190
+So that's another easy case
+for SAT to be careful about.
+
+834
+00:44:13,190 --> 00:44:17,850
+And the theorem is if you
+have one of these situations--
+
+835
+00:44:17,850 --> 00:44:19,180
+so you can't mix these.
+
+836
+00:44:19,180 --> 00:44:20,760
+If you have one
+clause of this type
+
+837
+00:44:20,760 --> 00:44:25,080
+and another clause of this type,
+your problem will be NP-hard.
+
+838
+00:44:25,080 --> 00:44:31,490
+So in general, you say,
+otherwise SAT is NP-hard.
+
+839
+00:44:36,965 --> 00:44:38,590
+I guess it will
+actually be NP-complete
+
+840
+00:44:38,590 --> 00:44:41,090
+here, the way we've set it up.
+
+841
+00:44:41,090 --> 00:44:44,720
+Well, assuming the
+relations are checkable.
+
+842
+00:44:44,720 --> 00:44:46,090
+So these are the only cases.
+
+843
+00:44:46,090 --> 00:44:47,885
+This is an easy case,
+this is an easy case,
+
+844
+00:44:47,885 --> 00:44:48,760
+this is an easy case.
+
+845
+00:44:48,760 --> 00:44:51,040
+It could be that multiple
+of these things are true.
+
+846
+00:44:51,040 --> 00:44:53,710
+Maybe your 2CNF
+and your all Horn.
+
+847
+00:44:53,710 --> 00:44:55,860
+That will also be
+polynomial, of course.
+
+848
+00:44:55,860 --> 00:44:57,980
+But if none of these
+individually hold,
+
+849
+00:44:57,980 --> 00:44:59,800
+then your problem is NP-hard.
+
+850
+00:44:59,800 --> 00:45:00,423
+Question.
+
+851
+00:45:00,423 --> 00:45:01,964
+AUDIENCE: So how
+does this generalize
+
+852
+00:45:01,964 --> 00:45:04,366
+from non-Boolean fields?
+
+853
+00:45:04,366 --> 00:45:06,260
+I'm sure the last one
+is also still true.
+
+854
+00:45:06,260 --> 00:45:06,926
+PROFESSOR: Yeah.
+
+855
+00:45:06,926 --> 00:45:09,580
+So we can go back to your
+question about three colors,
+
+856
+00:45:09,580 --> 00:45:11,190
+and the answer is I don't know.
+
+857
+00:45:11,190 --> 00:45:12,740
+As far as I know, there's
+no theorem of that type.
+
+858
+00:45:12,740 --> 00:45:13,730
+But there might be one.
+
+859
+00:45:13,730 --> 00:45:16,550
+It's been 30 years.
+
+860
+00:45:16,550 --> 00:45:18,826
+So it wouldn't be surprising.
+
+861
+00:45:18,826 --> 00:45:20,950
+Certainly, you can-- some
+of these positive results
+
+862
+00:45:20,950 --> 00:45:22,720
+will generalize.
+
+863
+00:45:22,720 --> 00:45:27,760
+But I think even this one
+would be a little tricky.
+
+864
+00:45:27,760 --> 00:45:29,602
+AUDIENCE: So MAX 2SAT
+doesn't fall in this?
+
+865
+00:45:29,602 --> 00:45:30,310
+PROFESSOR: Right.
+
+866
+00:45:30,310 --> 00:45:33,735
+So here the goal is always to
+satisfy all of the clauses.
+
+867
+00:45:33,735 --> 00:45:35,360
+It's always the AND
+of all the clauses.
+
+868
+00:45:35,360 --> 00:45:38,960
+You could imagine a
+MAX 2SAT-like theorem.
+
+869
+00:45:38,960 --> 00:45:40,810
+My guess is most
+problems will be hard.
+
+870
+00:45:40,810 --> 00:45:44,080
+But as far as I know,
+there's no such theorem.
+
+871
+00:45:44,080 --> 00:45:44,870
+Yeah.
+
+872
+00:45:44,870 --> 00:45:47,078
+AUDIENCE: Is there any way
+to understand this theorem
+
+873
+00:45:47,078 --> 00:45:51,160
+as making a geometric statement
+about the relation being convex
+
+874
+00:45:51,160 --> 00:45:53,330
+and hypercube or something?
+
+875
+00:45:53,330 --> 00:45:54,830
+Like, is there any
+sort of convexity
+
+876
+00:45:54,830 --> 00:45:57,870
+property encoded in this?
+
+877
+00:45:57,870 --> 00:45:58,870
+PROFESSOR: I don't know.
+
+878
+00:45:58,870 --> 00:46:01,540
+I would guess no.
+
+879
+00:46:01,540 --> 00:46:03,310
+I know there is a
+more modern take
+
+880
+00:46:03,310 --> 00:46:05,709
+on this that is more algebraic.
+
+881
+00:46:05,709 --> 00:46:07,750
+So it's more like, if you
+start with these things
+
+882
+00:46:07,750 --> 00:46:09,124
+and you can build
+up in this way,
+
+883
+00:46:09,124 --> 00:46:10,960
+anything you can
+build up in this way
+
+884
+00:46:10,960 --> 00:46:13,680
+are the polynomial
+solvable versions of SAT.
+
+885
+00:46:13,680 --> 00:46:17,436
+Anything you can't build
+up in this way is NP-hard.
+
+886
+00:46:17,436 --> 00:46:19,810
+So if you're interested in
+that, check the Wikipedia page
+
+887
+00:46:19,810 --> 00:46:23,142
+for Schaefer's
+Dichotomy Theorem.
+
+888
+00:46:23,142 --> 00:46:25,350
+But I don't think there's
+a geometric interpretation.
+
+889
+00:46:25,350 --> 00:46:27,516
+This one, obviously, has a
+geometric interpretation.
+
+890
+00:46:27,516 --> 00:46:31,080
+But I think the others
+not, would be my guess.
+
+891
+00:46:31,080 --> 00:46:32,320
+Yeah.
+
+892
+00:46:32,320 --> 00:46:33,820
+AUDIENCE: So does
+this say something
+
+893
+00:46:33,820 --> 00:46:37,660
+about the complexity of
+recognizing the clauses if you
+
+894
+00:46:37,660 --> 00:46:39,150
+interpret them as a language?
+
+895
+00:46:39,150 --> 00:46:41,460
+PROFESSOR: If I give
+you the formula that
+
+896
+00:46:41,460 --> 00:46:43,620
+specifies the types
+of clauses, can you
+
+897
+00:46:43,620 --> 00:46:47,160
+determine whether any
+of these is the case.
+
+898
+00:46:47,160 --> 00:46:52,090
+I would guess yes, but I
+don't know of such a theorem.
+
+899
+00:46:52,090 --> 00:46:54,100
+So another good question.
+
+900
+00:46:54,100 --> 00:46:56,530
+So many questions
+to think about here.
+
+901
+00:46:56,530 --> 00:46:58,860
+It's definitely not
+explicitly mentioned,
+
+902
+00:46:58,860 --> 00:47:00,470
+that I saw, in the
+Schaefer paper.
+
+903
+00:47:00,470 --> 00:47:02,990
+But it's been around for
+a while so people may
+
+904
+00:47:02,990 --> 00:47:05,501
+have thought about that more.
+
+905
+00:47:05,501 --> 00:47:07,000
+It definitely can
+be a little tricky
+
+906
+00:47:07,000 --> 00:47:10,410
+to check which things are
+of this type, practically.
+
+907
+00:47:10,410 --> 00:47:15,020
+So it would be nice if
+there was an algorithm.
+
+908
+00:47:15,020 --> 00:47:19,920
+I would say-- so again,
+practically speaking,
+
+909
+00:47:19,920 --> 00:47:24,780
+there was one hardness proof I
+was trying to generate gadgets
+
+910
+00:47:24,780 --> 00:47:25,800
+computationally.
+
+911
+00:47:25,800 --> 00:47:27,570
+So just enumerate
+all possible gadgets
+
+912
+00:47:27,570 --> 00:47:29,470
+of a certain size
+for my problem,
+
+913
+00:47:29,470 --> 00:47:33,370
+and then see what formula
+they were representing.
+
+914
+00:47:33,370 --> 00:47:36,060
+And then we would
+take that formula,
+
+915
+00:47:36,060 --> 00:47:39,960
+do a Karnaugh map -- if you've
+ever done digital logic stuff --
+
+916
+00:47:39,960 --> 00:47:43,510
+and then from that, you
+get a nice, minimal form.
+
+917
+00:47:43,510 --> 00:47:46,060
+And then we would-- usually
+we could just look at the map
+
+918
+00:47:46,060 --> 00:47:49,760
+and say, oh, that's
+just equals, or that's
+
+919
+00:47:49,760 --> 00:47:50,930
+not equals or something.
+
+920
+00:47:50,930 --> 00:47:52,990
+We were hoping for-- we
+were dreaming for-- one
+
+921
+00:47:52,990 --> 00:47:54,610
+of these things or 3SAT.
+
+922
+00:47:54,610 --> 00:47:56,980
+We never got the
+gadget we wanted.
+
+923
+00:47:56,980 --> 00:48:00,150
+So I think, with a Karnaugh
+map, you could do this.
+
+924
+00:48:00,150 --> 00:48:01,350
+But that's exponential time.
+
+925
+00:48:01,350 --> 00:48:03,700
+AUDIENCE: Yeah.
+
+926
+00:48:03,700 --> 00:48:06,119
+PROFESSOR: So I
+don't know for sure.
+
+927
+00:48:06,119 --> 00:48:07,910
+I should probably check
+the algebraic view.
+
+928
+00:48:07,910 --> 00:48:09,770
+That might--
+
+929
+00:48:09,770 --> 00:48:11,754
+AUDIENCE: That's a
+clever approach though.
+
+930
+00:48:11,754 --> 00:48:12,420
+PROFESSOR: Yeah.
+
+931
+00:48:12,420 --> 00:48:13,820
+AUDIENCE: To do things
+computationally.
+
+932
+00:48:13,820 --> 00:48:15,280
+PROFESSOR: It's
+definitely helpful.
+
+933
+00:48:15,280 --> 00:48:16,980
+Because of course,
+computationally, you
+
+934
+00:48:16,980 --> 00:48:18,360
+can only look at small gadgets.
+
+935
+00:48:18,360 --> 00:48:21,460
+But hopefully there is a small
+gadget and then a nice proof.
+
+936
+00:48:21,460 --> 00:48:24,616
+So why do the hard work of
+generating them yourself when
+
+937
+00:48:24,616 --> 00:48:25,990
+the computer could
+do it for you?
+
+938
+00:48:25,990 --> 00:48:27,710
+It doesn't work
+for all problems.
+
+939
+00:48:27,710 --> 00:48:30,230
+Your problems need to
+be locally isolatable.
+
+940
+00:48:30,230 --> 00:48:33,770
+To not worry about
+the big picture.
+
+941
+00:48:33,770 --> 00:48:36,690
+Other questions?
+
+942
+00:48:36,690 --> 00:48:39,250
+Cool.
+
+943
+00:48:39,250 --> 00:48:42,640
+Well that's all the versions
+of SAT you need to know.
+
+944
+00:48:42,640 --> 00:48:45,170
+Because here we have the
+universality theorem.
+
+945
+00:48:45,170 --> 00:48:47,550
+There will be another
+one or two that we
+
+946
+00:48:47,550 --> 00:48:51,380
+bump into but these are the
+things you should all know.
+
+947
+00:48:51,380 --> 00:48:53,100
+It's really helpful
+when doing a proof
+
+948
+00:48:53,100 --> 00:48:55,770
+to not have to worry about
+which version 3SAT you even
+
+949
+00:48:55,770 --> 00:48:58,516
+are going to use, and just know
+that these are all out here.
+
+950
+00:48:58,516 --> 00:49:00,890
+So that when you find a gadget
+that happens to match one,
+
+951
+00:49:00,890 --> 00:49:02,306
+and then you say,
+oh, well I meant
+
+952
+00:49:02,306 --> 00:49:06,221
+to do a reduction from
+Not-All-Equal 3SAT.
+
+953
+00:49:06,221 --> 00:49:07,970
+That's why I wanted
+to tell you all these,
+
+954
+00:49:07,970 --> 00:49:12,200
+although I know it's a lot
+to take in all at once.
+
+955
+00:49:12,200 --> 00:49:14,475
+Let's do some
+reductions, finally.
+
+956
+00:49:20,640 --> 00:49:22,910
+NP-hardcore time.
+
+957
+00:49:22,910 --> 00:49:31,310
+So the first one, I had
+actually never seen before,
+
+958
+00:49:31,310 --> 00:49:32,980
+but it's in Schaefer's paper.
+
+959
+00:49:32,980 --> 00:49:35,205
+So I thought it'd
+be fun to cover.
+
+960
+00:49:38,830 --> 00:49:40,740
+Here's a problem,
+which is NP-hard,
+
+961
+00:49:40,740 --> 00:49:43,160
+and we will actually
+prove this one NP-hard.
+
+962
+00:49:43,160 --> 00:49:44,640
+2-colorable perfect matching.
+
+963
+00:49:47,280 --> 00:49:53,970
+Let's say you're given a
+planar 3-regular graph,
+
+964
+00:49:53,970 --> 00:49:55,430
+every vertex has degree 3.
+
+965
+00:50:01,780 --> 00:50:05,050
+And what you'd like to do is
+2-color the vertices, a red
+
+966
+00:50:05,050 --> 00:50:26,166
+and blue, such that every
+vertex has exactly one
+
+967
+00:50:26,166 --> 00:50:27,290
+neighbor of the same color.
+
+968
+00:50:37,150 --> 00:50:37,650
+OK.
+
+969
+00:50:37,650 --> 00:50:43,390
+So if you look at a vertex
+and it has three neighbors,
+
+970
+00:50:43,390 --> 00:50:45,980
+then-- let's say we
+color this guy red,
+
+971
+00:50:45,980 --> 00:50:48,010
+there should be exactly
+one neighbor that's red.
+
+972
+00:50:48,010 --> 00:50:50,166
+And so you can think of
+this edge as being red,
+
+973
+00:50:50,166 --> 00:50:52,290
+and then the red edges will
+form a perfect matching
+
+974
+00:50:52,290 --> 00:50:53,179
+in the graph.
+
+975
+00:50:53,179 --> 00:50:54,720
+Every vertex will
+be incident to
+
+976
+00:50:54,720 --> 00:50:56,429
+exactly one edge.
+
+977
+00:50:56,429 --> 00:50:58,220
+So that's the 2-colorable
+perfect matching.
+
+978
+00:50:58,220 --> 00:51:00,560
+It's kind of-- well, sorry.
+
+979
+00:51:00,560 --> 00:51:03,300
+The red edges form perfect
+matching on the red nodes,
+
+980
+00:51:03,300 --> 00:51:06,870
+and the black-- or
+the white edges,
+
+981
+00:51:06,870 --> 00:51:10,920
+I guess-- form a perfect
+matching on the white nodes,
+
+982
+00:51:10,920 --> 00:51:13,350
+black nodes, whatever.
+
+983
+00:51:13,350 --> 00:51:16,770
+So it's like two
+perfect matchings,
+
+984
+00:51:16,770 --> 00:51:19,410
+one in each color class.
+
+985
+00:51:19,410 --> 00:51:20,830
+So this is a nice problem.
+
+986
+00:51:20,830 --> 00:51:22,670
+You can think of it
+as SAT, in a sense.
+
+987
+00:51:22,670 --> 00:51:25,210
+It's, again, just a local
+constraint on the nodes.
+
+988
+00:51:28,007 --> 00:51:30,340
+And so you can think of this
+as being a clause involving
+
+989
+00:51:30,340 --> 00:51:32,280
+those four guys.
+
+990
+00:51:32,280 --> 00:51:34,260
+I think, unless I
+did something wrong,
+
+991
+00:51:34,260 --> 00:51:39,280
+you can think of it
+as 2-in-4SAT,
+
+992
+00:51:39,280 --> 00:51:42,340
+or a special version
+of 2-in-4SAT.
+
+993
+00:51:42,340 --> 00:51:45,585
+Because-- is that right?
+
+994
+00:51:45,585 --> 00:51:46,540
+Yeah.
+
+995
+00:51:46,540 --> 00:51:51,210
+So let's say red is true.
+
+996
+00:51:51,210 --> 00:51:53,447
+So what we're saying
+is if this guy is true,
+
+997
+00:51:53,447 --> 00:51:55,530
+among these four nodes
+there should be exactly one
+
+998
+00:51:55,530 --> 00:51:57,470
+other one that is red.
+
+999
+00:51:57,470 --> 00:51:59,190
+On the other hand,
+if this is black,
+
+1000
+00:51:59,190 --> 00:52:02,130
+there should be exactly
+one of them that is black.
+
+1001
+00:52:02,130 --> 00:52:03,960
+And so the other
+two should be red.
+
+1002
+00:52:03,960 --> 00:52:07,500
+So in all cases, it's exactly
+two in four of them are red.
+
+1003
+00:52:07,500 --> 00:52:10,370
+And it's symmetric between red
+and black, so that seems good.
+
+1004
+00:52:10,370 --> 00:52:12,590
+So this is a special
+case of 2-in-4SAT.
+
+1005
+00:52:12,590 --> 00:52:15,270
+In case you were wondering
+whether 2-in-4SAT is hard,
+
+1006
+00:52:15,270 --> 00:52:16,340
+here it is.
+
+1007
+00:52:16,340 --> 00:52:23,265
+And I have the original
+reduction by Schaefer here.
+
+1008
+00:52:23,265 --> 00:52:24,420
+Do I have any notes?
+
+1009
+00:52:24,420 --> 00:52:26,090
+No, that would be too easy.
+
+1010
+00:52:26,090 --> 00:52:32,620
+So here's a gadget and
+here's another gadget,
+
+1011
+00:52:32,620 --> 00:52:35,760
+and then they're
+pasted together.
+
+1012
+00:52:35,760 --> 00:52:39,560
+And I should
+mention-- so Schaefer
+
+1013
+00:52:39,560 --> 00:52:41,855
+claims that if you have
+a planar 3-regular graph,
+
+1014
+00:52:41,855 --> 00:52:42,730
+this problem is hard.
+
+1015
+00:52:42,730 --> 00:52:44,220
+But he doesn't prove it.
+
+1016
+00:52:44,220 --> 00:52:45,910
+He just proves it
+for general graphs,
+
+1017
+00:52:45,910 --> 00:52:48,460
+so I'm only going to prove
+it for general graphs.
+
+1018
+00:52:48,460 --> 00:52:51,370
+Maybe we can think about
+planar 3-regular case,
+
+1019
+00:52:51,370 --> 00:52:53,340
+but not right here.
+
+1020
+00:52:53,340 --> 00:52:57,580
+So this will just make a graph
+instance to that problem.
+
+1021
+00:52:57,580 --> 00:53:01,180
+So this gadget,
+this is a K4 on--
+
+1022
+00:53:01,180 --> 00:53:04,490
+and we're only
+distinguishing x, y, and z.
+
+1023
+00:53:04,490 --> 00:53:06,370
+And it has to
+form-- there's going
+
+1024
+00:53:06,370 --> 00:53:09,930
+to be one red edge
+and one black edge.
+
+1025
+00:53:09,930 --> 00:53:11,630
+So maybe like this,
+and like this.
+
+1026
+00:53:11,630 --> 00:53:12,970
+Or like this, or like this.
+
+1027
+00:53:12,970 --> 00:53:15,950
+It's going to be a rotation
+of one of those assignments.
+
+1028
+00:53:15,950 --> 00:53:18,970
+So I believe the
+claim is x, y, and z,
+
+1029
+00:53:18,970 --> 00:53:20,770
+just looking at
+those three vertices,
+
+1030
+00:53:20,770 --> 00:53:23,890
+should be not-all-equal.
+
+1031
+00:53:23,890 --> 00:53:24,390
+OK?
+
+1032
+00:53:24,390 --> 00:53:27,090
+If two of them are red,
+by symmetry-- there's
+
+1033
+00:53:27,090 --> 00:53:29,410
+lots of rotational symmetry
+here-- so maybe two of them
+
+1034
+00:53:29,410 --> 00:53:30,800
+are red and one is black.
+
+1035
+00:53:30,800 --> 00:53:32,800
+Then this guy can be set
+black and you're happy.
+
+1036
+00:53:32,800 --> 00:53:35,930
+It's actually forced for
+that guy to be black.
+
+1037
+00:53:35,930 --> 00:53:39,500
+If two of them are black,
+then these two must be red.
+
+1038
+00:53:39,500 --> 00:53:42,570
+And if all three of these
+are black, you're toast.
+
+1039
+00:53:42,570 --> 00:53:44,710
+Because you should
+have two of each.
+
+1040
+00:53:44,710 --> 00:53:48,040
+And if all three of them
+are red, you're in trouble.
+
+1041
+00:53:48,040 --> 00:53:54,890
+So this is a not-all-equal
+clause gadget for this problem.
+
+1042
+00:53:54,890 --> 00:53:59,290
+So we're going to reduce
+from Not-All-Equal 3SAT
+
+1043
+00:53:59,290 --> 00:54:01,030
+to 2-colorable perfect matching.
+
+1044
+00:54:01,030 --> 00:54:04,050
+So we're representing a
+Not-All-Equal clause like this.
+
+1045
+00:54:04,050 --> 00:54:10,650
+And now what we need is the
+ability to copy data, right?
+
+1046
+00:54:10,650 --> 00:54:13,070
+So these are three variables
+that-- at the moment, yeah,
+
+1047
+00:54:13,070 --> 00:54:14,580
+they can be red or blue.
+
+1048
+00:54:14,580 --> 00:54:16,730
+But what we need
+is that the same x_i
+
+1049
+00:54:16,730 --> 00:54:18,330
+can appear in multiple clauses.
+
+1050
+00:54:18,330 --> 00:54:19,779
+Because we have a
+bipartite graph.
+
+1051
+00:54:19,779 --> 00:54:21,820
+If every variable appeared
+in only in one clause,
+
+1052
+00:54:21,820 --> 00:54:24,740
+the problem would
+be really easy.
+
+1053
+00:54:24,740 --> 00:54:26,990
+So that's what this gadget does.
+
+1054
+00:54:26,990 --> 00:54:30,080
+The claim is this
+gadget copies a value.
+
+1055
+00:54:30,080 --> 00:54:32,650
+And this, I think, requires--
+so it says that these two
+
+1056
+00:54:32,650 --> 00:54:35,300
+guys must have the same color.
+
+1057
+00:54:35,300 --> 00:54:38,160
+And so what you do
+is you just have--
+
+1058
+00:54:38,160 --> 00:54:39,920
+for each Not-All-Equal
+clause-- you
+
+1059
+00:54:39,920 --> 00:54:41,940
+have one of these
+Not-All-Equal gadgets.
+
+1060
+00:54:41,940 --> 00:54:44,180
+And then whenever you
+have two variables
+
+1061
+00:54:44,180 --> 00:54:47,080
+that are supposed to be the
+same thing here, it's x and x.
+
+1062
+00:54:47,080 --> 00:54:49,177
+In our terminology, x_i and x_i.
+
+1063
+00:54:49,177 --> 00:54:51,510
+Then you're just going to
+connect them with this gadget.
+
+1064
+00:54:51,510 --> 00:54:53,630
+And that will force
+them to be equal.
+
+1065
+00:54:53,630 --> 00:54:55,180
+Or over here we have y and y.
+
+1066
+00:54:55,180 --> 00:54:57,560
+So r here is Not-All-Equal.
+
+1067
+00:54:57,560 --> 00:55:01,490
+In our terminology, it'd
+be NAE(x,x,y) and NAE(y,z,u).
+
+1068
+00:55:01,490 --> 00:55:05,696
+This would represent
+that formula.
+
+1069
+00:55:05,696 --> 00:55:08,070
+So the thing to check, which
+I will leave as an exercise,
+
+1070
+00:55:08,070 --> 00:55:11,665
+because it seems-- at least,
+I couldn't find a clean way
+
+1071
+00:55:11,665 --> 00:55:12,165
+to do it.
+
+1072
+00:55:12,165 --> 00:55:13,414
+It seems a little bit tedious.
+
+1073
+00:55:13,414 --> 00:55:18,360
+That this forces equality
+between the two ends,
+
+1074
+00:55:18,360 --> 00:55:20,015
+not providing any
+other constraints.
+
+1075
+00:55:23,010 --> 00:55:26,016
+So that was a simple proof.
+
+1076
+00:55:26,016 --> 00:55:27,520
+One of few simple proofs.
+
+1077
+00:55:27,520 --> 00:55:28,660
+Still some cases to check.
+
+1078
+00:55:28,660 --> 00:55:29,949
+Yeah.
+
+1079
+00:55:29,949 --> 00:55:31,865
+AUDIENCE: Wait, you said
+those general graphs,
+
+1080
+00:55:31,865 --> 00:55:33,020
+they don't have to be
+3-regular?
+
+1081
+00:55:33,020 --> 00:55:33,728
+PROFESSOR: Right.
+
+1082
+00:55:33,728 --> 00:55:36,500
+This is general graphs.
+
+1083
+00:55:36,500 --> 00:55:40,890
+So you might say, what about
+planar 3-regular graphs?
+
+1084
+00:55:40,890 --> 00:55:45,230
+Planar Not-All-Equal 3SAT--
+when this graph is planar--
+
+1085
+00:55:45,230 --> 00:55:47,400
+when the bipartite graph
+is planar-- it's actually
+
+1086
+00:55:47,400 --> 00:55:49,430
+easy to solve, polynomial.
+
+1087
+00:55:49,430 --> 00:55:52,890
+So you can't reduce from
+planar Not-All-Equal 3SAT
+
+1088
+00:55:52,890 --> 00:55:54,520
+because it's easy.
+
+1089
+00:55:54,520 --> 00:55:56,680
+But I would guess that
+in this situation--
+
+1090
+00:55:56,680 --> 00:55:58,970
+and we just proved this
+is a more general problem
+
+1091
+00:55:58,970 --> 00:56:00,900
+than Not-All-Equal
+3SAT-- what we
+
+1092
+00:56:00,900 --> 00:56:03,320
+would need at this point
+is a crossover gadget.
+
+1093
+00:56:03,320 --> 00:56:05,310
+So that when-- and
+this thing is going
+
+1094
+00:56:05,310 --> 00:56:07,980
+to end up with crossings--
+if there's a gadget that just
+
+1095
+00:56:07,980 --> 00:56:10,430
+communicates the information
+across the crossover,
+
+1096
+00:56:10,430 --> 00:56:12,020
+without any other
+constraints, then
+
+1097
+00:56:12,020 --> 00:56:14,270
+we can just plug that in and
+get rid of all crossings.
+
+1098
+00:56:14,270 --> 00:56:17,540
+Then we have a planar graph
+and that would prove this part.
+
+1099
+00:56:17,540 --> 00:56:21,530
+And then the other part is that
+we have high degree nodes here.
+
+1100
+00:56:21,530 --> 00:56:23,464
+And so I'm guessing
+Schaefer had in mind
+
+1101
+00:56:23,464 --> 00:56:25,130
+the gadget that takes
+a high degree node
+
+1102
+00:56:25,130 --> 00:56:27,860
+and splits it up into lots of
+little lower degree nodes--
+
+1103
+00:56:27,860 --> 00:56:31,170
+degree 3 nodes-- that
+simulates the same effect.
+
+1104
+00:56:31,170 --> 00:56:32,980
+But I don't know either gadget.
+
+1105
+00:56:32,980 --> 00:56:35,240
+But that would be my
+guess on how to-- that
+
+1106
+00:56:35,240 --> 00:56:36,740
+would be the obvious
+approach of how
+
+1107
+00:56:36,740 --> 00:56:38,354
+to proceed to get that theorem.
+
+1108
+00:56:38,354 --> 00:56:38,854
+Yeah.
+
+1109
+00:56:38,854 --> 00:56:40,270
+AUDIENCE: The other
+gadget is just
+
+1110
+00:56:40,270 --> 00:56:44,810
+1(b) split into
+degree 3 copies connected
+
+1111
+00:56:44,810 --> 00:56:47,467
+by that gadget.
+
+1112
+00:56:47,467 --> 00:56:48,050
+PROFESSOR: OK.
+
+1113
+00:56:48,050 --> 00:56:49,040
+Good.
+
+1114
+00:56:49,040 --> 00:56:49,840
+One gadget down.
+
+1115
+00:56:49,840 --> 00:56:51,048
+Now we just need a crossover.
+
+1116
+00:56:53,394 --> 00:56:54,060
+Other questions?
+
+1117
+00:56:58,950 --> 00:57:00,240
+All right.
+
+1118
+00:57:00,240 --> 00:57:03,240
+I want to talk about two
+families of problems--
+
+1119
+00:57:03,240 --> 00:57:05,560
+a proof hardness for two
+families of problems-- next.
+
+1120
+00:57:05,560 --> 00:57:09,930
+One is called pushing blocks.
+
+1121
+00:57:09,930 --> 00:57:13,210
+These come up in lots of
+different video games.
+
+1122
+00:57:13,210 --> 00:57:16,430
+One of the first, I
+think, is called Sokoban.
+
+1123
+00:57:16,430 --> 00:57:21,260
+This goes back to 1984 and this
+is, I believe, the original CGA
+
+1124
+00:57:21,260 --> 00:57:23,910
+graphics for Sokoban.
+
+1125
+00:57:23,910 --> 00:57:26,040
+And so you may have
+played Sokoban.
+
+1126
+00:57:26,040 --> 00:57:27,480
+I think it's in Emacs.
+
+1127
+00:57:27,480 --> 00:57:28,580
+It's all over the place.
+
+1128
+00:57:28,580 --> 00:57:30,990
+Tons of implementations on it.
+
+1129
+00:57:30,990 --> 00:57:33,910
+You are at a warehouseman, that
+is what sokoban means literally
+
+1130
+00:57:33,910 --> 00:57:34,980
+in Japanese.
+
+1131
+00:57:34,980 --> 00:57:36,080
+And you have these boxes.
+
+1132
+00:57:36,080 --> 00:57:37,150
+They're all one by one boxes.
+
+1133
+00:57:37,150 --> 00:57:37,941
+You are one by one.
+
+1134
+00:57:37,941 --> 00:57:40,550
+There are some bricks
+which cannot be moved.
+
+1135
+00:57:40,550 --> 00:57:44,080
+You have some target
+locations and your poor job
+
+1136
+00:57:44,080 --> 00:57:46,590
+is to move all these boxes
+into the target locations.
+
+1137
+00:57:46,590 --> 00:57:48,340
+Or rather, every
+target location must
+
+1138
+00:57:48,340 --> 00:57:50,450
+be covered by exactly one box.
+
+1139
+00:57:50,450 --> 00:57:53,012
+Boxes can't overlap each
+other, you can push a box,
+
+1140
+00:57:53,012 --> 00:57:54,470
+but you can only
+push one at a time
+
+1141
+00:57:54,470 --> 00:57:55,770
+because you're not that strong.
+
+1142
+00:57:55,770 --> 00:57:58,430
+So you could not, for
+example, push left here.
+
+1143
+00:57:58,430 --> 00:58:02,100
+But in general, your inputs
+are up, down, left, and right.
+
+1144
+00:58:02,100 --> 00:58:04,460
+Up, up, down, down,
+left, right, left, right.
+
+1145
+00:58:04,460 --> 00:58:07,119
+And you can only push
+one block at a time.
+
+1146
+00:58:07,119 --> 00:58:08,660
+So if you push a
+block into a corner,
+
+1147
+00:58:08,660 --> 00:58:10,370
+it's never going to move again.
+
+1148
+00:58:10,370 --> 00:58:12,170
+So often you have to hit reset.
+
+1149
+00:58:12,170 --> 00:58:13,770
+There's a lot of
+ways to get stuck.
+
+1150
+00:58:13,770 --> 00:58:15,900
+But this is a solvable instance.
+
+1151
+00:58:15,900 --> 00:58:19,370
+I think it's level five
+in the original game.
+
+1152
+00:58:19,370 --> 00:58:23,292
+So this got started a
+huge family of problems.
+
+1153
+00:58:23,292 --> 00:58:24,750
+There are tons of
+other video games
+
+1154
+00:58:24,750 --> 00:58:26,400
+that have pushing
+blocks problems.
+
+1155
+00:58:26,400 --> 00:58:29,480
+This is one, in Legend of
+Zelda: Minish Cap, which I think
+
+1156
+00:58:29,480 --> 00:58:31,470
+is a Gameboy Advance game.
+
+1157
+00:58:31,470 --> 00:58:33,220
+It's been a while since
+I played this one.
+
+1158
+00:58:33,220 --> 00:58:36,030
+But here is a level
+where you have--
+
+1159
+00:58:36,030 --> 00:58:38,980
+it's in perspective
+a little bit,
+
+1160
+00:58:38,980 --> 00:58:41,190
+but this is really a 2D problem.
+
+1161
+00:58:41,190 --> 00:58:42,430
+Everything is one by one.
+
+1162
+00:58:42,430 --> 00:58:43,730
+Believe me.
+
+1163
+00:58:43,730 --> 00:58:45,690
+You have one by one blocks.
+
+1164
+00:58:45,690 --> 00:58:47,070
+You're on ice.
+
+1165
+00:58:47,070 --> 00:58:49,620
+So if you ever push a
+block, it will slide off
+
+1166
+00:58:49,620 --> 00:58:53,930
+to infinity unless it hits
+something else, like a block.
+
+1167
+00:58:53,930 --> 00:58:57,021
+And your goal is to
+get a block here.
+
+1168
+00:58:57,021 --> 00:58:57,520
+OK?
+
+1169
+00:58:57,520 --> 00:58:58,680
+Anyone see how to do it?
+
+1170
+00:59:01,293 --> 00:59:02,793
+AUDIENCE: It's like
+Ricochet Robots.
+
+1171
+00:59:02,793 --> 00:59:03,250
+AUDIENCE: Can you
+walk without sliding?
+
+1172
+00:59:03,250 --> 00:59:04,540
+PROFESSOR: It's a lot
+like Ricochet Robots.
+
+1173
+00:59:04,540 --> 00:59:05,390
+Yeah.
+
+1174
+00:59:05,390 --> 00:59:07,500
+You can walk wherever you want.
+
+1175
+00:59:07,500 --> 00:59:09,440
+There is no block.
+
+1176
+00:59:09,440 --> 00:59:11,860
+So there's lots of free
+space in this case.
+
+1177
+00:59:11,860 --> 00:59:16,650
+So you can push this guy down
+and then push it over and then
+
+1178
+00:59:16,650 --> 00:59:17,310
+push it up.
+
+1179
+00:59:17,310 --> 00:59:18,970
+It's actually not that hard.
+
+1180
+00:59:18,970 --> 00:59:20,636
+At some point I was
+thinking, well maybe
+
+1181
+00:59:20,636 --> 00:59:23,670
+I should stack up three
+here so it ends up-- but no.
+
+1182
+00:59:23,670 --> 00:59:28,062
+It's just three pushes
+and you're done.
+
+1183
+00:59:28,062 --> 00:59:30,520
+And if you watch the YouTube
+video that's linked from this,
+
+1184
+00:59:30,520 --> 00:59:32,870
+you'll see him spend
+like 30 minutes
+
+1185
+00:59:32,870 --> 00:59:34,700
+until he finds the
+right solution.
+
+1186
+00:59:34,700 --> 00:59:37,241
+In the game, it's frustrating
+because once you push them off,
+
+1187
+00:59:37,241 --> 00:59:39,550
+they disappear and you have
+to leave and come back.
+
+1188
+00:59:39,550 --> 00:59:41,510
+Anyway.
+
+1189
+00:59:41,510 --> 00:59:45,730
+So out of all these games,
+we've defined a bunch of models.
+
+1190
+00:59:45,730 --> 00:59:48,490
+Here's one aspect of the model.
+
+1191
+00:59:48,490 --> 00:59:50,250
+So we have the
+fixed blocks, which
+
+1192
+00:59:50,250 --> 00:59:53,990
+are in red, the movable
+blocks, which are in cyan here,
+
+1193
+00:59:53,990 --> 00:59:55,220
+and the robot is blue.
+
+1194
+00:59:55,220 --> 00:59:57,150
+Everything's one by one.
+
+1195
+00:59:57,150 --> 01:00:01,710
+And in one model, which we call
+Push, when you push a block,
+
+1196
+01:00:01,710 --> 01:00:03,380
+it moves one step.
+
+1197
+01:00:03,380 --> 01:00:04,580
+That's the normal model.
+
+1198
+01:00:04,580 --> 01:00:06,760
+And that's like Sokoban.
+
+1199
+01:00:06,760 --> 01:00:10,110
+And I'll talk about
+the two in a second.
+
+1200
+01:00:10,110 --> 01:00:13,300
+In PushPush-- this is
+like the on-ice version.
+
+1201
+01:00:13,300 --> 01:00:14,240
+So you're not on ice.
+
+1202
+01:00:14,240 --> 01:00:16,460
+You can still kind of
+move and then kind of
+
+1203
+01:00:16,460 --> 01:00:19,700
+counteract physics and
+just move one step.
+
+1204
+01:00:19,700 --> 01:00:22,930
+But the blocks, they'll just fly
+off until they hit something.
+
+1205
+01:00:22,930 --> 01:00:26,490
+So here, this block will
+fly until it goes there.
+
+1206
+01:00:26,490 --> 01:00:29,690
+In PushPushPush,
+everything is so slippery
+
+1207
+01:00:29,690 --> 01:00:32,520
+that if you hit a block and
+it hits another block that's
+
+1208
+01:00:32,520 --> 01:00:36,020
+movable, they will all
+just keep going until they
+
+1209
+01:00:36,020 --> 01:00:38,296
+hit an immovable block.
+
+1210
+01:00:38,296 --> 01:00:40,059
+AUDIENCE: But you don't slip.
+
+1211
+01:00:40,059 --> 01:00:42,350
+PROFESSOR: You still don't
+slip in any of these models.
+
+1212
+01:00:42,350 --> 01:00:44,099
+So there's another
+version where you slip,
+
+1213
+01:00:44,099 --> 01:00:45,930
+which has not been
+considered so much.
+
+1214
+01:00:45,930 --> 01:00:47,850
+Although Ricochet Robots
+has been considered
+
+1215
+01:00:47,850 --> 01:00:49,290
+and that's in that genre.
+
+1216
+01:00:49,290 --> 01:00:49,790
+Yeah?
+
+1217
+01:00:49,790 --> 01:00:53,592
+AUDIENCE: Is there a model
+where the block you first pushed
+
+1218
+01:00:53,592 --> 01:00:55,550
+stops and transfers its
+momentum to the other--
+
+1219
+01:00:55,550 --> 01:00:56,350
+PROFESSOR: Oh, cool.
+
+1220
+01:00:56,350 --> 01:00:56,680
+Yeah.
+
+1221
+01:00:56,680 --> 01:00:57,690
+Conservation momentum.
+
+1222
+01:00:57,690 --> 01:01:00,200
+So this one hits then
+the next one goes.
+
+1223
+01:01:00,200 --> 01:01:00,909
+That's probably--
+
+1224
+01:01:00,909 --> 01:01:01,866
+AUDIENCE: PushStopPush.
+
+1225
+01:01:01,866 --> 01:01:02,960
+PROFESSOR: PushStopPush.
+
+1226
+01:01:02,960 --> 01:01:05,100
+I would guess that's also
+hard because this ends up
+
+1227
+01:01:05,100 --> 01:01:06,395
+being the same proof.
+
+1228
+01:01:06,395 --> 01:01:08,610
+I'm guessing that works,
+but we would need to check.
+
+1229
+01:01:08,610 --> 01:01:10,010
+That's a good-- yeah.
+
+1230
+01:01:10,010 --> 01:01:14,030
+The push-- push ricochet push.
+
+1231
+01:01:14,030 --> 01:01:14,530
+OK.
+
+1232
+01:01:14,530 --> 01:01:16,650
+One other thing here
+is the number two.
+
+1233
+01:01:16,650 --> 01:01:18,830
+You'll notice only
+two blocks are moving.
+
+1234
+01:01:18,830 --> 01:01:22,080
+And normally here, two is
+the strength of the robot,
+
+1235
+01:01:22,080 --> 01:01:24,072
+meaning if there are
+up to two in a row,
+
+1236
+01:01:24,072 --> 01:01:26,530
+you can push two blocks, but
+once there are three in a row,
+
+1237
+01:01:26,530 --> 01:01:28,470
+you can't push at all.
+
+1238
+01:01:28,470 --> 01:01:30,350
+The idea here is the
+same thing happens.
+
+1239
+01:01:30,350 --> 01:01:31,970
+So they're just too heavy.
+
+1240
+01:01:31,970 --> 01:01:34,120
+After you get up
+to three of them,
+
+1241
+01:01:34,120 --> 01:01:36,150
+then they'll stop sliding.
+
+1242
+01:01:36,150 --> 01:01:38,300
+And same with PushPushPush.
+
+1243
+01:01:38,300 --> 01:01:40,620
+AUDIENCE: So Sokoban
+is actually Push-1.
+
+1244
+01:01:40,620 --> 01:01:42,480
+PROFESSOR: Sokoban
+is like Push-1.
+
+1245
+01:01:42,480 --> 01:01:43,970
+It's a little bit
+more complicated,
+
+1246
+01:01:43,970 --> 01:01:46,390
+as illustrated in this table.
+
+1247
+01:01:46,390 --> 01:01:52,800
+So Sokoban is here and you can
+only push one block at a time.
+
+1248
+01:01:52,800 --> 01:01:53,929
+There are fixed blocks.
+
+1249
+01:01:53,929 --> 01:01:55,970
+And in general, the models
+that have fixed blocks
+
+1250
+01:01:55,970 --> 01:01:59,070
+are highlighted in pink here.
+
+1251
+01:01:59,070 --> 01:02:02,380
+The slide thing is trying
+to capture whether it just
+
+1252
+01:02:02,380 --> 01:02:06,000
+moves one step or all the
+way until it can't anymore.
+
+1253
+01:02:06,000 --> 01:02:06,677
+That's the max.
+
+1254
+01:02:06,677 --> 01:02:08,510
+And there's only a
+couple of slide versions.
+
+1255
+01:02:08,510 --> 01:02:11,020
+I haven't put PushPushPush
+here because that
+
+1256
+01:02:11,020 --> 01:02:13,960
+would be the only difference--
+is what max means.
+
+1257
+01:02:13,960 --> 01:02:17,200
+But everything else
+you just move one step.
+
+1258
+01:02:17,200 --> 01:02:19,550
+Then the other issue
+is, what is the goal?
+
+1259
+01:02:19,550 --> 01:02:23,740
+I mentioned in Sokoban you
+have to cover every storage
+
+1260
+01:02:23,740 --> 01:02:26,100
+space with a box.
+
+1261
+01:02:26,100 --> 01:02:28,760
+That is the only problem with
+that flavor, in this list
+
+1262
+01:02:28,760 --> 01:02:29,440
+anyway.
+
+1263
+01:02:29,440 --> 01:02:31,210
+All the ones that
+are called Push--
+
+1264
+01:02:31,210 --> 01:02:34,390
+the goal is just to get
+the robot to a destination,
+
+1265
+01:02:34,390 --> 01:02:37,850
+like in Mario or
+Zelda or something.
+
+1266
+01:02:37,850 --> 01:02:42,030
+So that's the difference
+between Sokoban and Push-1.
+
+1267
+01:02:42,030 --> 01:02:46,490
+Well Push-1F, I suppose,
+is pushing one thing
+
+1268
+01:02:46,490 --> 01:02:48,720
+at a time with fixed blocks.
+
+1269
+01:02:48,720 --> 01:02:51,890
+That's identical to Sokoban
+except for this issue of what
+
+1270
+01:02:51,890 --> 01:02:52,520
+the goal is.
+
+1271
+01:02:52,520 --> 01:02:54,981
+Either just to get from
+s to t-- the robot--
+
+1272
+01:02:54,981 --> 01:02:57,355
+or to get all the blocks into
+a particular configuration.
+
+1273
+01:03:00,690 --> 01:03:02,450
+OK.
+
+1274
+01:03:02,450 --> 01:03:04,740
+Well there are some
+other things here.
+
+1275
+01:03:04,740 --> 01:03:06,660
+We've talked about Push-k.
+
+1276
+01:03:06,660 --> 01:03:08,370
+Push-* is when k is infinity.
+
+1277
+01:03:08,370 --> 01:03:10,780
+So when you push, you can--
+your arbitrary strength--
+
+1278
+01:03:10,780 --> 01:03:13,630
+you can push as many blocks
+in a row as you want.
+
+1279
+01:03:13,630 --> 01:03:16,340
+PushPush-k, PushPush-*, then.
+
+1280
+01:03:16,340 --> 01:03:18,810
+We've talked about F. F is
+when you have fixed blocks.
+
+1281
+01:03:18,810 --> 01:03:23,800
+Push-1F, Push-kF,
+and Push-*F.
+
+1282
+01:03:23,800 --> 01:03:25,950
+And then there's one
+other variation here
+
+1283
+01:03:25,950 --> 01:03:27,790
+that's been considered,
+which is the X.
+
+1284
+01:03:27,790 --> 01:03:30,520
+This is when the path
+that the robot takes
+
+1285
+01:03:30,520 --> 01:03:33,720
+must not cross itself--
+must not revisit a square.
+
+1286
+01:03:33,720 --> 01:03:35,240
+This is-- there a
+lot of video games
+
+1287
+01:03:35,240 --> 01:03:37,630
+where after you leave a
+square, that square disappears.
+
+1288
+01:03:37,630 --> 01:03:42,470
+It falls down into the
+abyss and so you're scared.
+
+1289
+01:03:42,470 --> 01:03:44,850
+So to represent
+those games-- there's
+
+1290
+01:03:44,850 --> 01:03:48,170
+another reason we did that, but
+I'll get to that in a moment--
+
+1291
+01:03:48,170 --> 01:03:51,141
+there's Push-kX
+and Push-*X.
+
+1292
+01:03:51,141 --> 01:03:51,640
+OK.
+
+1293
+01:03:51,640 --> 01:03:52,973
+Now let's talk about complexity.
+
+1294
+01:03:52,973 --> 01:03:55,440
+That's the right
+two columns here.
+
+1295
+01:03:55,440 --> 01:03:58,520
+The reference and
+the complexity.
+
+1296
+01:03:58,520 --> 01:04:02,550
+So all of these
+problems are NP-hard.
+
+1297
+01:04:02,550 --> 01:04:03,050
+OK?
+
+1298
+01:04:03,050 --> 01:04:05,560
+But there's this
+issue-- are they in NP
+
+1299
+01:04:05,560 --> 01:04:07,141
+or are they PSPACE-Complete?
+
+1300
+01:04:07,141 --> 01:04:07,640
+Question.
+
+1301
+01:04:07,640 --> 01:04:08,306
+AUDIENCE: Sorry.
+
+1302
+01:04:08,306 --> 01:04:10,010
+What did you say
+a fixed block is?
+
+1303
+01:04:10,010 --> 01:04:12,880
+PROFESSOR: A fixed block is a
+block that cannot be pushed.
+
+1304
+01:04:12,880 --> 01:04:14,470
+So it's just glued
+to the ground.
+
+1305
+01:04:14,470 --> 01:04:15,494
+AUDIENCE: So this is
+just whether or not
+
+1306
+01:04:15,494 --> 01:04:16,520
+there are some blocks
+that are fixed.
+
+1307
+01:04:16,520 --> 01:04:17,228
+PROFESSOR: Right.
+
+1308
+01:04:17,228 --> 01:04:19,660
+In these problems, this
+is a more general version
+
+1309
+01:04:19,660 --> 01:04:20,960
+than this game.
+
+1310
+01:04:20,960 --> 01:04:23,820
+Here, you allow some blocks
+to be specified as fixed.
+
+1311
+01:04:23,820 --> 01:04:25,890
+Here, everything is
+potentially movable.
+
+1312
+01:04:25,890 --> 01:04:27,640
+Although if you have
+more than k in a row,
+
+1313
+01:04:27,640 --> 01:04:28,770
+it's like a fixed block.
+
+1314
+01:04:28,770 --> 01:04:31,060
+If you have a
+k+1 by k+1 block,
+
+1315
+01:04:31,060 --> 01:04:33,590
+that's fixed, effectively.
+
+1316
+01:04:33,590 --> 01:04:36,140
+But you have a
+resolution issue that you
+
+1317
+01:04:36,140 --> 01:04:38,740
+can't make tiny fixed
+blocks in this model.
+
+1318
+01:04:38,740 --> 01:04:41,190
+And in this model there are
+no fixed blocks whatsoever.
+
+1319
+01:04:41,190 --> 01:04:43,380
+But here you can specify
+some of them are fixed.
+
+1320
+01:04:46,210 --> 01:04:46,960
+A lot of versions.
+
+1321
+01:04:46,960 --> 01:04:48,190
+AUDIENCE: So push-star
+has a boundary?
+
+1322
+01:04:48,190 --> 01:04:49,550
+Otherwise you could just--
+
+1323
+01:04:49,550 --> 01:04:51,971
+PROFESSOR: Push-star does
+live in a rectangular box.
+
+1324
+01:04:51,971 --> 01:04:52,470
+Yeah.
+
+1325
+01:04:52,470 --> 01:04:53,314
+That is the one.
+
+1326
+01:04:53,314 --> 01:04:54,230
+AUDIENCE: Is it fixed?
+
+1327
+01:04:54,230 --> 01:04:58,850
+PROFESSOR: You could think of
+that as fixed blocks or not.
+
+1328
+01:04:58,850 --> 01:05:01,450
+If nothing is fixed, then you
+can just walk off to infinity,
+
+1329
+01:05:01,450 --> 01:05:03,460
+move all the blocks
+away and then come back
+
+1330
+01:05:03,460 --> 01:05:04,543
+and find your destination.
+
+1331
+01:05:04,543 --> 01:05:05,712
+AUDIENCE: [INAUDIBLE].
+
+1332
+01:05:05,712 --> 01:05:06,420
+PROFESSOR: Right.
+
+1333
+01:05:06,420 --> 01:05:07,820
+So they're all NP-hard.
+
+1334
+01:05:07,820 --> 01:05:10,680
+There's a few that are
+known to be PSPACE-Complete.
+
+1335
+01:05:10,680 --> 01:05:15,960
+PushPush, with a fixed
+strength, is PSPACE-Complete.
+
+1336
+01:05:15,960 --> 01:05:21,640
+Or with fixed blocks, I think,
+should also be PSPACE-Complete.
+
+1337
+01:05:21,640 --> 01:05:23,290
+That's not written here.
+
+1338
+01:05:23,290 --> 01:05:25,650
+But PushPush-*, all
+we know is NP-hardness.
+
+1339
+01:05:28,200 --> 01:05:33,450
+Push-kF, where k is at least 2,
+is known to be PSPACE-Complete.
+
+1340
+01:05:33,450 --> 01:05:39,560
+But Push-1F or Push-2,
+without the F, are both open.
+
+1341
+01:05:39,560 --> 01:05:42,120
+And the reason we
+were interested
+
+1342
+01:05:42,120 --> 01:05:44,850
+in a non-crossing path is that
+forces the problem to be in NP.
+
+1343
+01:05:44,850 --> 01:05:46,474
+Because then you know
+the solution path
+
+1344
+01:05:46,474 --> 01:05:47,530
+has polynomial length.
+
+1345
+01:05:47,530 --> 01:05:49,560
+You can visit each
+square at most once.
+
+1346
+01:05:49,560 --> 01:05:51,470
+So the hard part
+here was to prove
+
+1347
+01:05:51,470 --> 01:05:54,030
+that it's still NP-hard,
+even with non-crossing paths.
+
+1348
+01:05:54,030 --> 01:05:55,879
+We won't try to
+prove that today.
+
+1349
+01:05:55,879 --> 01:05:58,170
+So those, we actually have
+tight bounds of NP-complete.
+
+1350
+01:05:58,170 --> 01:06:00,370
+And Sokoban-- there's a
+relatively old result--
+
+1351
+01:06:00,370 --> 01:06:02,620
+1998-- that it's
+PSPACE-Complete.
+
+1352
+01:06:02,620 --> 01:06:03,120
+OK.
+
+1353
+01:06:03,120 --> 01:06:04,350
+Let's do some reductions.
+
+1354
+01:06:04,350 --> 01:06:08,270
+So this first reduction
+is amazingly cool.
+
+1355
+01:06:08,270 --> 01:06:10,520
+It's by Michael Hoffman, 2000.
+
+1356
+01:06:10,520 --> 01:06:13,940
+This is Push-* with
+a rectangular box.
+
+1357
+01:06:13,940 --> 01:06:14,440
+OK.
+
+1358
+01:06:14,440 --> 01:06:15,600
+So you're here.
+
+1359
+01:06:15,600 --> 01:06:17,410
+The outlined regions
+are the blank space.
+
+1360
+01:06:17,410 --> 01:06:19,590
+Everything else is
+filled with a block.
+
+1361
+01:06:19,590 --> 01:06:21,770
+But every block
+is movable and you
+
+1362
+01:06:21,770 --> 01:06:23,460
+can push arbitrarily strongly.
+
+1363
+01:06:23,460 --> 01:06:25,750
+So this is going
+to be variables.
+
+1364
+01:06:25,750 --> 01:06:27,740
+You're going to make
+some choices here.
+
+1365
+01:06:27,740 --> 01:06:30,530
+These are the connections
+between variables and clauses.
+
+1366
+01:06:30,530 --> 01:06:32,780
+This is a bipartite
+graph encoded
+
+1367
+01:06:32,780 --> 01:06:35,170
+in binary in the obvious way.
+
+1368
+01:06:35,170 --> 01:06:37,470
+There's variables
+here, clauses here.
+
+1369
+01:06:37,470 --> 01:06:42,120
+There's a hole exactly when that
+literal appears in that clause.
+
+1370
+01:06:42,120 --> 01:06:42,620
+OK?
+
+1371
+01:06:42,620 --> 01:06:44,970
+There's actually two rows
+per variable, the true
+
+1372
+01:06:44,970 --> 01:06:46,440
+and the false.
+
+1373
+01:06:46,440 --> 01:06:49,450
+And then there's this gadget
+here to connect the things.
+
+1374
+01:06:49,450 --> 01:06:50,950
+And then these are
+the clauses where
+
+1375
+01:06:50,950 --> 01:06:53,200
+we're going to check that
+they were all set correctly.
+
+1376
+01:06:53,200 --> 01:06:54,290
+So let's go through it.
+
+1377
+01:06:54,290 --> 01:06:56,540
+This is the schematic
+diagram of what I just said.
+
+1378
+01:06:56,540 --> 01:06:58,165
+We're going to start here
+in the variable block
+
+1379
+01:06:58,165 --> 01:06:59,790
+and walk through each
+of the variables.
+
+1380
+01:06:59,790 --> 01:07:02,140
+Here's what the
+variables look like.
+
+1381
+01:07:02,140 --> 01:07:05,330
+You have two rows, the x_i row
+and the x_i-complement row.
+
+1382
+01:07:05,330 --> 01:07:08,769
+That's another way
+to write NOT x_i.
+
+1383
+01:07:08,769 --> 01:07:10,810
+And you're going to count,
+how many times does x_i
+
+1384
+01:07:10,810 --> 01:07:12,090
+appear in any clauses?
+
+1385
+01:07:12,090 --> 01:07:13,590
+In the positive
+form, negative form.
+
+1386
+01:07:13,590 --> 01:07:15,594
+That's called n_i and n_i-bar.
+
+1387
+01:07:15,594 --> 01:07:17,510
+And you're going to
+measure out these lengths.
+
+1388
+01:07:17,510 --> 01:07:19,870
+You can negate variables to
+make sure that n_i is always
+
+1389
+01:07:19,870 --> 01:07:21,630
+bigger than n_i-bar.
+
+1390
+01:07:21,630 --> 01:07:22,950
+So do that.
+
+1391
+01:07:22,950 --> 01:07:25,786
+So in this case, n_i is this
+big, n_i-bar is this big.
+
+1392
+01:07:25,786 --> 01:07:26,410
+Measure it out.
+
+1393
+01:07:26,410 --> 01:07:27,451
+This is your blank space.
+
+1394
+01:07:27,451 --> 01:07:29,740
+And what you're allowed--
+what we will show you
+
+1395
+01:07:29,740 --> 01:07:32,380
+you're allowed to do--
+is either move up here
+
+1396
+01:07:32,380 --> 01:07:35,080
+and move all the way
+over here and then up.
+
+1397
+01:07:35,080 --> 01:07:38,300
+Or to move here and all
+the way over and then up.
+
+1398
+01:07:38,300 --> 01:07:42,142
+And this star is so that the
+one block that's here could fit.
+
+1399
+01:07:42,142 --> 01:07:43,600
+And then you can
+go over to this x.
+
+1400
+01:07:43,600 --> 01:07:45,724
+In general, in these gadgets,
+the x is your target.
+
+1401
+01:07:45,724 --> 01:07:46,826
+x marks the spot.
+
+1402
+01:07:46,826 --> 01:07:47,520
+All right?
+
+1403
+01:07:47,520 --> 01:07:48,840
+For the gadget.
+
+1404
+01:07:48,840 --> 01:07:50,720
+And then there's a
+global x, which will
+
+1405
+01:07:50,720 --> 01:07:53,810
+be at the end of the clauses.
+
+1406
+01:07:53,810 --> 01:07:54,900
+So what does this do?
+
+1407
+01:07:54,900 --> 01:07:57,049
+Well if you think about
+this connection block--
+
+1408
+01:07:57,049 --> 01:07:59,129
+this is the bipartite
+graph encoded
+
+1409
+01:07:59,129 --> 01:08:03,230
+as a matrix-- the number
+of blank spaces over here
+
+1410
+01:08:03,230 --> 01:08:05,481
+is exactly n_i.
+
+1411
+01:08:05,481 --> 01:08:09,497
+So this is why, after you push
+n_i steps or n_i-bar steps,
+
+1412
+01:08:09,497 --> 01:08:10,330
+you'll have to stop.
+
+1413
+01:08:10,330 --> 01:08:12,605
+Because there are no blank
+spaces to the right of you.
+
+1414
+01:08:12,605 --> 01:08:14,230
+Then the only thing
+you can do is go up
+
+1415
+01:08:14,230 --> 01:08:16,063
+because there are no
+blank spaces below you.
+
+1416
+01:08:16,063 --> 01:08:19,250
+So in general, these gadgets are
+super tight because above you
+
+1417
+01:08:19,250 --> 01:08:20,379
+there's nothing.
+
+1418
+01:08:20,379 --> 01:08:21,200
+It's all blocks.
+
+1419
+01:08:21,200 --> 01:08:23,159
+And below you and left
+of you, it's all blocks.
+
+1420
+01:08:23,159 --> 01:08:24,283
+There's nothing you can do.
+
+1421
+01:08:24,283 --> 01:08:25,969
+You put the next
+variable gadget here,
+
+1422
+01:08:25,969 --> 01:08:28,379
+so then that remains true.
+
+1423
+01:08:28,379 --> 01:08:29,839
+In your row, and
+in your columns,
+
+1424
+01:08:29,839 --> 01:08:30,880
+you're completely packed.
+
+1425
+01:08:30,880 --> 01:08:34,530
+So the only choice you have
+is to do this or to do this.
+
+1426
+01:08:34,530 --> 01:08:38,750
+And you will fill the
+row that you choose.
+
+1427
+01:08:38,750 --> 01:08:39,633
+Exactly.
+
+1428
+01:08:39,633 --> 01:08:40,420
+OK?
+
+1429
+01:08:40,420 --> 01:08:41,784
+So that's the variable gadget.
+
+1430
+01:08:41,784 --> 01:08:44,410
+AUDIENCE: What prevents
+you from choosing both?
+
+1431
+01:08:44,410 --> 01:08:46,049
+PROFESSOR: You
+could choose both.
+
+1432
+01:08:46,049 --> 01:08:48,850
+Or you could do a little bit
+of one and then do the other.
+
+1433
+01:08:48,850 --> 01:08:49,350
+That's true.
+
+1434
+01:08:49,350 --> 01:08:51,433
+But as we'll see, that
+only makes your life worse.
+
+1435
+01:08:51,433 --> 01:08:52,154
+AUDIENCE: OK.
+
+1436
+01:08:52,154 --> 01:08:52,820
+PROFESSOR: Yeah.
+
+1437
+01:08:52,820 --> 01:08:54,580
+Good question.
+
+1438
+01:08:54,580 --> 01:08:56,719
+So next, we enter
+the bridge gadget,
+
+1439
+01:08:56,719 --> 01:09:00,370
+which is these two pictures
+and it looks like this.
+
+1440
+01:09:00,370 --> 01:09:02,460
+This is basically a
+locking mechanism.
+
+1441
+01:09:02,460 --> 01:09:05,190
+So you start here-- I'll just
+tell you're supposed to do.
+
+1442
+01:09:05,190 --> 01:09:07,780
+You walk over through
+this blank space,
+
+1443
+01:09:07,780 --> 01:09:12,670
+then you push all of
+these things down to here.
+
+1444
+01:09:12,670 --> 01:09:16,370
+So this basically prevents
+you from going back
+
+1445
+01:09:16,370 --> 01:09:17,469
+to where you were.
+
+1446
+01:09:17,469 --> 01:09:19,250
+So you push all that down.
+
+1447
+01:09:19,250 --> 01:09:24,440
+And then you go over here
+and you tunnel down--
+
+1448
+01:09:24,440 --> 01:09:26,770
+so I think you're moving
+these blocks over to here.
+
+1449
+01:09:26,770 --> 01:09:28,469
+That's another kind of lock.
+
+1450
+01:09:28,469 --> 01:09:32,320
+And then you're pushing
+this stuff down to here.
+
+1451
+01:09:32,320 --> 01:09:34,180
+And then you get there.
+
+1452
+01:09:34,180 --> 01:09:37,090
+So when all is said and
+done, this will be down here,
+
+1453
+01:09:37,090 --> 01:09:39,580
+this will be down here,
+this will be over here.
+
+1454
+01:09:39,580 --> 01:09:42,050
+And so when you're in
+the clause block-- again,
+
+1455
+01:09:42,050 --> 01:09:45,290
+you have full rows to your
+left, full columns above you.
+
+1456
+01:09:45,290 --> 01:09:47,760
+So there's nothing-- you can't
+go up and you can't go left.
+
+1457
+01:09:47,760 --> 01:09:49,280
+That's the purpose
+of this gadget--
+
+1458
+01:09:49,280 --> 01:09:51,140
+is to connect this
+thing to this thing.
+
+1459
+01:09:51,140 --> 01:09:53,010
+If there was a teleporter,
+it would be much easier.
+
+1460
+01:09:53,010 --> 01:09:54,551
+We could just leave
+these all filled.
+
+1461
+01:09:54,551 --> 01:09:58,690
+But we want to get up to here,
+but make sure this is all
+
+1462
+01:09:58,690 --> 01:10:00,000
+filled at the end.
+
+1463
+01:10:00,000 --> 01:10:02,450
+So that's the sole
+purpose of this gadget.
+
+1464
+01:10:02,450 --> 01:10:02,950
+OK.
+
+1465
+01:10:02,950 --> 01:10:05,736
+Now a clause.
+
+1466
+01:10:05,736 --> 01:10:08,310
+How do we do a clause again?
+
+1467
+01:10:08,310 --> 01:10:10,240
+So you have-- there's
+three spaces here
+
+1468
+01:10:10,240 --> 01:10:11,160
+because this is 3SAT.
+
+1469
+01:10:11,160 --> 01:10:14,280
+You can move down one here,
+and then move over two.
+
+1470
+01:10:14,280 --> 01:10:15,990
+These two blocks go here.
+
+1471
+01:10:15,990 --> 01:10:17,540
+And then you can get to the x.
+
+1472
+01:10:17,540 --> 01:10:20,950
+Or you can go down here
+and over and get to the x.
+
+1473
+01:10:20,950 --> 01:10:23,230
+Or you can go here
+and down, over.
+
+1474
+01:10:23,230 --> 01:10:25,806
+And this is possible if
+there's a hole below you.
+
+1475
+01:10:25,806 --> 01:10:27,680
+This is possible if
+there's a hole below you,
+
+1476
+01:10:27,680 --> 01:10:29,721
+and this is possible if
+there's a hole below you.
+
+1477
+01:10:29,721 --> 01:10:31,810
+These are aligned
+with these things.
+
+1478
+01:10:31,810 --> 01:10:34,400
+So with exact-- I
+didn't quite align them,
+
+1479
+01:10:34,400 --> 01:10:38,150
+but these three columns
+are these three columns.
+
+1480
+01:10:38,150 --> 01:10:41,390
+And if one of these
+is unfilled, you'll
+
+1481
+01:10:41,390 --> 01:10:42,920
+be able to get
+from here to here.
+
+1482
+01:10:42,920 --> 01:10:45,430
+If they're all
+filled, you won't.
+
+1483
+01:10:45,430 --> 01:10:47,790
+Because it will be full
+columns all the way down.
+
+1484
+01:10:50,470 --> 01:10:54,490
+So that's a clause
+gadget because things
+
+1485
+01:10:54,490 --> 01:11:00,400
+were filled when you chose
+that thing to be-- maybe
+
+1486
+01:11:00,400 --> 01:11:02,055
+I-- did I get it backwards?
+
+1487
+01:11:02,055 --> 01:11:04,420
+AUDIENCE: So you're really
+choosing the opposite.
+
+1488
+01:11:04,420 --> 01:11:05,128
+PROFESSOR: Right.
+
+1489
+01:11:05,128 --> 01:11:09,126
+You're choosing the
+thing to be not true
+
+1490
+01:11:09,126 --> 01:11:11,250
+and leaving the other one
+to be as true as possible
+
+1491
+01:11:11,250 --> 01:11:12,360
+by not pushing it.
+
+1492
+01:11:12,360 --> 01:11:14,620
+So it leaves the hole so
+that later you can traverse--
+
+1493
+01:11:14,620 --> 01:11:15,750
+AUDIENCE: So that's why you
+wouldn't want to choose both.
+
+1494
+01:11:15,750 --> 01:11:15,950
+PROFESSOR: Right.
+
+1495
+01:11:15,950 --> 01:11:17,500
+If you chose both, that
+would be like making them
+
+1496
+01:11:17,500 --> 01:11:18,875
+both of them not
+true, and so you
+
+1497
+01:11:18,875 --> 01:11:21,290
+don't get any of the benefits.
+
+1498
+01:11:21,290 --> 01:11:22,620
+OK?
+
+1499
+01:11:22,620 --> 01:11:25,080
+That's Push-*.
+
+1500
+01:11:25,080 --> 01:11:25,580
+Cool?
+
+1501
+01:11:31,240 --> 01:11:33,040
+OK.
+
+1502
+01:11:33,040 --> 01:11:35,610
+Let's do PushPush-1 in 3D.
+
+1503
+01:11:35,610 --> 01:11:37,930
+This is really easy.
+
+1504
+01:11:37,930 --> 01:11:40,340
+This is almost like the
+Super Mario Brothers proof.
+
+1505
+01:11:40,340 --> 01:11:44,580
+So it's just old drawing style.
+
+1506
+01:11:44,580 --> 01:11:46,330
+And we've drawn sort
+of the dual graphs,
+
+1507
+01:11:46,330 --> 01:11:49,290
+so these paths are
+little width-1 tunnels
+
+1508
+01:11:49,290 --> 01:11:50,684
+that you can walk down.
+
+1509
+01:11:50,684 --> 01:11:53,350
+So you start up here and you can
+either push this thing this way
+
+1510
+01:11:53,350 --> 01:11:54,810
+or this way.
+
+1511
+01:11:54,810 --> 01:11:57,310
+And so you're choosing which
+way you'll be able to traverse.
+
+1512
+01:11:57,310 --> 01:12:00,280
+Either you can go the true
+way or the false way--
+
+1513
+01:12:00,280 --> 01:12:02,456
+the opposite of wherever
+you push that block.
+
+1514
+01:12:02,456 --> 01:12:04,080
+And so that cuts off
+one of the things.
+
+1515
+01:12:04,080 --> 01:12:07,100
+Then that path is going to be
+connected to all of the clauses
+
+1516
+01:12:07,100 --> 01:12:08,320
+that it satisfies.
+
+1517
+01:12:08,320 --> 01:12:10,315
+That that literal
+choice satisfies.
+
+1518
+01:12:10,315 --> 01:12:11,940
+Then there's this
+gadget to prevent you
+
+1519
+01:12:11,940 --> 01:12:14,120
+from wrapping around
+to the other side.
+
+1520
+01:12:14,120 --> 01:12:17,999
+Whichever one you come down, you
+will block off the other path.
+
+1521
+01:12:17,999 --> 01:12:20,040
+And then you do that again
+for the next variable,
+
+1522
+01:12:20,040 --> 01:12:21,248
+the next variable, and so on.
+
+1523
+01:12:21,248 --> 01:12:23,260
+At the end of the
+last variable, you
+
+1524
+01:12:23,260 --> 01:12:24,800
+run through all the clauses.
+
+1525
+01:12:24,800 --> 01:12:26,000
+So how do the clauses work?
+
+1526
+01:12:26,000 --> 01:12:27,790
+Very simple.
+
+1527
+01:12:27,790 --> 01:12:32,130
+If any of the literals
+that satisfy the clause
+
+1528
+01:12:32,130 --> 01:12:35,720
+were visitable, then you
+could push this block over.
+
+1529
+01:12:35,720 --> 01:12:37,512
+And then later, when
+you visit the clause--
+
+1530
+01:12:37,512 --> 01:12:39,053
+at the end, when
+you visit the clause
+
+1531
+01:12:39,053 --> 01:12:41,120
+and try to traverse it--
+if there's nothing here
+
+1532
+01:12:41,120 --> 01:12:42,526
+when you push this
+block down, it
+
+1533
+01:12:42,526 --> 01:12:43,900
+will go all the
+way to the bottom
+
+1534
+01:12:43,900 --> 01:12:47,980
+and you're trapped, never to get
+to the finish line down here.
+
+1535
+01:12:47,980 --> 01:12:52,100
+But if at least one of these was
+in, then it will block this guy
+
+1536
+01:12:52,100 --> 01:12:54,930
+and you can-- if that's
+true for all the clauses--
+
+1537
+01:12:54,930 --> 01:12:56,700
+then you can get
+to the destination.
+
+1538
+01:12:56,700 --> 01:12:59,740
+So these are just
+clause checking.
+
+1539
+01:12:59,740 --> 01:13:03,609
+And that's a very
+straightforward 3SAT proof.
+
+1540
+01:13:03,609 --> 01:13:05,650
+In fact, the previous
+proof is based on this one.
+
+1541
+01:13:05,650 --> 01:13:07,877
+And the next proof
+is based on this one.
+
+1542
+01:13:07,877 --> 01:13:09,960
+And the Nintendo proofs
+are all based on this one.
+
+1543
+01:13:09,960 --> 01:13:12,606
+This is sort of the prototype.
+
+1544
+01:13:12,606 --> 01:13:13,105
+Yeah.
+
+1545
+01:13:13,105 --> 01:13:15,146
+AUDIENCE: Do you have the
+crossover gadget that--
+
+1546
+01:13:15,146 --> 01:13:16,400
+PROFESSOR: So this is 3D.
+
+1547
+01:13:16,400 --> 01:13:17,108
+AUDIENCE: Oh, oh.
+
+1548
+01:13:17,108 --> 01:13:19,010
+PROFESSOR: So
+there's no crossover.
+
+1549
+01:13:19,010 --> 01:13:21,010
+But in 2D, we want
+to get a crossover.
+
+1550
+01:13:21,010 --> 01:13:23,250
+So here's how we do 2D.
+
+1551
+01:13:23,250 --> 01:13:26,130
+And this will work for
+both Push and Push-1-- Push
+
+1552
+01:13:26,130 --> 01:13:27,500
+and PushPush.
+
+1553
+01:13:27,500 --> 01:13:29,000
+The only place we're
+using PushPush
+
+1554
+01:13:29,000 --> 01:13:33,750
+was this clause gadget, so let's
+first get rid of that aspect.
+
+1555
+01:13:33,750 --> 01:13:35,261
+So here's something
+called a lock,
+
+1556
+01:13:35,261 --> 01:13:37,510
+and you're going to have to
+believe a little bit here.
+
+1557
+01:13:40,130 --> 01:13:42,140
+Your goal, let's say,
+is to get from a to b.
+
+1558
+01:13:42,140 --> 01:13:49,130
+And this is what happens if you
+try to go from a to b directly.
+
+1559
+01:13:49,130 --> 01:13:51,010
+There isn't much that
+you can move-- well,
+
+1560
+01:13:51,010 --> 01:14:00,000
+you can maybe move I down, J
+left, and like this, but-- yes.
+
+1561
+01:14:00,000 --> 01:14:09,280
+You can move I down, J left, E
+down, F left, B down, but not C
+
+1562
+01:14:09,280 --> 01:14:11,594
+left, because D is in the way.
+
+1563
+01:14:11,594 --> 01:14:12,094
+OK?
+
+1564
+01:14:15,270 --> 01:14:16,830
+So you can't get from a to b.
+
+1565
+01:14:16,830 --> 01:14:22,849
+But if you visit from u, and you
+push this block out of the way,
+
+1566
+01:14:22,849 --> 01:14:24,890
+then you'd come back
+through a, then you can do--
+
+1567
+01:14:24,890 --> 01:14:25,690
+AUDIENCE: Push them over.
+
+1568
+01:14:25,690 --> 01:14:27,148
+PROFESSOR: You can
+do these things.
+
+1569
+01:14:27,148 --> 01:14:27,990
+Push them all over.
+
+1570
+01:14:27,990 --> 01:14:30,270
+And then you have
+room to push C over,
+
+1571
+01:14:30,270 --> 01:14:33,150
+and then A can go all the
+way down, and you're through.
+
+1572
+01:14:33,150 --> 01:14:36,380
+So this unlocks the lock.
+
+1573
+01:14:36,380 --> 01:14:38,763
+Then allowing a to b
+traversal later.
+
+1574
+01:14:38,763 --> 01:14:40,262
+AUDIENCE: And going
+backwards from v
+
+1575
+01:14:40,262 --> 01:14:42,140
+to u would lock it again?
+
+1576
+01:14:42,140 --> 01:14:42,880
+PROFESSOR: No.
+
+1577
+01:14:42,880 --> 01:14:44,220
+This is not a reversible gadget.
+
+1578
+01:14:44,220 --> 01:14:45,100
+It only works once.
+
+1579
+01:14:45,100 --> 01:14:48,084
+AUDIENCE: [INAUDIBLE].
+
+1580
+01:14:48,084 --> 01:14:49,250
+PROFESSOR: You can't
+un-unlock.
+
+1581
+01:14:49,250 --> 01:14:51,030
+Once L's down, it's
+permanently there.
+
+1582
+01:14:53,870 --> 01:14:57,360
+So now we're going to use
+this in a clause as follows.
+
+1583
+01:14:57,360 --> 01:14:58,860
+So here's the lock
+and then there's
+
+1584
+01:14:58,860 --> 01:15:00,450
+this schematic above it.
+
+1585
+01:15:00,450 --> 01:15:02,320
+So we have three
+possible entries.
+
+1586
+01:15:02,320 --> 01:15:06,784
+This is x_i or not x_j or x_k.
+
+1587
+01:15:06,784 --> 01:15:08,200
+And we're going
+to use this gadget
+
+1588
+01:15:08,200 --> 01:15:11,376
+to say, well if you come
+down the true path from here,
+
+1589
+01:15:11,376 --> 01:15:13,250
+you're going to have to
+push this block down,
+
+1590
+01:15:13,250 --> 01:15:15,850
+which prevents you from using
+the other half of the gadget.
+
+1591
+01:15:15,850 --> 01:15:18,922
+So either you move Y
+or you move X.
+
+1592
+01:15:18,922 --> 01:15:21,130
+From then on, you can only
+do west to south traversal
+
+1593
+01:15:21,130 --> 01:15:23,740
+or only north to east traversal.
+
+1594
+01:15:23,740 --> 01:15:25,376
+So it blocks the other path.
+
+1595
+01:15:25,376 --> 01:15:26,750
+So this is--
+because I don't want
+
+1596
+01:15:26,750 --> 01:15:28,990
+to come down here,
+unlock the lock,
+
+1597
+01:15:28,990 --> 01:15:30,740
+and then go back on
+a different path.
+
+1598
+01:15:30,740 --> 01:15:33,280
+Because that's not something
+that's necessarily true.
+
+1599
+01:15:33,280 --> 01:15:34,700
+So as you come
+down one of these,
+
+1600
+01:15:34,700 --> 01:15:37,250
+you force these gadgets to
+be in a particular state that
+
+1601
+01:15:37,250 --> 01:15:41,120
+will only let you come back
+the way you came-- go back
+
+1602
+01:15:41,120 --> 01:15:42,000
+the way you came.
+
+1603
+01:15:42,000 --> 01:15:44,310
+And then you can unlock
+the lock and then
+
+1604
+01:15:44,310 --> 01:15:45,900
+this just connects back.
+
+1605
+01:15:45,900 --> 01:15:46,400
+OK?
+
+1606
+01:15:46,400 --> 01:15:48,360
+Then later, when we're
+checking the clauses--
+
+1607
+01:15:48,360 --> 01:15:49,860
+when we come through
+all the clauses
+
+1608
+01:15:49,860 --> 01:15:51,443
+to make sure that
+they're true-- we're
+
+1609
+01:15:51,443 --> 01:15:53,303
+going to route those
+from a to b, to a to b,
+
+1610
+01:15:53,303 --> 01:15:54,635
+to a to b for all the locks.
+
+1611
+01:15:54,635 --> 01:15:56,260
+And if they're all
+unlocked, then we'll
+
+1612
+01:15:56,260 --> 01:15:58,200
+be able to traverse
+them, and otherwise, not.
+
+1613
+01:15:58,200 --> 01:16:00,560
+That's the idea.
+
+1614
+01:16:00,560 --> 01:16:01,600
+OK.
+
+1615
+01:16:01,600 --> 01:16:03,320
+Then we have the
+issue of a crossover,
+
+1616
+01:16:03,320 --> 01:16:05,460
+if we want to go into 2D.
+
+1617
+01:16:05,460 --> 01:16:11,990
+So we have-- here's a basic
+crossover in the Push-1 model,
+
+1618
+01:16:11,990 --> 01:16:13,520
+or PushPush-1.
+
+1619
+01:16:13,520 --> 01:16:17,900
+If we're going to go from north
+to south, then we will go-- OK.
+
+1620
+01:16:17,900 --> 01:16:20,060
+We can push this down.
+
+1621
+01:16:20,060 --> 01:16:22,570
+But we won't be able
+to go to the east then.
+
+1622
+01:16:22,570 --> 01:16:23,320
+OK?
+
+1623
+01:16:23,320 --> 01:16:24,820
+And we're not able
+to go to the west
+
+1624
+01:16:24,820 --> 01:16:27,240
+because if we push this
+block, it gets stuck.
+
+1625
+01:16:27,240 --> 01:16:28,950
+So we can go north to
+south, that's fine.
+
+1626
+01:16:28,950 --> 01:16:32,420
+And we can also go west to
+east, by symmetry, essentially.
+
+1627
+01:16:32,420 --> 01:16:35,500
+But you can't go from west
+to north or west to south,
+
+1628
+01:16:35,500 --> 01:16:37,250
+or any of the
+other combinations.
+
+1629
+01:16:37,250 --> 01:16:39,290
+This works as long as
+you do one or the other.
+
+1630
+01:16:41,990 --> 01:16:45,240
+Once you do west to east, you
+can't even do north to south.
+
+1631
+01:16:45,240 --> 01:16:47,830
+So that's why we call
+it an XOR crossover.
+
+1632
+01:16:47,830 --> 01:16:49,330
+It's not what we want.
+
+1633
+01:16:49,330 --> 01:16:52,470
+But if we combine
+things in this way,
+
+1634
+01:16:52,470 --> 01:16:55,680
+we get a uni-directional
+crossover.
+
+1635
+01:16:55,680 --> 01:16:59,540
+This is one where-- I better
+check my notes-- you can
+
+1636
+01:16:59,540 --> 01:17:03,210
+do with one of three things.
+
+1637
+01:17:03,210 --> 01:17:07,120
+You can do north to
+south, if you want.
+
+1638
+01:17:07,120 --> 01:17:10,850
+And then you can
+do west to east.
+
+1639
+01:17:10,850 --> 01:17:12,967
+So you could just
+do west to east.
+
+1640
+01:17:12,967 --> 01:17:15,050
+Or you could do north to
+south, then west to east.
+
+1641
+01:17:15,050 --> 01:17:16,549
+Or you could just
+do north to south.
+
+1642
+01:17:16,549 --> 01:17:18,290
+Those are all possible here.
+
+1643
+01:17:18,290 --> 01:17:22,500
+So when we do north to south,
+we prevent this particular thing
+
+1644
+01:17:22,500 --> 01:17:23,690
+from being traversed.
+
+1645
+01:17:23,690 --> 01:17:26,510
+But we unlock this gate, which
+later, when we go west to east,
+
+1646
+01:17:26,510 --> 01:17:28,300
+will allow us to do it.
+
+1647
+01:17:28,300 --> 01:17:35,740
+So we go here and then these
+are called no-reverse gadgets.
+
+1648
+01:17:35,740 --> 01:17:38,220
+So once you push
+this block back,
+
+1649
+01:17:38,220 --> 01:17:41,880
+you can never go-- this
+gadget becomes untraversible.
+
+1650
+01:17:41,880 --> 01:17:45,397
+So you come here, you push
+this, push that, push that,
+
+1651
+01:17:45,397 --> 01:17:47,230
+and now you can never
+use this gadget again.
+
+1652
+01:17:47,230 --> 01:17:49,260
+So it's like a single-use thing.
+
+1653
+01:17:49,260 --> 01:17:50,410
+So you can come here.
+
+1654
+01:17:50,410 --> 01:17:51,920
+If you tried to
+do that, you would
+
+1655
+01:17:51,920 --> 01:17:54,089
+get stuck because
+this is a lock and it
+
+1656
+01:17:54,089 --> 01:17:55,130
+hasn't been unlocked yet.
+
+1657
+01:17:55,130 --> 01:17:58,180
+So instead you've got to go over
+here, go through this thing,
+
+1658
+01:17:58,180 --> 01:18:01,110
+permanently destroy it, and
+then unlock this gadget,
+
+1659
+01:18:01,110 --> 01:18:02,130
+and then you exit.
+
+1660
+01:18:02,130 --> 01:18:04,090
+So that was north
+to south traversal.
+
+1661
+01:18:04,090 --> 01:18:06,690
+We unlocked this gate and
+we unlocked this gate.
+
+1662
+01:18:06,690 --> 01:18:08,110
+So if you're coming
+west to east,
+
+1663
+01:18:08,110 --> 01:18:10,140
+it could be this has
+been done or not.
+
+1664
+01:18:10,140 --> 01:18:13,610
+So going west to east, maybe
+you haven't visited this gadget.
+
+1665
+01:18:13,610 --> 01:18:15,140
+Then you can just
+go through here,
+
+1666
+01:18:15,140 --> 01:18:18,730
+block off a later north to
+south traversal, that's OK.
+
+1667
+01:18:18,730 --> 01:18:20,880
+Then come over here and leave.
+
+1668
+01:18:20,880 --> 01:18:24,020
+And if you try to go
+here, nothing happens.
+
+1669
+01:18:24,020 --> 01:18:25,740
+OK?
+
+1670
+01:18:25,740 --> 01:18:28,840
+Or it could be this has already
+been done-- north to south--
+
+1671
+01:18:28,840 --> 01:18:30,630
+and then when you're
+coming from the west,
+
+1672
+01:18:30,630 --> 01:18:34,080
+this has been unlocked, and
+so you can open this gate
+
+1673
+01:18:34,080 --> 01:18:36,240
+and come through here.
+
+1674
+01:18:36,240 --> 01:18:39,160
+This has already been used,
+so you can't go that way.
+
+1675
+01:18:39,160 --> 01:18:41,660
+So instead you use this one.
+
+1676
+01:18:41,660 --> 01:18:44,230
+This has already been unlocked,
+so you can get through.
+
+1677
+01:18:44,230 --> 01:18:46,387
+And then you get out.
+
+1678
+01:18:46,387 --> 01:18:47,970
+So with just a little
+bit of checking,
+
+1679
+01:18:47,970 --> 01:18:49,910
+those are the only
+things you can do.
+
+1680
+01:18:49,910 --> 01:18:52,130
+So when we have this
+diagram -- I think
+
+1681
+01:18:52,130 --> 01:18:54,090
+I have one here --
+variables and clauses,
+
+1682
+01:18:54,090 --> 01:18:56,256
+and you connect all the
+variables to all the clauses
+
+1683
+01:18:56,256 --> 01:18:58,750
+they're involved in-- this
+is a slide from lecture one,
+
+1684
+01:18:58,750 --> 01:19:02,190
+but it's the same outline.
+
+1685
+01:19:02,190 --> 01:19:04,590
+You know the order in which
+these crossings happen.
+
+1686
+01:19:04,590 --> 01:19:08,300
+Because you know I'm going to
+visit variable i before I visit
+
+1687
+01:19:08,300 --> 01:19:11,270
+variable j greater than i.
+
+1688
+01:19:11,270 --> 01:19:15,150
+So I know how to order--
+and each of these paths
+
+1689
+01:19:15,150 --> 01:19:17,560
+is really two paths,
+one and then the other.
+
+1690
+01:19:17,560 --> 01:19:20,260
+And so I know whether
+I'm going to do north
+
+1691
+01:19:20,260 --> 01:19:22,620
+to south before west to east.
+
+1692
+01:19:22,620 --> 01:19:26,280
+If not, I'd transpose the
+gadget and exchange north-south
+
+1693
+01:19:26,280 --> 01:19:27,660
+with west-east.
+
+1694
+01:19:27,660 --> 01:19:29,660
+And then I don't need
+that they're both visited.
+
+1695
+01:19:29,660 --> 01:19:31,120
+I don't know which ones
+are going to be visited,
+
+1696
+01:19:31,120 --> 01:19:32,530
+but I could do one or the other.
+
+1697
+01:19:32,530 --> 01:19:34,821
+Or if I do both, I know one
+will come before the other.
+
+1698
+01:19:34,821 --> 01:19:37,460
+So that kind of crossover
+gadget is enough
+
+1699
+01:19:37,460 --> 01:19:41,830
+for Push-1 and PushPush-1.
+
+1700
+01:19:42,940 --> 01:19:43,449
+All right.
+
+1701
+01:19:43,449 --> 01:19:44,990
+The next game I'm
+going to talk about
+
+1702
+01:19:44,990 --> 01:19:48,950
+is a sort of physical game
+that you play on usually a go
+
+1703
+01:19:48,950 --> 01:19:50,670
+board with go stones.
+
+1704
+01:19:50,670 --> 01:19:53,060
+So they're white stones
+and black stones.
+
+1705
+01:19:53,060 --> 01:19:56,300
+It was invented by
+this guy, John Conway.
+
+1706
+01:19:56,300 --> 01:19:58,967
+And so if you've ever played
+Conway's Game of Life,
+
+1707
+01:19:58,967 --> 01:20:00,050
+that's a zero-player game.
+
+1708
+01:20:00,050 --> 01:20:02,970
+This is an actual two-player
+game and quite challenging.
+
+1709
+01:20:02,970 --> 01:20:04,910
+Here's the general idea.
+
+1710
+01:20:04,910 --> 01:20:08,520
+There's a right player trying
+to get the white ball-- that's
+
+1711
+01:20:08,520 --> 01:20:09,730
+the "football."
+
+1712
+01:20:09,730 --> 01:20:12,196
+This is philosophers'
+football, if you will.
+
+1713
+01:20:12,196 --> 01:20:14,900
+You're trying to get this
+ball over to that goal
+
+1714
+01:20:14,900 --> 01:20:17,560
+and the left player's trying to
+get the ball to the right goal.
+
+1715
+01:20:17,560 --> 01:20:20,180
+Then, there are these black
+pieces, which are called "men."
+
+1716
+01:20:20,180 --> 01:20:23,560
+Those are the players of
+the game, so to speak.
+
+1717
+01:20:23,560 --> 01:20:25,940
+And there are two types
+of moves in this game.
+
+1718
+01:20:25,940 --> 01:20:30,080
+One move you can do is just
+place a black stone anywhere
+
+1719
+01:20:30,080 --> 01:20:32,459
+on the board that's
+currently empty.
+
+1720
+01:20:32,459 --> 01:20:34,750
+And the other type of move
+is the more complicated one.
+
+1721
+01:20:34,750 --> 01:20:36,510
+This is called
+"kicking the ball."
+
+1722
+01:20:36,510 --> 01:20:39,120
+You can take the
+white piece and you
+
+1723
+01:20:39,120 --> 01:20:42,820
+can jump it over a string
+of consecutive black pieces.
+
+1724
+01:20:42,820 --> 01:20:44,830
+Those pieces are
+immediately removed,
+
+1725
+01:20:44,830 --> 01:20:46,980
+so this gray shading
+means they've
+
+1726
+01:20:46,980 --> 01:20:48,680
+been removed from the board.
+
+1727
+01:20:48,680 --> 01:20:51,760
+But in the same move, you
+can do several such jumps.
+
+1728
+01:20:51,760 --> 01:20:53,170
+So I can jump here.
+
+1729
+01:20:53,170 --> 01:20:58,740
+Then, I can jump here.
+
+1730
+01:20:58,740 --> 01:21:01,940
+And everything I jump
+over-- in this case, I won.
+
+1731
+01:21:01,940 --> 01:21:04,550
+If I'm the right player,
+I got to that position.
+
+1732
+01:21:04,550 --> 01:21:06,050
+So this is why
+the right player--
+
+1733
+01:21:06,050 --> 01:21:07,633
+from the original
+position, maybe they
+
+1734
+01:21:07,633 --> 01:21:10,830
+wanted to place this stone
+because that would enable
+
+1735
+01:21:10,830 --> 01:21:13,680
+in their next move-- you
+can't place a black stone
+
+1736
+01:21:13,680 --> 01:21:14,320
+and then jump.
+
+1737
+01:21:14,320 --> 01:21:15,710
+You can do one or the other.
+
+1738
+01:21:15,710 --> 01:21:17,740
+So you could try to
+place this position,
+
+1739
+01:21:17,740 --> 01:21:20,860
+place this stone hoping
+that in your next turn,
+
+1740
+01:21:20,860 --> 01:21:23,280
+you'll be able to do
+this jump and win.
+
+1741
+01:21:23,280 --> 01:21:27,690
+But instead from this position,
+the left player could say,
+
+1742
+01:21:27,690 --> 01:21:31,450
+oh, well, I'll just add this
+stone and then in my next move,
+
+1743
+01:21:31,450 --> 01:21:33,810
+I'll be able to jump
+to the right side.
+
+1744
+01:21:33,810 --> 01:21:36,240
+And that's, I
+think, unblockable.
+
+1745
+01:21:36,240 --> 01:21:38,645
+So left wins.
+
+1746
+01:21:38,645 --> 01:21:39,145
+Yea!
+
+1747
+01:21:41,830 --> 01:21:43,890
+So that's the setup.
+
+1748
+01:21:43,890 --> 01:21:47,060
+This is a fairly
+complicated game.
+
+1749
+01:21:47,060 --> 01:21:50,230
+You can get to the same
+position multiple times
+
+1750
+01:21:50,230 --> 01:21:54,010
+and so it's actually open
+how hard this game is.
+
+1751
+01:21:54,010 --> 01:21:55,510
+I think there's an
+upper bound of it
+
+1752
+01:21:55,510 --> 01:21:58,315
+being solvable in exponential
+time, so it's in EXP.
+
+1753
+01:21:58,315 --> 01:22:00,290
+AUDIENCE: What do you
+mean by "solvable?"
+
+1754
+01:22:00,290 --> 01:22:02,150
+PROFESSOR: So given
+a position, you
+
+1755
+01:22:02,150 --> 01:22:03,880
+want to know whether
+left or right will
+
+1756
+01:22:03,880 --> 01:22:05,495
+win from this position.
+
+1757
+01:22:05,495 --> 01:22:08,040
+AUDIENCE: Is it possible
+that it doesn't terminate?
+
+1758
+01:22:08,040 --> 01:22:11,810
+PROFESSOR: I could be a
+tie is the right answer.
+
+1759
+01:22:11,810 --> 01:22:13,640
+So that's tricky.
+
+1760
+01:22:13,640 --> 01:22:16,680
+There is a piece-base hardness
+result relatively recent,
+
+1761
+01:22:16,680 --> 01:22:20,560
+but an old result of
+ours with David Eppstein
+
+1762
+01:22:20,560 --> 01:22:24,800
+is that just determining
+whether you can win in one move
+
+1763
+01:22:24,800 --> 01:22:26,510
+is NP-complete.
+
+1764
+01:22:26,510 --> 01:22:28,010
+So that's a relatively
+clean thing.
+
+1765
+01:22:28,010 --> 01:22:30,144
+You don't have to worry
+about non-termination
+
+1766
+01:22:30,144 --> 01:22:31,060
+or that sort of thing.
+
+1767
+01:22:31,060 --> 01:22:33,180
+It's just one player's move.
+
+1768
+01:22:33,180 --> 01:22:35,485
+Here, everything is reversed.
+
+1769
+01:22:38,530 --> 01:22:40,320
+The ball is black in this case.
+
+1770
+01:22:40,320 --> 01:22:44,650
+I'm not sure if there's a
+consistent notion, anyway.
+
+1771
+01:22:44,650 --> 01:22:47,950
+And this is actually a
+reduction all on one slide.
+
+1772
+01:22:47,950 --> 01:22:49,040
+It's pretty simple.
+
+1773
+01:22:49,040 --> 01:22:51,404
+So this is what we call
+the mate in one problem.
+
+1774
+01:22:51,404 --> 01:22:53,070
+And you can take lots
+of different games
+
+1775
+01:22:53,070 --> 01:22:55,570
+and make them really
+clean, well-defined puzzles
+
+1776
+01:22:55,570 --> 01:22:57,770
+if you just ask, can
+I win in one move?
+
+1777
+01:22:57,770 --> 01:23:01,420
+Even games that involve cards
+and randomness and weird stuff.
+
+1778
+01:23:01,420 --> 01:23:04,150
+And one movie usually
+doesn't involve those at all.
+
+1779
+01:23:04,150 --> 01:23:07,270
+Anyway, here, we're getting rid
+of the loopiness of the game
+
+1780
+01:23:07,270 --> 01:23:09,280
+and not having to
+worry about that.
+
+1781
+01:23:09,280 --> 01:23:12,200
+So there's sort of two
+parts to this proof,
+
+1782
+01:23:12,200 --> 01:23:14,204
+the variable traversal
+and the clause traversal.
+
+1783
+01:23:14,204 --> 01:23:16,120
+But here, we have a kind
+of very different way
+
+1784
+01:23:16,120 --> 01:23:17,369
+of connecting things together.
+
+1785
+01:23:17,369 --> 01:23:20,580
+We have a giant
+matrix, if you will.
+
+1786
+01:23:20,580 --> 01:23:22,830
+We're starting up
+here and we have
+
+1787
+01:23:22,830 --> 01:23:25,890
+a choice whether-- if we
+want to set x1 to true,
+
+1788
+01:23:25,890 --> 01:23:29,050
+we're just going to go to the
+right by a sequence of jumps.
+
+1789
+01:23:29,050 --> 01:23:31,500
+We jump here, then
+here, then here.
+
+1790
+01:23:31,500 --> 01:23:33,990
+Every time we stop,
+we have no choice.
+
+1791
+01:23:33,990 --> 01:23:36,500
+If we want to keep
+going, our goal
+
+1792
+01:23:36,500 --> 01:23:41,530
+is to get to somewhere, one
+of the edges of the board,
+
+1793
+01:23:41,530 --> 01:23:43,500
+I think the bottom edge.
+
+1794
+01:23:43,500 --> 01:23:47,234
+Bottom edge is the one
+that's hard to get to.
+
+1795
+01:23:47,234 --> 01:23:48,900
+So every time we jump
+to the right here,
+
+1796
+01:23:48,900 --> 01:23:49,858
+we don't have a choice.
+
+1797
+01:23:49,858 --> 01:23:51,850
+We have to keep
+jumping to the right.
+
+1798
+01:23:51,850 --> 01:23:53,230
+But over here, we have a choice.
+
+1799
+01:23:53,230 --> 01:23:57,311
+We could go down and then jump
+to the right and get over here
+
+1800
+01:23:57,311 --> 01:23:59,310
+and that will do different
+things in the middle.
+
+1801
+01:23:59,310 --> 01:24:01,507
+In general, that is
+our setting of x1.
+
+1802
+01:24:01,507 --> 01:24:03,590
+Then, we're going to do
+the same thing coming back
+
+1803
+01:24:03,590 --> 01:24:05,330
+for x2 of two choices.
+
+1804
+01:24:05,330 --> 01:24:08,090
+Then, the same thing
+going back for x3
+
+1805
+01:24:08,090 --> 01:24:10,070
+and then we get to this corner.
+
+1806
+01:24:10,070 --> 01:24:12,480
+So that's forced other
+than these two choices,
+
+1807
+01:24:12,480 --> 01:24:14,650
+binary choices.
+
+1808
+01:24:14,650 --> 01:24:17,930
+Now, we have our first clause.
+
+1809
+01:24:17,930 --> 01:24:22,240
+Let's say x1 negated or
+x2 negated or x3 negated.
+
+1810
+01:24:22,240 --> 01:24:24,530
+We want one of those
+things to be true.
+
+1811
+01:24:24,530 --> 01:24:27,450
+And so the idea is we're
+going to choose whichever
+
+1812
+01:24:27,450 --> 01:24:31,789
+one has been set correctly and
+then we will go up that channel
+
+1813
+01:24:31,789 --> 01:24:32,580
+and get to the top.
+
+1814
+01:24:32,580 --> 01:24:34,620
+Again, it's pretty
+much symmetric.
+
+1815
+01:24:34,620 --> 01:24:36,800
+So every time we jump
+over a bunch of pieces,
+
+1816
+01:24:36,800 --> 01:24:39,000
+whenever we stop, we
+can't go left or right.
+
+1817
+01:24:39,000 --> 01:24:40,200
+We have to keep going up.
+
+1818
+01:24:40,200 --> 01:24:42,760
+So we have to make
+it all the way.
+
+1819
+01:24:42,760 --> 01:24:46,410
+In fact, each of these columns
+will be completely filled
+
+1820
+01:24:46,410 --> 01:24:48,840
+except for one
+intersection, which is
+
+1821
+01:24:48,840 --> 01:24:51,100
+the thing that makes it false.
+
+1822
+01:24:51,100 --> 01:24:54,290
+So here, we want x2 to be false.
+
+1823
+01:24:54,290 --> 01:24:58,750
+So if we happen to follow the
+true path where x2 is true,
+
+1824
+01:24:58,750 --> 01:25:01,540
+we won't make it because
+this piece will already
+
+1825
+01:25:01,540 --> 01:25:03,870
+have been removed when
+we came through here.
+
+1826
+01:25:03,870 --> 01:25:06,300
+And so if we try to take this
+path, we'll get stuck here.
+
+1827
+01:25:06,300 --> 01:25:09,480
+There won't be any
+piece above us.
+
+1828
+01:25:09,480 --> 01:25:13,380
+As long as that didn't happen,
+as long as this row was not
+
+1829
+01:25:13,380 --> 01:25:15,530
+chosen, then we can
+take this column
+
+1830
+01:25:15,530 --> 01:25:17,794
+and just make it all
+the way up to the top.
+
+1831
+01:25:17,794 --> 01:25:20,210
+So we're going to be able to
+take one of these three paths
+
+1832
+01:25:20,210 --> 01:25:22,840
+if and only if at least one
+of these things is true.
+
+1833
+01:25:22,840 --> 01:25:24,670
+That's the first clause.
+
+1834
+01:25:24,670 --> 01:25:27,080
+Then, we do the same thing
+for the second clause.
+
+1835
+01:25:27,080 --> 01:25:28,560
+And if all of the
+clauses are true,
+
+1836
+01:25:28,560 --> 01:25:30,630
+we will be able to
+get here and then
+
+1837
+01:25:30,630 --> 01:25:33,710
+we can jump down and
+get to the finish line
+
+1838
+01:25:33,710 --> 01:25:38,140
+and win in one move, one move.
+
+1839
+01:25:38,140 --> 01:25:42,260
+So mate in one is NP-complete.
+
+1840
+01:25:42,260 --> 01:25:44,440
+I have one other example
+of a mate in one result.
+
+1841
+01:25:44,440 --> 01:25:46,856
+It's actually not a hardness
+result, but it's kind of fun,
+
+1842
+01:25:46,856 --> 01:25:49,850
+so I thought I would talk about
+a non-hardness result for once,
+
+1843
+01:25:49,850 --> 01:25:51,260
+which is checkers.
+
+1844
+01:25:51,260 --> 01:25:53,070
+Checkers is another
+game where in one move,
+
+1845
+01:25:53,070 --> 01:25:54,280
+you can do a lot of jumps.
+
+1846
+01:25:54,280 --> 01:25:56,710
+Especially if you
+have a king, then you
+
+1847
+01:25:56,710 --> 01:26:01,660
+can potentially win by killing
+a lot of pieces all at once.
+
+1848
+01:26:01,660 --> 01:26:03,560
+And this is considered
+back in 1978.
+
+1849
+01:26:03,560 --> 01:26:05,060
+This is the same
+paper that proves
+
+1850
+01:26:05,060 --> 01:26:08,000
+checkers is
+EXPTIME-complete, which
+
+1851
+01:26:08,000 --> 01:26:10,269
+we will get to at some point.
+
+1852
+01:26:10,269 --> 01:26:12,560
+But for now, let's think
+about the mate in one problem.
+
+1853
+01:26:12,560 --> 01:26:16,480
+This turns out to be
+easy, unlike phutball.
+
+1854
+01:26:16,480 --> 01:26:21,520
+So checkers-- I assume
+you've all played checkers.
+
+1855
+01:26:21,520 --> 01:26:25,230
+You can only move diagonally
+on the black squares.
+
+1856
+01:26:25,230 --> 01:26:29,120
+So you can recast that
+into an orthogonal problem
+
+1857
+01:26:29,120 --> 01:26:32,930
+where the pieces can only
+move orthogonally up or right
+
+1858
+01:26:32,930 --> 01:26:35,497
+or vice versa,
+except king pieces.
+
+1859
+01:26:35,497 --> 01:26:36,830
+They can just move orthogonally.
+
+1860
+01:26:36,830 --> 01:26:39,109
+And the interesting part
+is when you can jump over
+
+1861
+01:26:39,109 --> 01:26:40,150
+a piece of another color.
+
+1862
+01:26:40,150 --> 01:26:44,510
+So if there was a black piece
+here, this one can jump over.
+
+1863
+01:26:44,510 --> 01:26:47,880
+And in general, if you have a
+sequence of jumps you can make,
+
+1864
+01:26:47,880 --> 01:26:50,112
+then you can do all
+of them at once.
+
+1865
+01:26:50,112 --> 01:26:51,820
+So the problem looks
+something like this.
+
+1866
+01:26:51,820 --> 01:26:55,990
+If you have a black piece and
+let's say a black to move,
+
+1867
+01:26:55,990 --> 01:27:00,100
+if there are a bunch of white
+pieces, you can jump over them.
+
+1868
+01:27:00,100 --> 01:27:02,070
+And the key thing
+to notice-- again,
+
+1869
+01:27:02,070 --> 01:27:04,070
+as soon as you jump over
+a piece, it disappears.
+
+1870
+01:27:04,070 --> 01:27:06,330
+So you can reuse
+it in the same move
+
+1871
+01:27:06,330 --> 01:27:09,090
+or I guess you can't
+reuse it in general.
+
+1872
+01:27:09,090 --> 01:27:12,340
+The key thing is that the jumps
+preserve the parity, the even
+
+1873
+01:27:12,340 --> 01:27:14,920
+or oddness of both
+your x-coordinate
+
+1874
+01:27:14,920 --> 01:27:16,090
+and your y-coordinate.
+
+1875
+01:27:16,090 --> 01:27:18,310
+So you're moving around
+on this reduced grid.
+
+1876
+01:27:18,310 --> 01:27:20,530
+And so you can take
+a picture like this
+
+1877
+01:27:20,530 --> 01:27:23,860
+and turn it into a graph
+where the potential positions
+
+1878
+01:27:23,860 --> 01:27:27,510
+for you, which are drawn
+with this kind of pattern,
+
+1879
+01:27:27,510 --> 01:27:32,850
+same parity of rows and columns.
+
+1880
+01:27:32,850 --> 01:27:34,870
+You could make those the
+vertices of your graph.
+
+1881
+01:27:34,870 --> 01:27:36,453
+And then, there's
+an edge between them
+
+1882
+01:27:36,453 --> 01:27:39,180
+if there's a white stone
+in between that you
+
+1883
+01:27:39,180 --> 01:27:41,120
+could jump over.
+
+1884
+01:27:41,120 --> 01:27:42,820
+So then, given this
+graph, the question
+
+1885
+01:27:42,820 --> 01:27:45,140
+is, can you visit all of
+the edges of the graph
+
+1886
+01:27:45,140 --> 01:27:46,700
+with a single path?
+
+1887
+01:27:46,700 --> 01:27:49,120
+And that is the Euler tour
+problem or the Euler path
+
+1888
+01:27:49,120 --> 01:27:50,020
+problem.
+
+1889
+01:27:50,020 --> 01:27:52,470
+And it's easy to solve
+that in polynomial time.
+
+1890
+01:27:52,470 --> 01:27:53,930
+You look for
+odd-degree vertices.
+
+1891
+01:27:53,930 --> 01:27:56,520
+There should be at most two of
+them and you better be at one
+
+1892
+01:27:56,520 --> 01:27:58,570
+of them.
+
+1893
+01:27:58,570 --> 01:27:59,750
+Or there's zero of them.
+
+1894
+01:27:59,750 --> 01:28:01,530
+Then, you're happy.
+
+1895
+01:28:01,530 --> 01:28:03,499
+So that's how to
+solve mate in one
+
+1896
+01:28:03,499 --> 01:28:06,040
+in checkers, in case you ever
+get to those difficult checkers
+
+1897
+01:28:06,040 --> 01:28:06,860
+endgames.
+
+1898
+01:28:06,860 --> 01:28:11,630
+And now, you can decide how
+to win or not in one move.
+
+1899
+01:28:11,630 --> 01:28:15,390
+Two moves is left to you.
+
