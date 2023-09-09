@@ -7955,7 +7955,7 @@ this guy, John Conway.
 
 1706
 01:19:56,300 --> 01:19:58,967
-And so if you've ever played
+And if you've ever played
 Conway's Game of Life,
 
 1707
@@ -7974,7 +7974,7 @@ Here's the general idea.
 1710
 01:20:04,910 --> 01:20:08,520
 There's a right player trying
-to get the white ball-- that's
+to get the white "ball", that's
 
 1711
 01:20:08,520 --> 01:20:09,730
@@ -7982,7 +7982,7 @@ the "football."
 
 1712
 01:20:09,730 --> 01:20:12,196
-This is philosophers'
+This is philosopher's
 football, if you will.
 
 1713
@@ -8061,11 +8061,11 @@ can do several such jumps.
 
 1728
 01:20:51,760 --> 01:20:53,170
-So I can jump here.
+So I can jump here,
 
 1729
 01:20:53,170 --> 01:20:58,740
-Then, I can jump here.
+then, I can jump here.
 
 1730
 01:20:58,740 --> 01:21:01,940
@@ -8212,8 +8212,8 @@ So that's tricky.
 
 1760
 01:22:13,640 --> 01:22:16,680
-There is a piece-base hardness
-result relatively recent,
+There is a PSPACE-hardness
+result, relatively recent,
 
 1761
 01:22:16,680 --> 01:22:20,560
@@ -8272,7 +8272,7 @@ It's pretty simple.
 1773
 01:22:49,040 --> 01:22:51,404
 So this is what we call
-the mate in one problem.
+the mate-in-1 problem.
 
 1774
 01:22:51,404 --> 01:22:53,070
@@ -8296,7 +8296,7 @@ and randomness and weird stuff.
 
 1778
 01:23:01,420 --> 01:23:04,150
-And one movie usually
+And one move usually
 doesn't involve those at all.
 
 1779
@@ -8384,20 +8384,20 @@ to the right here,
 
 1796
 01:23:48,900 --> 01:23:49,858
-we don't have a choice.
+we don't have a choice,
 
 1797
 01:23:49,858 --> 01:23:51,850
-We have to keep
+we have to keep
 jumping to the right.
 
 1798
 01:23:51,850 --> 01:23:53,230
-But over here, we have a choice.
+But over here, we have a choice:
 
 1799
 01:23:53,230 --> 01:23:57,311
-We could go down and then jump
+we could go down and then jump
 to the right and get over here
 
 1800
@@ -8408,7 +8408,7 @@ things in the middle.
 1801
 01:23:59,310 --> 01:24:01,507
 In general, that is
-our setting of x1.
+our setting of x_1.
 
 1802
 01:24:01,507 --> 01:24:03,590
@@ -8417,12 +8417,12 @@ the same thing coming back
 
 1803
 01:24:03,590 --> 01:24:05,330
-for x2 of two choices.
+for x_2 of two choices.
 
 1804
 01:24:05,330 --> 01:24:08,090
 Then, the same thing
-going back for x3
+going back for x_3
 
 1805
 01:24:08,090 --> 01:24:10,070
@@ -8431,7 +8431,7 @@ and then we get to this corner.
 1806
 01:24:10,070 --> 01:24:12,480
 So that's forced other
-than these two choices,
+than these choices,
 
 1807
 01:24:12,480 --> 01:24:14,650
@@ -8443,8 +8443,8 @@ Now, we have our first clause.
 
 1809
 01:24:17,930 --> 01:24:22,240
-Let's say x1 negated or
-x2 negated or x3 negated.
+Let's say x_1 negated or
+x_2 negated or x_3 negated.
 
 1810
 01:24:22,240 --> 01:24:24,530
@@ -8505,12 +8505,12 @@ the thing that makes it false.
 
 1822
 01:24:51,100 --> 01:24:54,290
-So here, we want x2 to be false.
+So here, we want x_2 to be false.
 
 1823
 01:24:54,290 --> 01:24:58,750
 So if we happen to follow the
-true path where x2 is true,
+true path where x_2 is true,
 
 1824
 01:24:58,750 --> 01:25:01,540
@@ -8583,16 +8583,16 @@ get to the finish line
 
 1838
 01:25:33,710 --> 01:25:38,140
-and win in one move, one move.
+and win in one move. One move.
 
 1839
 01:25:38,140 --> 01:25:42,260
-So mate in one is NP-complete.
+So mate-in-1 is NP-complete.
 
 1840
 01:25:42,260 --> 01:25:44,440
 I have one other example
-of a mate in one result.
+of a mate-in-1 result.
 
 1841
 01:25:44,440 --> 01:25:46,856
@@ -8649,7 +8649,7 @@ we will get to at some point.
 1852
 01:26:10,269 --> 01:26:12,560
 But for now, let's think
-about the mate in one problem.
+about the mate-in-1 problem.
 
 1853
 01:26:12,560 --> 01:26:16,480
@@ -8854,7 +8854,7 @@ Then, you're happy.
 1895
 01:28:01,530 --> 01:28:03,499
 So that's how to
-solve mate in one
+solve mate-in-1
 
 1896
 01:28:03,499 --> 01:28:06,040
