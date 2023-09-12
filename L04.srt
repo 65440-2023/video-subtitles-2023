@@ -427,7 +427,7 @@ So it's an acyclic circuit.
 92
 00:05:06,000 --> 00:05:08,860
 That would be another problem,
-which is harder than sNP.
+which is harder than NP.
 
 93
 00:05:08,860 --> 00:05:12,570
@@ -4767,7 +4767,7 @@ instance to that problem.
 1021
 00:52:57,580 --> 00:53:01,180
 So this gadget,
-this is a K4 on--
+this is a K_4 on--
 
 1022
 00:53:01,180 --> 00:53:04,490
@@ -6056,7 +6056,7 @@ issue-- are they in NP
 
 1299
 01:04:05,560 --> 01:04:07,141
-or are they PSPACE-Complete?
+or are they PSPACE-complete?
 
 1300
 01:04:07,141 --> 01:04:07,640
@@ -6216,17 +6216,17 @@ So they're all NP-hard.
 1334
 01:05:07,820 --> 01:05:10,680
 There's a few that are
-known to be PSPACE-Complete.
+known to be PSPACE-complete.
 
 1335
 01:05:10,680 --> 01:05:15,960
 PushPush, with a fixed
-strength, is PSPACE-Complete.
+strength, is PSPACE-complete.
 
 1336
 01:05:15,960 --> 01:05:21,640
 Or with fixed blocks, I think,
-should also be PSPACE-Complete.
+should also be PSPACE-complete.
 
 1337
 01:05:21,640 --> 01:05:23,290
@@ -6240,7 +6240,7 @@ we know is NP-hardness.
 1339
 01:05:28,200 --> 01:05:33,450
 Push-kF, where k is at least 2,
-is known to be PSPACE-Complete.
+is known to be PSPACE-complete.
 
 1340
 01:05:33,450 --> 01:05:39,560
@@ -6299,7 +6299,7 @@ relatively old result--
 1351
 01:06:00,370 --> 01:06:02,620
 1998-- that it's
-PSPACE-Complete.
+PSPACE-complete.
 
 1352
 01:06:02,620 --> 01:06:03,120
@@ -8341,7 +8341,7 @@ here and we have
 1787
 01:23:22,830 --> 01:23:25,890
 a choice whether-- if we
-want to set x1 to true,
+want to set x_1 to true,
 
 1788
 01:23:25,890 --> 01:23:29,050
