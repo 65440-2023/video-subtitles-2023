@@ -8654,7 +8654,7 @@ about the mate-in-1 problem.
 1853
 01:26:12,560 --> 01:26:16,480
 This turns out to be
-easy, unlike phutball.
+easy, unlike Phutball.
 
 1854
 01:26:16,480 --> 01:26:21,520
