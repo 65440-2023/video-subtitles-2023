@@ -5859,7 +5859,7 @@ write down the problem again.
 
 1258
 00:57:44,828 --> 00:57:46,629
-You're given three sets.
+You're given 3-sets.
 
 1259
 00:57:46,629 --> 00:57:48,465
