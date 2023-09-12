@@ -7912,8 +7912,8 @@ only weakly hard.
 
 1701
 01:16:02,891 --> 01:16:04,826
-There was a pseudo
-poly-algorithm.
+There was a pseudopoly
+algorithm.
 
 1702
 01:16:04,826 --> 01:16:06,395
@@ -7927,7 +7927,7 @@ poly-algorithm
 
 1704
 01:16:07,763 --> 01:16:08,931
-unless P equals np.
+unless P equals NP.
 
 1705
 01:16:08,931 --> 01:16:11,099
@@ -8083,7 +8083,7 @@ it one more time.
 
 1738
 01:17:28,410 --> 01:17:30,679
-Here it's hitting P1,
+Here it's hitting p_1,
 because this basically
 
 1739
@@ -8111,12 +8111,12 @@ then this one has to be down.
 1744
 01:17:41,990 --> 01:17:45,827
 But this guy can be up
-and avoid P1 but hit P2.
+and avoid p_1 but hit p_2.
 
 1745
 01:17:45,827 --> 01:17:50,298
 Or this one's down, these
-are up, and we hit P3.
+are up, and we hit p_3.
 
 1746
 01:17:50,298 --> 01:17:52,534
