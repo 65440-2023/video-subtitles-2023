@@ -43,8 +43,8 @@ it was finally finished in 2014.
 
 10
 00:00:59,726 --> 00:01:04,497
-So here you see some press we got:
-“Science proves old video games were super hard.”
+So here you see some press we got: “Science
+proves old video games were super hard.”
 
 11
 00:01:04,497 --> 00:01:11,504
@@ -431,7 +431,8 @@ back and forth here.
 
 93
 00:05:48,581 --> 00:05:52,452
-Stars give Mario invincibility so you can--
+Stars give Mario invincibility
+so you can--
 
 94
 00:05:52,518 --> 00:05:55,521
@@ -614,8 +615,8 @@ we're reducing from 3SAT.
 
 133
 00:07:51,506 --> 00:07:57,777
-So these connections here between a variable
-and a clause are actually doubled.
+So these connections here between a
+variable and a clause are actually doubled.
 
 134
 00:07:57,777 --> 00:07:59,679
@@ -785,8 +786,8 @@ And the other is--
 
 170
 00:09:47,186 --> 00:09:51,924
-We added a long fall just to make sure
-you can't come backwards through this gadget.
+We added a long fall just to make sure you
+can't come backwards through this gadget.
 
 171
 00:09:52,024 --> 00:09:55,127
@@ -894,7 +895,8 @@ when a particular graph is planar.
 
 196
 00:11:12,471 --> 00:11:17,075
-The graph is-- consists of two parts, let's say.
+The graph is-- consists of
+two parts, let's say.
 
 197
 00:11:17,075 --> 00:11:20,012
@@ -908,7 +910,8 @@ variables and the clauses they appear in.
 
 199
 00:11:25,284 --> 00:11:28,721
-So that's basically this part of the graph,
+So that's basically this
+part of the graph,
 
 200
 00:11:28,788 --> 00:11:32,591
@@ -972,8 +975,8 @@ And this is actually
 
 213
 00:12:16,669 --> 00:12:21,040
-what we were calling planar monotone [rectilinear] 3SAT,
-where you have a horizontal line
+what we were calling planar monotone [rectilinear]
+3SAT, where you have a horizontal line
 
 214
 00:12:21,040 --> 00:12:24,610
@@ -1332,8 +1335,8 @@ is that the formula is monotone,
 
 294
 00:17:47,867 --> 00:17:52,638
-so every clause is all positive or all negative,
-and you can require that
+so every clause is all positive or all
+negative, and you can require that
 
 295
 00:17:52,638 --> 00:17:57,643
@@ -1420,7 +1423,8 @@ The whole structure is planar.
 
 314
 00:19:07,212 --> 00:19:10,549
-Some notation, which is the legend up there:
+Some notation, which is
+the legend up there:
 
 315
 00:19:10,649 --> 00:19:15,888
@@ -1475,7 +1479,8 @@ But this is mainly to
 
 326
 00:19:46,752 --> 00:19:49,056
-illustrate what a variable cycle looks like
+illustrate what a variable
+cycle looks like
 
 327
 00:19:49,056 --> 00:19:52,558
@@ -1555,8 +1560,8 @@ it's a little different
 
 344
 00:20:36,602 --> 00:20:41,773
-because while we have positive edges inside,
-negative edges outside,
+because while we have positive edges
+inside, negative edges outside,
 
 345
 00:20:41,840 --> 00:20:44,577
@@ -1878,7 +1883,8 @@ we're going to ignore all the other stuff.
 
 417
 00:24:56,127 --> 00:24:57,829
-These are just going to be wraparound edges.
+These are just going to
+be wraparound edges.
 
 418
 00:24:57,829 --> 00:25:01,366
@@ -2025,8 +2031,8 @@ This is the same--
 
 448
 00:26:46,100 --> 00:26:50,508
-together this is saying x if and only if x',
-or they're equal.
+together this is saying x if and
+only if x', or they're equal.
 
 449
 00:26:50,609 --> 00:26:52,110
@@ -2153,7 +2159,8 @@ up to here.
 
 475
 00:28:15,927 --> 00:28:22,033
-And then this is the actual clause that brings together three variables in whatever
+And then this is the actual clause that
+brings together three variables in whatever
 
 476
 00:28:22,133 --> 00:28:24,502
@@ -2552,7 +2559,8 @@ to a white circle, that's negative;
 
 564
 00:32:56,074 --> 00:32:58,309
-if you go to a black circle, that's positive.
+if you go to a black circle,
+that's positive.
 
 565
 00:32:58,309 --> 00:33:00,445
@@ -2636,8 +2644,8 @@ crossover gadgets anymore.
 
 583
 00:33:57,702 --> 00:34:01,973
-So the variable gadgets turn out to be easy
-using our existing gadgets.
+So the variable gadgets turn out to be
+easy using our existing gadgets.
 
 585
 00:34:01,973 --> 00:34:03,975
@@ -2678,8 +2686,8 @@ a similar long fall thing,
 
 593
 00:34:24,328 --> 00:34:30,735
-it can-- he can choose false or true, then visit
-all the corresponding clauses,
+it can-- he can choose false or true, then
+visit all the corresponding clauses,
 
 595
 00:34:30,835 --> 00:34:35,807
@@ -2855,8 +2863,8 @@ at most two connections on each side.
 
 632
 00:36:20,244 --> 00:36:26,017
-So that's where I'm going to use this maybe,
-it's a little nicer.
+So that's where I'm going to use this
+maybe, it's a little nicer.
 
 634
 00:36:26,117 --> 00:36:29,420
@@ -3219,8 +3227,8 @@ But before we said
 
 719
 00:41:47,071 --> 00:41:50,574
-there was a cycle, that visits all variables
-and _then_ visits all clauses.
+there was a cycle, that visits all
+variables and _then_ visits all clauses.
 
 720
 00:41:50,641 --> 00:41:53,911
@@ -3366,8 +3374,8 @@ This is a 4SAT clause.
 
 754
 00:43:50,427 --> 00:43:58,469
-It has two positive versions
-above, two negative versions below, let's say.
+It has two positive versions above, two
+negative versions below, let's say.
 
 756
 00:43:58,469 --> 00:44:00,337
@@ -3552,7 +3560,8 @@ So that's two ways
 
 795
 00:46:12,669 --> 00:46:20,377
-to use sided linked planar 3SAT in a nice way,
+to use sided linked planar
+3SAT in a nice way,
 
 797
 00:46:20,444 --> 00:46:26,316
@@ -3752,7 +3761,8 @@ Long falls in many video games,
 
 845
 00:49:17,854 --> 00:49:21,325
-platform games with gravity give you a diode.
+platform games with gravity
+give you a diode.
 
 846
 00:49:21,325 --> 00:49:22,192
@@ -3884,12 +3894,13 @@ we get to opening doors.
 
 876
 00:50:50,247 --> 00:50:54,017
-[STUDENT]
-Is it important that the crumbler is directed?
+[STUDENT] Is it important that
+the crumbler is directed?
 
 877
 00:50:54,084 --> 00:50:58,155
-Is important that the crumbler is directed...
+Is important that the crumbler
+is directed...
 
 879
 00:50:58,221 --> 00:50:58,855
@@ -3905,8 +3916,8 @@ I thought it was.
 
 882
 00:51:04,261 --> 00:51:06,00
-[STUDENT]
-If you go through it, you can't go the other way,
+[STUDENT] If you go through it,
+you can't go the other way,
 
 883
 00:51:06,400 --> 00:51:08,331
@@ -4098,8 +4109,8 @@ statement.
 
 929
 00:53:27,837 --> 00:53:32,042
-Planar motion planning is NP-hard if
-you have three gadgets: branching hallways,
+Planar motion planning is NP-hard if you
+have three gadgets: branching hallways,
 
 930
 00:53:32,142 --> 00:53:35,044
@@ -4453,8 +4464,8 @@ and there's only one star here,
 
 1006
 00:57:57,273 --> 00:58:00,900
-so once you get the star, you can go
-left to right, and you get a directed crumbler.
+so once you get the star, you can go left
+to right, and you get a directed crumbler.
 
 1007
 00:58:00,900 --> 00:58:04,481
@@ -4595,8 +4606,8 @@ when you're coming here, rolling around
 
 1036
 00:59:34,270 --> 00:59:38,441
-so you can't destroy the enemies
-in any other way), you have to roll through
+so you can't destroy the enemies in any
+other way), you have to roll through
 
 1037
 00:59:38,608 --> 00:59:43,346
@@ -4773,7 +4784,8 @@ It's like a column or a row.
 
 1075
 01:01:44,400 --> 01:01:48,204
-And if you walk-- if the player walks here,
+And if you walk-- if the
+player walks here,
 
 1076
 01:01:48,304 --> 01:01:52,008
@@ -5194,7 +5206,8 @@ they both disappear,
 
 1170
 01:07:41,457 --> 01:07:44,760
-so they're matched to be in the same [state].
+so they're matched to be
+in the same [state].
 
 1172
 01:07:47,997 --> 01:07:50,933
@@ -5954,8 +5967,8 @@ And one of these is rotated 180
 
 1345
 01:19:03,872 --> 01:19:06,875
-or maybe you don't even-- Yeah,
-probably one of these should be rotated 180,
+or maybe you don't even-- Yeah, probably
+one of these should be rotated 180,
 
 1346
 01:19:07,075 --> 01:19:10,479
@@ -6091,8 +6104,8 @@ non -rossing,
 
 1376
 01:20:36,231 --> 01:20:39,901
-also neither of these things.
-Or even I could have started with crossing.
+also neither of these things. Or even
+I could have started with crossing.
 
 1377
 01:20:40,001 --> 01:20:42,938
@@ -6295,7 +6308,8 @@ And symmetrify...
 
 1428
 01:24:11,012 --> 01:24:17,085
-Okay, so these are gadgets, these big boxes.
+Okay, so these are gadgets,
+these big boxes.
 
 1430
 01:24:17,152 --> 01:24:20,121
@@ -6333,7 +6347,8 @@ Now I have this branching hallway.
 
 1438
 01:24:37,739 --> 01:24:41,109
-I can't go this way, cause that's destroyed.
+I can't go this way, cause
+that's destroyed.
 
 1439
 01:24:41,176 --> 01:24:45,447
@@ -6346,8 +6361,8 @@ So in fact, I have to go this way
 
 1441
 01:24:49,584 --> 01:24:53,488
-and destroy this edge,
-and then come over here, destroy that edge.
+and destroy this edge, and then come
+over here, destroy that edge.
 
 1442
 01:24:53,555 --> 01:24:57,425
@@ -6433,7 +6448,8 @@ was NP-hard with a whole bunch of gadgets.
 
 1460
 01:25:48,076 --> 01:25:50,211
-This isn't-- this is only like half of them.
+This isn't-- this is only
+like half of them.
 
 1461
 01:25:50,211 --> 01:25:52,347
@@ -6473,7 +6489,8 @@ So this is a directed parallel NAND.
 
 1469
 01:26:12,900 --> 01:26:17,872
-Sadly, we don't know hardness for that case.
+Sadly, we don't know hardness
+for that case.
 
 1470
 01:26:17,939 --> 01:26:21,142
@@ -6653,7 +6670,8 @@ And similarly, if you push this one out,
 
 1508
 01:28:11,152 --> 01:28:14,822
-it falls here, and you have to go to there.
+it falls here, and you
+have to go to there.
 
 1509
 01:28:14,922 --> 01:28:17,191
@@ -6799,8 +6817,8 @@ and you just get NP-hardness for free.
 
 1540
 01:29:43,277 --> 01:29:46,800
-You don't even have to
-mention planar linked sided linked planar 3SAT
+You don't even have to mention planar
+linked sided linked planar 3SAT
 
 1541
 01:29:46,800 --> 01:29:49,283
