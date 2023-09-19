@@ -5958,12 +5958,11 @@ is to just put a third one.
 1343
 01:18:57,899 --> 01:19:00,302
 Now it's crossing again.
-[Erik is about to get very confused]
 
 1344
 01:19:00,302 --> 01:19:03,805
-And one of these is rotated 180
-[No it isn't!]
+And one of these is rotated 180--
+[incorrect]
 
 1345
 01:19:03,872 --> 01:19:06,875
@@ -5982,7 +5981,6 @@ this one will control that.
 1348
 01:19:13,014 --> 01:19:14,583
 And so I got confused here.
-[And you still are]
 
 1349
 01:19:14,583 --> 01:19:18,120
@@ -6002,7 +6000,7 @@ to also close this one,
 
 1353
 01:19:26,461 --> 01:19:29,297
-which actually is
+which actually is--
 maybe you don't even flip,
 
 1354
@@ -6051,7 +6049,6 @@ the same gadget with no rotation.
 1364
 01:20:00,162 --> 01:20:03,098
 Cool.
-[Finally!]
 
 1365
 01:20:03,098 --> 01:20:04,533
