@@ -6848,4 +6848,5 @@ that are enough to prove
 
 1547
 01:30:07,101 --> 01:30:09,270
-that your problem is hard. And that's it!
+that your problem is [NP-]hard.
+And that's it!
