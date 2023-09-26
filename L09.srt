@@ -76,8 +76,8 @@ most useful, I would say,
 
 17
 00:00:50,650 --> 00:00:52,485
-ways of doing NP
-hardness reductions.
+ways of doing
+NP-hardness reductions.
 
 18
 00:00:52,485 --> 00:00:53,853
@@ -213,7 +213,7 @@ setting k of the variables
 45
 00:02:27,280 --> 00:02:30,416
 to be true, then it becomes this
-NP hard problem vertex cover.
+NP-hard problem vertex cover.
 
 46
 00:02:30,416 --> 00:02:32,952
@@ -296,7 +296,7 @@ be one or the other.
 
 62
 00:03:51,831 --> 00:03:59,439
-If you have exclusively, or
+If you have exclusive OR
 between those two, it's easy.
 
 63
@@ -384,7 +384,8 @@ one of these.
 
 80
 00:04:52,525 --> 00:04:54,861
-OK, so this morning's.
+OK, so those are
+some warnings.
 
 81
 00:04:54,861 --> 00:04:58,431
@@ -451,7 +452,7 @@ on the cover,
 94
 00:05:44,577 --> 00:05:49,649
 but we can prove that
-it's NP hard by reduction
+it's NP-hard by reduction
 
 95
 00:05:49,649 --> 00:05:51,918
@@ -460,7 +461,7 @@ from this problem.
 96
 00:05:51,918 --> 00:05:53,753
 And so in particular,
-we'll get that it's NP
+we'll get that it's NP-
 
 97
 00:05:53,753 --> 00:05:59,225
@@ -925,7 +926,7 @@ recover vertex cover.
 
 193
 00:10:47,813 --> 00:10:50,349
-AUDIENCE: [INAUDIBLE]
+AUDIENCE: Don't you need
 fives times the edges
 
 194
@@ -966,7 +967,7 @@ increasing the degree to 4.
 
 202
 00:11:04,664 --> 00:11:07,166
-Connected vertex, however, is
+Connected vertex cover is
 actually an important problem.
 
 203
@@ -1116,7 +1117,7 @@ endpoints in the plane.
 
 233
 00:12:40,659 --> 00:12:44,964
-This problem is NP hard,
+This problem is NP-hard,
 and you can prove it
 
 234
@@ -1165,7 +1166,7 @@ the plane, something like this.
 
 243
 00:13:10,890 --> 00:13:13,692
-And that each
+And then at each
 vertex, we're going
 
 244
@@ -1494,13 +1495,13 @@ I just need a spanning tree.
 
 312
 00:17:12,831 --> 00:17:20,005
-And in general, there are v
+And in general, there are |V|
 vertices to connect together,
 
 313
 00:17:20,005 --> 00:17:26,612
-and each one of them costs
-2, in a certain sense.
+and each one of them costs 2,
+in a certain sense.
 
 314
 00:17:26,612 --> 00:17:30,282
@@ -1509,7 +1510,7 @@ an incident edge costs 2.
 
 315
 00:17:30,282 --> 00:17:33,485
-And so there are v minus 1
+And so there are |V| minus 1
 edges in the spanning tree,
 
 316
@@ -1796,7 +1797,7 @@ hand, variable gadget.
 376
 00:20:26,491 --> 00:20:32,764
 We're going to represent
-XI and XI bar like this.
+x_i and x_i bar like this.
 
 377
 00:20:32,764 --> 00:20:35,634
@@ -1806,12 +1807,12 @@ feel a lot like SAT.
 378
 00:20:35,634 --> 00:20:42,941
 In fact, you might think
-of this as xor 2SAT,
+of this as XOR 2SAT,
 
 379
 00:20:42,941 --> 00:20:46,011
-if you think of xor as
-the not equals operator.
+if you think of XOR as
+the not-equals operator.
 
 380
 00:20:46,011 --> 00:20:51,583
@@ -1913,7 +1914,7 @@ All right.
 401
 00:21:36,728 --> 00:21:40,799
 So this green vertex is
-connected to both XI and XI bar
+connected to both x_i and x_i bar
 
 402
 00:21:40,799 --> 00:21:42,868
@@ -1974,8 +1975,8 @@ be the positive forms,
 
 414
 00:22:07,859 --> 00:22:11,263
-this could be XI bar,
-XJ bar, whatever.
+this could be x_i bar,
+x_j bar, whatever.
 
 415
 00:22:11,263 --> 00:22:13,098
@@ -2013,8 +2014,8 @@ kind of taking an
 
 422
 00:22:29,114 --> 00:22:35,187
-or of this pair and then an
-or of that pair with this one
+OR of this pair and then an
+OR of that pair with this one
 
 423
 00:22:35,187 --> 00:22:38,857
@@ -2211,7 +2212,7 @@ PROFESSOR: Sorry.
 464
 00:24:11,183 --> 00:24:12,851
 I mean, when I
-sit right XI here,
+sit right x_i here,
 
 465
 00:24:12,851 --> 00:24:15,287
@@ -2263,7 +2264,7 @@ we make it planar.
 475
 00:24:37,409 --> 00:24:42,113
 We have a new crossover gadget
-for specific to 3-coloring.
+specific to 3-coloring.
 
 476
 00:24:42,113 --> 00:24:44,115
@@ -2446,11 +2447,11 @@ be set red by casework.
 513
 00:26:17,342 --> 00:26:22,347
 Here is the other case, when
-xx prime is different from yy
+x, x prime is different from y,
 
 514
 00:26:22,347 --> 00:26:25,250
-prime, or you could say
+y prime, or you could say
 x and y are different,
 
 515
@@ -2613,11 +2614,11 @@ each edge arbitrarily.
 548
 00:27:46,731 --> 00:27:51,736
 And that is planar vertex
-3-coloring not bound
+3-coloring not bounded
 
 549
 00:27:51,736 --> 00:27:53,571
-to degree yet.
+degree yet.
 
 550
 00:27:53,571 --> 00:27:54,072
@@ -2782,7 +2783,7 @@ will end up with max degree 4.
 
 584
 00:29:14,552 --> 00:29:17,689
-Degree 4 Because some of
+Degree 4 because some of
 these vertices have degree 4.
 
 585
@@ -2889,21 +2890,21 @@ degree 3, 3-coloring
 
 608
 00:30:14,646 --> 00:30:24,022
-is easy polynomial time
-unless your graph is k4.
+is easy polynomial time.
+Unless your graph is K_4 --
 
 609
 00:30:24,022 --> 00:30:25,390
-So one counter example.
+so one counter example --
 
 610
 00:30:25,390 --> 00:30:26,858
-This is always possible.
+this is always possible.
 
 611
 00:30:26,858 --> 00:30:33,097
-This is called Burke's
-theorem from 1941.
+This is called Brooks'
+Theorem from 1941.
 
 612
 00:30:33,097 --> 00:30:35,800
@@ -2926,7 +2927,7 @@ So that's cool.
 616
 00:30:44,843 --> 00:30:46,377
 AUDIENCE: What do
-you mean if it's k4
+you mean if it's K_4
 
 617
 00:30:46,377 --> 00:30:48,479
@@ -2934,7 +2935,7 @@ and then it doesn't work?
 
 618
 00:30:48,479 --> 00:30:51,149
-PROFESSOR: k4
+PROFESSOR: K_4
 requires four colors.
 
 619
@@ -2944,17 +2945,17 @@ whether or not there's--
 
 620
 00:30:53,484 --> 00:30:55,753
-PROFESSOR: But k4
+PROFESSOR: But K_4
 has max degree 3.
 
 621
 00:30:55,753 --> 00:30:57,589
-AUDIENCE: [INAUDIBLE]
-polynomial figure out
+AUDIENCE: But it's polynomial
+to figure out
 
 622
 00:30:57,589 --> 00:30:58,623
-if there's a 3 colorable?
+if there's a 3 coloring?
 
 623
 00:30:58,623 --> 00:31:00,859
@@ -2968,16 +2969,16 @@ max degree 3 graph is
 
 625
 00:31:04,295 --> 00:31:06,264
-3 colorable except for k4.
+3 colorable except for K_4.
 
 626
 00:31:06,264 --> 00:31:08,566
 So the decision
-problem is, am I k4.
+problem is, am I K_4.
 
 627
 00:31:08,566 --> 00:31:13,104
-Or I guess, am I not k4 would
+Or I guess, am I not K_4 would
 be the 3-coloring problem.
 
 628
@@ -2997,7 +2998,7 @@ for that algorithm
 
 631
 00:31:20,912 --> 00:31:23,848
-for testing for k4ness.
+for testing for K_4-ness.
 
 632
 00:31:23,848 --> 00:31:26,451
@@ -3034,12 +3035,12 @@ before you cite that result.
 
 639
 00:31:40,298 --> 00:31:43,868
-AUDIENCE: You can
-[INAUDIBLE], make
+AUDIENCE: You can construct one,
+for example, you make
 
 640
 00:31:43,868 --> 00:31:46,738
-yourself a [INAUDIBLE] gadget
+yourself a color gadget
 and then try probing things.
 
 641
@@ -3123,16 +3124,16 @@ undirected graph
 658
 00:32:50,001 --> 00:32:55,340
 and you want to find an
-orientation-- orientation
+orientation -- orientation
 
 659
 00:32:55,340 --> 00:32:57,408
-means for every
-edge, you give it
+means, for every edge,
+you give it
 
 660
 00:32:57,408 --> 00:33:14,192
-a direction-- satisfying
+a direction -- satisfying
 certain vertex constraints,
 
 661
@@ -3180,7 +3181,7 @@ has 3 in, 0 out, 2 in, 1 out,
 
 670
 00:33:55,867 --> 00:34:00,138
-And this problem is NP hard.
+And this problem is NP-hard.
 
 671
 00:34:00,138 --> 00:34:03,408
@@ -3229,7 +3230,7 @@ then all in, all out.
 680
 00:34:27,231 --> 00:34:30,134
 So this is going to
-represent x and x-bar.
+represent x and x bar.
 
 681
 00:34:30,134 --> 00:34:33,004
@@ -3239,7 +3240,7 @@ cycle is is up to you,
 682
 00:34:33,004 --> 00:34:36,040
 you could either make all the
-x's all in or all the x-bars
+x's all in or all the x bars
 
 683
 00:34:36,040 --> 00:34:39,310
@@ -3307,7 +3308,7 @@ a whole bunch of copies of x.
 696
 00:35:23,588 --> 00:35:26,257
 But I get all these
-copies of x-bar,
+copies of x bar,
 
 697
 00:35:26,257 --> 00:35:28,292
@@ -3364,7 +3365,7 @@ everything in the clause,
 708
 00:35:56,020 --> 00:36:00,191
 and then wherever we use x, we
-also use x-bar and vice versa.
+also use x bar and vice versa.
 
 709
 00:36:00,191 --> 00:36:03,694
@@ -3379,7 +3380,7 @@ occurrences of x, then
 711
 00:36:06,097 --> 00:36:07,698
 we'll make k
-occurrences of x-bar
+occurrences of x bar
 
 712
 00:36:07,698 --> 00:36:11,569
@@ -3446,12 +3447,12 @@ and I want to pack as many,
 725
 00:36:47,438 --> 00:36:52,210
 say, 3 by 3 squares in the
-polygon, that's NP hard.
+polygon, that's NP-hard.
 
 726
 00:36:52,210 --> 00:36:55,513
 If I want to pack as many 2
-by 2 squares, that's NP hard.
+by 2 squares, that's NP-hard.
 
 727
 00:36:55,513 --> 00:37:00,618
@@ -3521,7 +3522,7 @@ weirdly shaped warehouse, that
 
 741
 00:37:33,451 --> 00:37:34,885
-is NP hard.
+is NP-hard.
 
 742
 00:37:34,885 --> 00:37:37,255
@@ -3749,7 +3750,7 @@ proof, because in the proof
 
 790
 00:39:43,414 --> 00:39:45,883
-it was always XI, XI-Bar,
+it was always x_i, x_i bar,
 so there are always
 
 791
@@ -3765,7 +3766,7 @@ essentially either the left two
 793
 00:39:56,193 --> 00:39:59,897
 will have bumps and the right
-two will not have bombs,
+two will not have bumps,
 
 794
 00:39:59,897 --> 00:40:01,899
@@ -3794,7 +3795,7 @@ and these are all in.
 
 799
 00:40:11,442 --> 00:40:14,178
-So that's the x or x-bar.
+So that's the x or x bar.
 
 800
 00:40:14,178 --> 00:40:17,248
@@ -3843,7 +3844,7 @@ you can do graph orientation
 
 810
 00:40:43,374 --> 00:40:45,376
-and then you're NP hard.
+and then you're NP-hard.
 
 811
 00:40:45,376 --> 00:40:47,378
@@ -4022,12 +4023,12 @@ linear layout of a graph,
 
 847
 00:42:43,561 --> 00:42:48,032
-and it's a bijection--
+and it's a bijection --
 let's call it
 
 848
 00:42:48,032 --> 00:42:56,907
-f-- from the vertices to 1
+f -- from the vertices to 1
 up to the number of vertices.
 
 849
@@ -4250,16 +4251,16 @@ to minimize bandwidth.
 895
 00:45:22,820 --> 00:45:26,123
 It would be great,
-except it's NP hard.
+except it's NP-hard.
 
 896
 00:45:26,123 --> 00:45:30,828
-It's NP hard even on
+It's NP-hard even on
 trees of maximum degree 3.
 
 897
 00:45:30,828 --> 00:45:33,964
-It's NP hard even
+It's NP-hard even
 on caterpillars.
 
 898
@@ -4303,11 +4304,11 @@ when mapped into matrices,
 
 906
 00:46:00,157 --> 00:46:01,291
-this problem is NP hard.
+this problem is NP-hard.
 
 907
 00:46:01,291 --> 00:46:05,062
-Lots of cases are NP hard,
+Lots of cases are NP-hard,
 even for good graphs.
 
 908
@@ -4369,7 +4370,7 @@ from that in a moment.
 
 920
 00:46:30,921 --> 00:46:33,357
-It's NP hard, even for
+It's NP-hard, even for
 my bipartite graphs.
 
 921
@@ -4595,7 +4596,7 @@ Last one is edge by section.
 968
 00:48:41,151 --> 00:48:45,389
 This is where you only look at
-cutting in the middle at v/2.
+cutting in the middle at |V|/2.
 
 969
 00:48:45,389 --> 00:48:47,858
@@ -4620,11 +4621,11 @@ vertices on the left
 973
 00:48:55,666 --> 00:48:58,735
 and edges to the right
-half, but exactly half. v/2.
+half, but exactly half. |V|/2.
 
 974
 00:48:58,735 --> 00:49:00,337
-v/2.
+|V|/2.
 
 975
 00:49:00,337 --> 00:49:01,204
@@ -4783,7 +4784,7 @@ it a couple times,
 1007
 00:50:16,446 --> 00:50:19,082
 but rarely have I succeeded in
-getting an actual NP hardness
+getting an actual NP-hardness
 
 1008
 00:50:19,082 --> 00:50:21,718
@@ -5150,7 +5151,7 @@ whole bunch of edges.
 1085
 00:54:17,487 --> 00:54:21,524
 And a whole bunch
-means e squared,
+means |E| squared,
 
 1086
 00:54:21,524 --> 00:54:27,264
@@ -5179,13 +5180,13 @@ two bundles of edges crossed,
 
 1091
 00:54:38,208 --> 00:54:40,877
-you would get e to
+you would get |E| to
 the fourth crossings.
 
 1092
 00:54:40,877 --> 00:54:42,612
 And so if you ever
-want to get less than e
+want to get less than |E|
 
 1093
 00:54:42,612 --> 00:54:44,114
@@ -5258,16 +5259,16 @@ arrangement problem,
 1107
 00:55:12,575 --> 00:55:15,779
 the edges are like
-from vertex I to vertex
+from vertex i to vertex
 
 1108
 00:55:15,779 --> 00:55:20,250
-J. We're going to make that
-connection from bottom I to top
+j. We're going to make that
+connection from bottom i to top
 
 1109
 00:55:20,250 --> 00:55:24,587
-J. There's this choice, but it
+j. There's this choice, but it
 doesn't matter which is which.
 
 1110
@@ -5300,12 +5301,12 @@ the right way.
 
 1116
 00:55:45,108 --> 00:55:47,644
-If you have a link
-0 edge-- We never
+If you have a length-0
+edge-- We never
 
 1117
 00:55:47,644 --> 00:55:49,212
-have the link 0 edge,
+have a length-0 edge,
 because vertices
 
 1118
@@ -5314,7 +5315,7 @@ map to different places.
 
 1119
 00:55:50,213 --> 00:55:52,582
-If you have a length 1 edge,
+If you have a length-1 edge,
 you won't cross anything,
 
 1120
@@ -5323,17 +5324,17 @@ so 0 crossings.
 
 1121
 00:55:53,616 --> 00:55:57,687
-If you have a length 2 edge, you
+If you have a length-2 edge, you
 will cross exactly one bundle,
 
 1122
 00:55:57,687 --> 00:55:59,389
-and you pay e squared for that.
+and you pay |E| squared for that.
 
 1123
 00:55:59,389 --> 00:56:01,024
 In general, it will
-be something like e
+be something like |E|
 
 1124
 00:56:01,024 --> 00:56:03,760
@@ -5421,12 +5422,12 @@ and you have to count them.
 
 1142
 00:56:45,802 --> 00:56:48,104
-AUDIENCE: [INAUDIBLE] because
-you can't get more than e
+AUDIENCE: It's fine because
+you can't get more than |E|
 
 1143
 00:56:48,104 --> 00:56:49,939
-squared with this
+squared of those
 in the normal case?
 
 1144
@@ -5469,7 +5470,7 @@ single edge crossings
 1152
 00:57:10,093 --> 00:57:12,762
 will be strictly
-less than e squared,
+less than |E| squared,
 
 1153
 00:57:12,762 --> 00:57:14,964
@@ -5501,7 +5502,7 @@ you're going to get.
 1159
 00:57:22,839 --> 00:57:28,445
 So you have to add
-almost e squared.
+almost |E| squared.
 
 1160
 00:57:28,445 --> 00:57:30,580
@@ -5515,7 +5516,7 @@ interesting it is.
 1162
 00:57:32,582 --> 00:57:38,054
 But what they wrote, it's
-e squared times k minus e,
+|E| squared times k minus |E|,
 
 1163
 00:57:38,054 --> 00:57:42,492
@@ -5534,16 +5535,16 @@ per edge, that gets multiplied
 
 1166
 00:57:52,302 --> 00:57:54,204
-by e squared, and then
+by |E| squared, and then
 we're basically adding
 
 1167
 00:57:54,204 --> 00:57:56,372
-e squared minus 1 at the end.
+|E| squared minus 1 at the end.
 
 1168
 00:57:56,372 --> 00:57:59,676
-So almost e squared to allow
+So almost |E| squared to allow
 for any number of crossings
 
 1169
@@ -5753,12 +5754,12 @@ a Rubik's cube,
 
 1213
 00:59:57,226 --> 00:59:59,829
-but 3, by 3, by 3, that's easy.
+but 3 by 3 by 3, that's easy.
 
 1214
 00:59:59,829 --> 01:00:03,366
-So you have an n, by n, by
-n Rubik's cube, like this 7,
+So you have an n by n by n
+Rubik's cube, like this 7,
 
 1215
 01:00:03,366 --> 01:00:08,371
@@ -6103,11 +6104,11 @@ of x times y moves.
 1286
 01:03:13,923 --> 01:03:16,959
 And this is something we used to
-prove that you can solve an n,
+prove that you can solve an n
 
 1287
 01:03:16,959 --> 01:03:19,962
-by n, by n Rubik's cube and n
+by n by n Rubik's cube and n
 squared divided by log n moves,
 
 1288
@@ -6137,7 +6138,7 @@ give you some intuition.
 1293
 01:03:35,278 --> 01:03:37,547
 Sadly, we don't know whether
-this problem is NP hard,
+this problem is NP-hard,
 
 1294
 01:03:37,547 --> 01:03:39,882
@@ -6152,7 +6153,7 @@ some of the stickers
 1296
 01:03:41,617 --> 01:03:43,886
 fell off your cube,
-then it's NP hard.
+then it's NP-hard.
 
 1297
 01:03:43,886 --> 01:03:46,856
@@ -6205,16 +6206,16 @@ in a certain number of moves
 1307
 01:04:07,376 --> 01:04:14,050
 if and only if the first time
-you make the x2 column move
+you make the x=2 column move
 
 1308
 01:04:14,050 --> 01:04:17,186
 is between the first time
-you make the x1 column
+you make the x=1 column
 
 1309
 01:04:17,186 --> 01:04:19,789
-move and the x3 column move.
+move and the x=3 column move.
 
 1310
 01:04:19,789 --> 01:04:21,224
