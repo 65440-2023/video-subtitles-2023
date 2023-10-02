@@ -4309,7 +4309,7 @@ this problem is NP-hard.
 907
 00:46:01,291 --> 00:46:05,062
 Lots of cases are NP-hard,
-even for good graphs.
+even for grid graphs.
 
 908
 00:46:05,062 --> 00:46:06,730
@@ -4483,7 +4483,7 @@ graphs, max degree
 
 944
 00:47:35,652 --> 00:47:39,890
-3, good graphs, lots of things.
+3, grid graphs, lots of things.
 
 945
 00:47:39,890 --> 00:47:41,225
