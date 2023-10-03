@@ -5978,12 +5978,12 @@ rows, hey, I solved the puzzle.
 1259
 01:02:10,126 --> 01:02:14,063
 And in general, if you look at
-a [? cubee ?] and the four other
+a cubie and the four other
 
 1260
 01:02:14,063 --> 01:02:16,966
-[? cubees ?] that it can go
-to, they have some pattern.
+cubies that it can go to,
+they have some pattern.
 
 1261
 01:02:16,966 --> 01:02:19,035
@@ -6023,8 +6023,7 @@ what it needs to be solved.
 
 1269
 01:02:38,321 --> 01:02:39,789
-So these [? cubees ?],
-for example,
+So these cubies, for example,
 
 1270
 01:02:39,789 --> 01:02:42,692
@@ -6093,8 +6092,8 @@ of identically oriented
 
 1284
 01:03:09,185 --> 01:03:11,087
-[? cubees ?], I can
-solve it in about x
+cubies, I can solve
+it in about x
 
 1285
 01:03:11,087 --> 01:03:13,923
