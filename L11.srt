@@ -57,7 +57,7 @@ previous lecture, we actually implemented
 13
 00:01:03,463 --> 00:01:07,100
 this in a hacked version
-of the Super Mario Brothers ROM.
+of the Super Mario Bros. ROM.
 
 14
 00:01:07,200 --> 00:01:09,669
@@ -234,11 +234,11 @@ a redrawing of the same thing, hand-drawn.
 50
 00:03:09,389 --> 00:03:12,825
 But I wanted to show two examples
-from Lecture
+from Lecture 6,
 
 51
 00:03:12,825 --> 00:03:16,229
-6, just to give a few more...
+just to give a few more...
 
 52
 00:03:16,262 --> 00:03:18,998
@@ -416,7 +416,8 @@ more like vertices in a graph
 
 89
 00:05:30,430 --> 00:05:34,901
-and then t Oh, one thing I want to mention
+and then T-- oh, one thing
+I want to mention
 
 90
 00:05:34,967 --> 00:05:37,036
@@ -471,12 +472,9 @@ of L.
 And then the third thing is transitions.
 
 102
-00:06:29,355 --> 00:06:30,156
-Transitions.
-
-103
-00:06:30,156 --> 00:06:34,527
-We're going to write in the form
+00:06:29,355 --> 00:06:34,527
+Transitions we're going
+to write in the form
 
 104
 00:06:34,627 --> 00:06:37,063
@@ -573,8 +571,8 @@ possible
 
 125
 00:08:32,612 --> 00:08:37,783
-if there's some transition of the form (q,
-a) → (r, b) for some state r.
+if there's some transition of the form
+(q, a) → (r, b) for some state r.
 
 126
 00:08:37,850 --> 00:08:39,619
@@ -875,12 +873,12 @@ has been replaced with an open tunnel.
 192
 00:13:03,749 --> 00:13:07,586
 So it's a three tunnel gadget;
-it has open, traverse,
+it has open, traverse, close,
 
 193
 00:13:07,586 --> 00:13:12,925
-close,
-color coded here, green, blue and red.
+color coded here,
+green, blue, and red.
 
 194
 00:13:12,992 --> 00:13:15,094
@@ -972,7 +970,7 @@ between them.
 
 215
 00:14:46,352 --> 00:14:48,988
-We can also add vertices in-between.
+We can also add vertices in between.
 
 216
 00:14:48,988 --> 00:14:52,424
@@ -1317,8 +1315,8 @@ Another result we
 
 293
 00:19:47,386 --> 00:19:51,890
-proved in Lecture
-6 is planar reachability,
+proved in Lecture 6
+is planar reachability,
 
 294
 00:19:51,990 --> 00:20:00,532
@@ -1373,12 +1371,12 @@ now you have...
 305
 00:20:34,733 --> 00:20:38,971
 you take your favorite video game like
-Super Mario Brothers and you have this...
+Super Mario Bros. and you have this...
 
 306
 00:20:39,004 --> 00:20:44,176
-you're going to have a uh,
-a bouquet of possible gadgets
+you're going to have a
+bouquet of possible gadgets
 
 307
 00:20:44,243 --> 00:20:47,045
@@ -2114,8 +2112,8 @@ how we prove things about doors.
 
 469
 00:30:23,955 --> 00:30:27,826
-Here is a Legend of Zelda, Oracle Seasons
-has this cool magnetic glove
+Here is Legend of Zelda: Oracle of
+Seasons. It has this cool magnetic glove
 
 470
 00:30:27,826 --> 00:30:29,994
@@ -2248,8 +2246,8 @@ and just a few pictures
 
 498
 00:31:55,780 --> 00:31:59,584
-to prove
-that this game is PSPACE-complete.
+you prove that this
+game is PSPACE-complete.
 
 499
 00:31:59,684 --> 00:32:01,853
@@ -2324,9 +2322,8 @@ but you're able to move the platform over.
 
 514
 00:32:41,759 --> 00:32:45,330
-So we got a self-closing
-door. So PSPACE-
-complete.
+So we got a self-closing door.
+So PSPACE-complete.
 
 515
 00:32:45,430 --> 00:32:46,731
@@ -2407,11 +2404,11 @@ then you can take it back.
 531
 00:33:38,983 --> 00:33:42,920
 So one of these two traversals
-would be possible and it switches the,
+would be possible and it switches
 
 532
 00:33:43,021 --> 00:33:46,691
-uh, which one is available for next time.
+which one is available for next time.
 
 533
 00:33:46,758 --> 00:33:49,327
@@ -3009,8 +3006,8 @@ So we're going to characterize
 
 662
 00:41:19,710 --> 00:41:23,247
-exactly
-when certain a set of gadgets are...
+exactly when a certain
+set of gadgets
 
 663
 00:41:23,314 --> 00:41:28,185
@@ -3247,7 +3244,7 @@ So you could have also built it.
 716
 00:45:04,034 --> 00:45:09,406
 It just might be,
-you know, a constant factor, larger.
+you know, a constant factor larger.
 
 717
 00:45:09,473 --> 00:45:10,274
@@ -3391,8 +3388,8 @@ the traversability of this tunnel.
 
 747
 00:46:52,943 --> 00:46:57,748
-So just by relabeling one or two, this is
-the only this must happen somewhere.
+So just by relabeling 1 or 2,
+this must happen somewhere.
 
 748
 00:46:57,848 --> 00:47:00,851
@@ -3909,8 +3906,8 @@ from Nondeterministic Constraint Logic,
 
 860
 00:52:23,106 --> 00:52:24,641
-which is what
-we're covering in the next lecture.
+which is what we're covering
+in the next lecture.
 
 861
 00:52:24,641 --> 00:52:30,780
@@ -4198,7 +4195,7 @@ of this class, a bunch of students
 922
 00:55:32,629 --> 00:55:37,167
 from that class,
-except there's one which is Push?,
+except there's one which is Pull?,
 
 923
 00:55:37,167 --> 00:55:41,538
@@ -4328,23 +4325,24 @@ Yeah.
 
 951
 00:56:58,348 --> 00:57:00,150
-You said we want to reconfiguration...
+[AUDIENCE] You said we want to
 
 952
 00:57:00,150 --> 00:57:03,186
-Reconfigure from one state to another.
+reconfigure from one state to another.
 
 953
 00:57:03,253 --> 00:57:04,587
-Right, good question.
+[PROFESSOR] Right, good question.
 
 954
 00:57:04,587 --> 00:57:05,955
-But here we’re just getting an agent.
+[AUDIENCE] But here we’re just
+getting an agent...
 
 955
 00:57:05,955 --> 00:57:07,857
-Yes, so what I’ve...
+[PROFESSOR] Yes, so what I’ve...
 
 956
 00:57:07,857 --> 00:57:10,960
@@ -4574,7 +4572,7 @@ These are not as basic as the
 
 1005
 00:59:38,675 --> 00:59:41,678
-as a locking 2-toggle Okay.
+as a locking 2-toggle. Okay.
 
 1006
 00:59:41,844 --> 00:59:46,849
@@ -4583,13 +4581,12 @@ is building a 2-toggle
 
 1007
 00:59:46,950 --> 00:59:51,187
-in another Oracle of Seasonss mechanic,
+in another Oracle of Seasons mechanic,
 which is these 4-spinners.
 
 1008
 00:59:51,187 --> 00:59:54,490
-A 4-spinner is in...
-is either blue or red.
+A 4-spinner is either blue or red.
 
 1009
 00:59:54,591 --> 00:59:57,594
@@ -5247,12 +5244,8 @@ G’ plus a sequence of traversals,
 which we call
 
 1153
-01:07:31,380 --> 01:07:35,518
-check
-
-1154
-01:07:35,518 --> 01:07:40,956
-traversals,
+01:07:31,380 --> 01:07:40,956
+check traversals,
 
 1155
 01:07:41,057 --> 01:07:43,592
@@ -5267,12 +5260,9 @@ G equals G’
 restricted to good states
 
 1158
-01:07:58,841 --> 01:08:04,113
-where check
-
-1159
-01:08:04,146 --> 01:08:16,258
-traversals are possible.
+01:07:58,841 --> 01:08:16,258
+where check traversals
+are possible.
 
 1160
 01:08:16,358 --> 01:08:19,728
@@ -5295,7 +5285,7 @@ And I would like one thing which is,
 1164
 01:08:31,807 --> 01:08:38,180
 if your gadget is in a broken state,
-it stays broken -- no matter what you do.
+it stays broken, no matter what you do.
 
 1165
 01:08:38,247 --> 01:08:41,117
@@ -5330,7 +5320,7 @@ So I'm going to say...
 1172
 01:09:03,873 --> 01:09:09,645
 So this is a checkable
-whatever this gadget is --
+whatever-this-gadget-is --
 
 1173
 01:09:09,645 --> 01:09:13,382
@@ -5377,12 +5367,8 @@ reachability
 with G
 
 1183
-01:09:56,725 --> 01:09:57,393
-reduces
-
-1184
-01:09:57,393 --> 01:10:03,032
-to planar
+01:09:56,725 --> 01:10:03,032
+reduces to planar
 
 1185
 01:10:03,032 --> 01:10:08,137
@@ -6121,8 +6107,8 @@ which is among two-state
 
 1347
 01:19:00,502 --> 01:19:11,880
-deterministic output-disjoint gadgets,
-we are PSPACE-complete
+deterministic output-disjoint I/O
+gadgets, we are PSPACE-complete
 
 1348
 01:19:11,980 --> 01:19:18,286
@@ -6167,7 +6153,7 @@ Yeah?
 
 1357
 01:19:57,025 --> 01:19:58,960
-If you have a set-up
+[AUDIENCE] If you have a set-up
 
 1358
 01:19:58,960 --> 01:20:02,030
@@ -6176,7 +6162,8 @@ does it count as unbounded?
 
 1359
 01:20:02,097 --> 01:20:05,133
-I was wondering that. Yes. It does count.
+[PROFESSOR] I was wondering that.
+[AUDIENCE] Yes. [PROFESSOR] It does count.
 
 1360
 01:20:05,200 --> 01:20:07,836
@@ -6241,8 +6228,8 @@ Now, you could also relax this restriction
 
 1373
 01:20:53,882 --> 01:20:58,286
-of at most one
-input in each system location or
+of at most one input
+in each system location,
 
 1374
 01:20:58,386 --> 01:21:01,122
@@ -6269,7 +6256,7 @@ One more fun fact
 
 1379
 01:21:13,134 --> 01:21:16,805
-is that, uh,
+is that,
 
 1380
 01:21:16,905 --> 01:21:18,473
@@ -6277,8 +6264,8 @@ among these gadgets
 
 1381
 01:21:18,473 --> 01:21:22,577
--- two-state
-deterministic output-disjoint gadgets --
+-- two-state deterministic
+output-disjoint gadgets --
 
 1382
 01:21:22,577 --> 01:21:26,481
@@ -6506,8 +6493,8 @@ unbounded systems/puzzles, where we get
 
 1431
 01:23:42,751 --> 01:23:46,187
-PSPACE-completeness, in Lecture
-6, we were all about NP-completeness.
+PSPACE-completeness, in Lecture 6,
+we were all about NP-completeness.
 
 1432
 01:23:46,354 --> 01:23:50,892
@@ -6751,26 +6738,26 @@ in one direction and not the other.
 1484
 01:26:31,853 --> 01:26:34,556
 And so it turns out what's the right
-definition is There's
+definition is: there's
 
 1485
 01:26:34,556 --> 01:26:38,893
 some orientation on the tunnels, say
-all of them left to right.
+all of them left to right --
 
 1486
 01:26:38,893 --> 01:26:41,062
-But it doesn't have to be that.
+but it doesn't have to be that --
 
 1487
 01:26:41,062 --> 01:26:43,865
-And there's a traversal that closes
-at least one
+and there's a traversal that
+closes at least one
 
 1488
 01:26:43,865 --> 01:26:48,136
-different tunnel in
-in that direction, in that orientation.
+different tunnel in that direction,
+in that orientation.
 
 1489
 01:26:48,336 --> 01:26:53,007
